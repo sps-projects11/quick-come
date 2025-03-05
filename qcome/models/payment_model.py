@@ -7,9 +7,9 @@ class Payment(models.Model):
         choices=[(paytype.value, paytype.name) for paytype in PayType ],
         blank=True,null=True
     )
-    amount = models.ForeignKey('Billing', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     pay_status = models.IntegerField(
-        chocices = [(paystatus.value,paystatus.name) for paystatus in PayStatus],
+        choices = [(paystatus.value,paystatus.name) for paystatus in PayStatus],
         blank=False,null=False
     )
     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_payments_users_id')

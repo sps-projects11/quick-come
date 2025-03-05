@@ -1,11 +1,11 @@
 from django.db import models
-from ..constants import Vichel_Type
+from ..constants import Vehicle_Type
 from django.db.models import Q, UniqueConstraint
 
 class Booking(models.Model):
     customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_users_id')
-    vichel_type = models.IntegerField(
-        choices=[(v_type.value, v_type.name) for v_type in Vichel_Type],
+    vehicle_type = models.IntegerField(
+        choices=[(v_type.value, v_type.name) for v_type in Vehicle_Type],
         blank=False, null=False
     )
     current_location = models.CharField(max_length=255, null=False, blank=False)
@@ -16,7 +16,7 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_created=True)
     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_created_users_id')
-    updated_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bokkings_updated_users_id')
+    updated_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_updated_users_id')
 
 
     class Meta:
