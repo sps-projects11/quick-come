@@ -1,0 +1,22 @@
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django/SQLite
+db.sqlite3
+migrations/
+
+# VSCode settings (optional)
+.vscode/
+
+# Environment/config files
+.env
+.env_config.cpython-313.py
