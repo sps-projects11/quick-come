@@ -22,3 +22,16 @@ class Vichel_Type(Enum):
     BIKE = 1
     CAR = 2
 
+    
+class PayType(Enum):
+    CASH = 1
+    CARD = 2
+    ONLINE = 3
+
+class PayStatus(Enum):
+    PENDING = 1
+    COMPLETE = 2
+    FAILED = 3
+
+
+
