@@ -18,7 +18,7 @@ class Status(Enum):
     CANCELLED = 4
 
     
-class Vichel_Type(Enum):
+class Vehicle_Type(Enum):
     BIKE = 1
     CAR = 2
     BOTH = 3

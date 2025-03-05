@@ -1,5 +1,5 @@
 from django.db import models
-from ..constants import Vichel_Type
+from ..constants import Vehicle_Type
 
 
 class Garage(models.Model):
@@ -7,8 +7,8 @@ class Garage(models.Model):
     garage_owner = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     phone = models.CharField(max_length=10)
-    vichel_type = models.IntegerField(
-        choices=[(v_type.value, v_type.name) for v_type in Vichel_Type],
+    vehicle_type = models.IntegerField(
+        choices=[(v_type.value, v_type.name) for v_type in Vehicle_Type],
         blank=False, null=False
     )
     garage_ac = models.CharField(max_length=50, null=False, blank=False)
