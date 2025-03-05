@@ -7,10 +7,10 @@ class Payment(models.Model):
         choices=[(paytype.value, paytype.name) for paytype in PayType ],
         blank=True,null=True
     )
-    amount = models.IntegerField()
+    amount = models.ForeignKey('Billing', on_delete=models.CASCADE)
     pay_status = models.IntegerField(
         chocices = [(paystatus.value,paystatus.name) for paystatus in PayStatus],
-        blank=True,null=True
+        blank=False,null=False
     )
     created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_payments_users_id')
     paid_at = models.DateField(auto_now_add=True)

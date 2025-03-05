@@ -9,7 +9,7 @@ class Booking(models.Model):
         blank=False, null=False
     )
     current_location = models.CharField(max_length=255, null=False, blank=False)
-    problem = models.CharField(max_length=250, null=False, blank=False)
+    service = models.ForeignKey('Service', on_delete=models.CASCADE, blank=False, null=False)
 
 
     is_active = models.BooleanField(default=True, blank=True)
@@ -23,7 +23,7 @@ class Booking(models.Model):
         db_table = 'bookings'
         constraints =[
             UniqueConstraint(
-            fields=['user'],
+            fields=['customer'],
             condition=Q(is_active=True),
             name='unique_active_booking_per_user'
             )
