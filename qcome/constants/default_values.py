@@ -21,6 +21,7 @@ class Status(Enum):
 class Vichel_Type(Enum):
     BIKE = 1
     CAR = 2
+    BOTH = 3
 
     
 class PayType(Enum):
