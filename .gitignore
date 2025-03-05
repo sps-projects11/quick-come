@@ -1,22 +1,27 @@
-# Virtual environments
+# Virtual environment directories
 venv/
-.venv/
 env/
+.venv/
 .env/
 
-# Python cache
+# Python cache and bytecode
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Django/SQLite
+# Django specific
 db.sqlite3
+
+# Migrations (if you really want to ignore them, but it's common to track these)
 migrations/
 
-# VSCode settings (optional)
-.vscode/
-
-# Environment/config files
+# Environment files (with sensitive information)
 .env
-.env_config.cpython-313.py
+
+# Specific auto-generated environment configuration file
+env_config.cpython-313.py
+
+# OS-specific files
+.DS_Store
+Thumbs.db
