@@ -11,4 +11,7 @@ class Gender(Enum):
     FEMALE = 2
     OTHER = 3
 
+class Vichel_Type(Enum):
+    BIKE = 1
+    CAR = 2
 
