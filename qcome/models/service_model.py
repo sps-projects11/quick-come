@@ -1,26 +1,17 @@
 from django.db import models
-from ..constants import Gender
-
-
+from ..constants import Status
 
 class Sevice(models.Model):
-    status = models.CharField(max_length=50)
-    work_by = models.CharField(max_length=50)
-    worker_conatct = models.CharField(max_length=10)
-    worker_gender = models.IntegerField(
-        choices = [(gender.value,gender.name) for gender in Gender],
-        blank = True,null = True 
+    customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_service_users_id')
+    work_by = models.ForeignKey('Worker', on_delete=models.CASCADE, related_name='fk_worker_service_workers_id')
+    status = models.IntegerField(
+        choices=[(status.value, status.name) for status in Status],
+        blank=True, null=True
     )
-
-
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_created=True)
-    last_login = models.DateTimeField(null=True, blank=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
 
     class Meta:
         db_table = 'services'

@@ -11,4 +11,9 @@ class Gender(Enum):
     FEMALE = 2
     OTHER = 3
 
+class Status(Enum):
+    PENDING = 1
+    IN_PROGRESS = 2
+    COMPLETED = 3
+    CANCELLED = 4
 
