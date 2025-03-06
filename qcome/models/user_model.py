@@ -7,6 +7,7 @@ class User(AbstractUser):
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50)
     dob = models.DateField(null=False,blank=False)
+    profile_photo_url = models.URLField(max_length=200, null=True, blank=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=10)
     gender = models.IntegerField(
