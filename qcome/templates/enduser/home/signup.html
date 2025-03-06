@@ -17,7 +17,7 @@
         </div>
         <div class="signup-container">
             <h2>Sign Up</h2>
-            <form id="signupForm">
+            <form id="signupForm" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="form-group">
@@ -90,58 +90,88 @@
         document.addEventListener("DOMContentLoaded", function () {
             let sendOtpButton = document.getElementById("sendOtp");
             let verifyOtpButton = document.getElementById("verifyOtp");
+            let signupForm = document.getElementById("signupForm");
         
+            // Send OTP
             sendOtpButton.addEventListener("click", function () {
                 let email = document.getElementById("email").value;
         
                 if (!email) {
-                    console.log("Please enter your email address.");
+                    alert("Please enter your email address.");
                     return;
                 }
         
                 fetch(`/request-otp/?email=${encodeURIComponent(email)}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data.message);
+                        alert(data.message); // Show user feedback
                     })
                     .catch(error => console.error("Error:", error));
             });
         
+            // Verify OTP
             verifyOtpButton.addEventListener("click", function () {
                 let email = document.getElementById("email").value;
                 let otp = document.getElementById("otp").value;
                 let firstName = document.getElementById("first_name").value;
                 let lastName = document.getElementById("last_name").value;
-                let dob = document.getElementById("dob").value; // Include DOB
+                let dob = document.getElementById("dob").value;
                 let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
         
                 if (!email || !otp || !dob) {
-                    console.log("Email, OTP, and DOB are required.");
+                    alert("Email, OTP, and DOB are required.");
                     return;
                 }
+        
+                let formData = new FormData();
+                formData.append("email", email);
+                formData.append("otp", otp);
+                formData.append("first_name", firstName);
+                formData.append("last_name", lastName);
+                formData.append("dob", dob);
         
                 fetch("/verify-otp/", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
                         "X-CSRFToken": csrfToken
                     },
-                    body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}&first_name=${encodeURIComponent(firstName)}&last_name=${encodeURIComponent(lastName)}&dob=${encodeURIComponent(dob)}`
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     alert(data.message);
                     if (data.status === "success") {
-                        if (data.redirect) {
-                            window.location.href = data.redirect;  // Use valid redirect
-                        } else {
-                            console.log("Redirect URL missing!");
-                        }
+                        console.log("OTP verified successfully.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        
+            // Submit Signup Form
+            signupForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent default form submission
+        
+                let formData = new FormData(signupForm);
+        
+                fetch("/sign-up/", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = data.redirect; // Redirect to sign-in page
+                    } else {
+                        alert(data.message); // Show error message
                     }
                 })
                 .catch(error => console.error("Error:", error));
             });
         });
+        
     </script>  
     <style>
     
