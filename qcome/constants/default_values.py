@@ -21,7 +21,9 @@ class Status(Enum):
 class Vehicle_Type(Enum):
     BIKE = 1
     CAR = 2
-=========
+    BOTH = 3
+
+    
 class PayType(Enum):
     CASH = 1
     CARD = 2
