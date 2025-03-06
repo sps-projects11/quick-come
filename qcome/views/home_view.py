@@ -8,7 +8,7 @@ class HomeView(View):
     
 class UserSigninView(View):
     def get(self, request):
-        return
+        return render(request, 'enduser\home\signup.html')
         
     def post(self, request):
         return
