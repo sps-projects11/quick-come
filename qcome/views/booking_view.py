@@ -1,21 +1,21 @@
 from django.views import View
-class PaymentListView(View):
+class BookingListView(View):
     def get(self,request):
         return
     
-class PaymentCreateView(View):
-    def get(self,request):
-        return
-    def post(self,request):
-        return
-    
-class PaymentUpdateView(View):
+class BookingCreateView(View):
     def get(self,request):
         return
     def post(self,request):
         return
     
-class PaymentDeleteView(View):
+class BookingUpdateView(View):
+    def get(self,request):
+        return
+    def post(self,request):
+        return
+    
+class BookingDeleteView(View):
     def get(self,request):
         return
     def post(self,request):
