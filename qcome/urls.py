@@ -53,4 +53,11 @@ urlpatterns = [
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
 
+    #Authentication
+    path('request-otp/', views.RequestOTPView.as_view(), name='request_otp'),
+    path('verify-otp/', views.VerifyOTPView.as_view(), name='verify_otp'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
+    path('register/', views.UserRegistrationView.as_view(), name='register'),
+    path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
+
 ]
