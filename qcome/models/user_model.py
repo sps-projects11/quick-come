@@ -15,6 +15,7 @@ class User(AbstractUser):
     )
     roles = models.IntegerField(
         choices=[(r.value, r.name) for r in Role],
+        db_default=Role.END_USER.value,
         blank=True,null=True
     )
 
