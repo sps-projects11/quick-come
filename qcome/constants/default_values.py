@@ -11,9 +11,17 @@ class Gender(Enum):
     FEMALE = 2
     OTHER = 3
 
-class Vichel_Type(Enum):
+class Status(Enum):
+    PENDING = 1
+    IN_PROGRESS = 2
+    COMPLETED = 3
+    CANCELLED = 4
+
+    
+class Vehicle_Type(Enum):
     BIKE = 1
     CAR = 2
+=========
 class PayType(Enum):
     CASH = 1
     CARD = 2
