@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Quick-come App{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="static\css\base.css">
 </head>
 <body style="height:100%; background:#2d6c8d40;">
 
@@ -55,79 +55,5 @@
 {% endblock %}
 
 
-<style>
-/* Custom Navbar Styles */
-.navbar-custom {
-    background: linear-gradient(45deg, #007bff, #6610f2);
-    padding: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-brand {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-}
-
-.navbar-nav .nav-link {
-    font-size:20px;
-    color: white;
-}
-
-.navbar-nav .nav-link:hover {
-    color: #f8d210;
-}
-
-.navbar-toggler {
-    border: none;
-}
-
-.navbar-toggler-icon {
-    background-color: white;
-}
-
-.dropdown-menu {
-    background-color: white;
-}
-
-.dropdown-item:hover {
-    background-color: #007bff;
-    color: white;
-}
-
-/* Search Input */
-.form-control {
-    border-radius: 20px;
-}
-
-/* Button */
-.btn-primary {
-    border-radius: 20px;
-    background-color: #f8d210;
-    border: none;
-    color: black;
-    font-weight: bold;
-}
-
-.btn-primary:active {
-    background-color: #ffcc00;
-}
-.logo-wrapper{
-    object-fit: cover;
-    width: 80px;
-    height: 80px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    display: flex;
-
-}
-
-.logo{
-    height: 100%;
-    width: 100%;
-    border-radius: 50%;
-}
-</style>
 </body>
 </html>
