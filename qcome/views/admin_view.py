@@ -4,7 +4,8 @@ from django.shortcuts import render
 
 class AdminHomeView(View):
     def get(self, request):
-        return
+        return render(request, 'adminuser/home/index.html')
+
     
 
 class AsminDashboard(View):
