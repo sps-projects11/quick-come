@@ -7,6 +7,8 @@ from django.conf import settings
 import random
 import time
 from ..models import User
+from django.contrib.auth.hashers import make_password
+
 
 class HomeView(View):
     def get(self, request):
@@ -16,9 +18,8 @@ class HomeView(View):
 OTP_STORAGE = {}
 
 class UserSignupView(View):
-    def get(self, request):
-        return render(request, "enduser/home/signup.html")
-
+    def get(self,request):
+        return render(request,  "enduser/home/signup.html")
     def post(self, request):
         email = request.POST.get("email")
         first_name = request.POST.get("first_name")
@@ -27,24 +28,25 @@ class UserSignupView(View):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
+        # Password confirmation check
         if password != confirm_password:
             return JsonResponse({"status": "error", "message": "Passwords do not match."})
 
+        # Check if email is verified
         if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
             return JsonResponse({"status": "error", "message": "Email not verified."})
 
-        user = User(
-            username=email,  # Set username as email
+        # Save user
+        user = User.objects.create(
             first_name=first_name,
             last_name=last_name,
             dob=dob,
-            email=email
+            email=email,
+            password=make_password(password)  # Hash password
         )
-        user.set_password(password)  # Hash password
-        user.save()
-
         del OTP_STORAGE[email]  # Remove OTP after successful registration
         return JsonResponse({"status": "success", "redirect": "/sign-in/"})
+
 
 class RequestOTPView(View):
     def get(self, request):
