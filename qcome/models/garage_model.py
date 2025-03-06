@@ -5,6 +5,7 @@ from ..constants import Vehicle_Type
 class Garage(models.Model):
     garage_name = models.CharField(max_length=50)
     garage_owner = models.CharField(max_length=50)
+    garage_image = models.URLField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=100)
     phone = models.CharField(max_length=10)
     vehicle_type = models.IntegerField(
