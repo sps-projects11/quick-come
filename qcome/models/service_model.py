@@ -2,6 +2,7 @@ from django.db import models
 
 class ServiceCatalog(models.Model):
     service_name = models.CharField(max_length=200)
+    service_image = models.URLField(max_length=200, null=True, blank=True)
     spare_part = models.CharField(max_length=200, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
