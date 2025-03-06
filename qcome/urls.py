@@ -3,8 +3,16 @@ from . import views
 
 urlpatterns = [
     # Home
-    path('', views.HomeView.as_view(), name='home'),
-    path('sign-in/', views.UserSigninView.as_view(), name='sign_in'),
+    path("", views.HomeView.as_view(), name="home"),
+    path("sign-up/", views.UserSignupView.as_view(), name="sign_up"),
+    path("sign-in/", views.UserSigninView.as_view(), name="sign_in"),
+    path("logout/", views.UserLogoutView.as_view(), name="logout"),
+    path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    
+    # Authentication
+    path("request-otp/", views.RequestOTPView.as_view(), name="request-otp"),
+    path("verify-otp/", views.VerifyOTPView.as_view(), name="verify-otp"),
 
     # Admin
     path('admin/', views.AdminHomeView.as_view(), name='myadmin'),
@@ -52,12 +60,4 @@ urlpatterns = [
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
-
-    #Authentication
-    path('request-otp/', views.RequestOTPView.as_view(), name='request_otp'),
-    path('verify-otp/', views.VerifyOTPView.as_view(), name='verify_otp'),
-    path('logout/', views.LogoutView.as_view(), name='logout'),
-    path('register/', views.UserRegistrationView.as_view(), name='register'),
-    path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
-
 ]

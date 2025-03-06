@@ -5,158 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick-come Signup</title>
     {% load static %}
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            height: 100vh;
-            overflow-y: scroll;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        
-        }
-        .wrapper {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-        .carousel-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 400px;
-            overflow: hidden;
-            position: relative;
-            background: #ffffff;
-            border-radius: 10px;
-        }
-        .carousel {
-            display: flex;
-            width: 100%;
-            transition: transform 0.6s ease-in-out;
-        }
-        .carousel img {
-            width: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-            border-radius: 10px;
-        }
-        .signup-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .signup-container h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .btn {
-            width: 100%;
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: #0056b3;
-        }
-        @media (max-width: 768px) {
-            .wrapper {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
 
-
-
-        /* General button styling */
-button {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Send OTP button */
-#sendOtp {
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    margin-left: 10px;
-}
-
-#sendOtp:hover {
-    background-color: #0056b3;
-}
-
-/* Verify OTP button */
-#verifyOtp {
-    margin-top: 10px;
-    background-color: #28a745;
-    color: white;
-    margin-left: 10px;
-}
-
-#verifyOtp:hover {
-    background-color: #218838;
-}
-
-/* Disable button style */
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Add spacing between form elements */
-.form-group {
-    margin-bottom: 15px;
-}
-
-/* Improve input fields */
-input {
-    font-size: 16px;
-    padding: 8px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 5px;
-}
-
-    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -168,30 +17,58 @@ input {
         </div>
         <div class="signup-container">
             <h2>Sign Up</h2>
-            <form id="signupForm">
+            <form id="signupForm" method="POST">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" id="first_name" name="first_name" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" required>
-                </div>
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>                
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" required>
-                    <button type="button" id="sendOtp">Send OTP</button>
+                    <label for="email">Email</label>
+                    <div class="input-row">
+                        <input type="email" id="email" name="email" required style="width: 68%;">
+                        <button type="button" id="sendOtp">Send OTP</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="otp">OTP Verification</label>
-                    <input type="text" id="otp" name="otp" required>
-                    <button type="button" id="verifyOtp">Verify OTP</button>
+                    <div class="input-row">
+                        <input type="text" id="otp" name="otp" required style="width: 68%;">
+                        <button type="button" id="verifyOtp">Verify OTP</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn">Sign Up</button>
-            </form>                       
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="signup-button">Sign Up</button>
+                </div>
+            </form>     
+            <div class="extra-links">
+                <a href="{% url 'sign_in' %}">Already have account </a>
+            </div>
         </div>
     </div>
+    
+
+    
     <script>
         let currentIndex = 0;
         const slides = document.querySelectorAll(".carousel img");
@@ -213,59 +90,252 @@ input {
 
 
 
-
-
-
         document.addEventListener("DOMContentLoaded", function () {
             let sendOtpButton = document.getElementById("sendOtp");
             let verifyOtpButton = document.getElementById("verifyOtp");
+            let signupForm = document.getElementById("signupForm");
         
+            // Send OTP
             sendOtpButton.addEventListener("click", function () {
-                let phone = document.getElementById("phone").value;
+                let email = document.getElementById("email").value;
         
-                if (!phone) {
-                    alert("Please enter your phone number.");
+                if (!email) {
+                    alert("Please enter your email address.");
                     return;
                 }
         
-                fetch(`/request-otp/?phone=${phone}`)
+                fetch(`/request-otp/?email=${encodeURIComponent(email)}`)
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.message);
+                        alert(data.message); // Show user feedback
                     })
                     .catch(error => console.error("Error:", error));
             });
         
+            // Verify OTP
             verifyOtpButton.addEventListener("click", function () {
-                let phone = document.getElementById("phone").value;
+                let email = document.getElementById("email").value;
                 let otp = document.getElementById("otp").value;
+                let firstName = document.getElementById("first_name").value;
+                let lastName = document.getElementById("last_name").value;
+                let dob = document.getElementById("dob").value;
                 let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
         
-                if (!phone || !otp) {
-                    alert("Both phone number and OTP are required.");
+                if (!email || !otp || !dob) {
+                    alert("Email, OTP, and DOB are required.");
                     return;
                 }
+        
+                let formData = new FormData();
+                formData.append("email", email);
+                formData.append("otp", otp);
+                formData.append("first_name", firstName);
+                formData.append("last_name", lastName);
+                formData.append("dob", dob);
         
                 fetch("/verify-otp/", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
                         "X-CSRFToken": csrfToken
                     },
-                    body: `phone=${phone}&otp=${otp}`
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     alert(data.message);
                     if (data.status === "success") {
-                        window.location.href = data.redirect;  // Redirect on success
+                        console.log("OTP verified successfully.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        
+            // Submit Signup Form
+            signupForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent default form submission
+        
+                let formData = new FormData(signupForm);
+        
+                fetch("/sign-up/", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = data.redirect; // Redirect to sign-in page
+                    } else {
+                        alert(data.message); // Show error message
                     }
                 })
                 .catch(error => console.error("Error:", error));
             });
         });
         
+    </script>  
+    <style>
+    
+            .form-row {
+                display: flex;
+                gap: 15px;
+            }
+            .form-group {
+                flex: 1;
+            }
+            .input-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .button-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            .signup-button {
+                width: 100%;
+                max-width: 300px;
+                padding: 10px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+            .signup-button:hover {
+                background-color: #0056b3;
+            }
+
         
-    </script>
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .wrapper {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 30px;
+        }
+        
+        /* Carousel Styles */
+        .carousel-container {
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 10px;
+        }
+        
+        .carousel {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+        
+        .carousel img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        /* Signup Form Styles */
+        .signup-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .signup-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            font-size: 12px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* Button Styles */
+        button {
+            background-color: #007bff;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        #sendOtp, #verifyOtp {
+            margin-left: 10px;
+        }
+        
+        #verifyOtp {
+            background-color: #28a745;
+        }
+        
+        #verifyOtp:hover {
+            background-color: #218838;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wrapper {
+                flex-direction: column;
+            }
+        }
+        
+    </style>       
 </body>
 </html>
