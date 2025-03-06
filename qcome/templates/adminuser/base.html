@@ -2,37 +2,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Quick-come Admin{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+  <title>{% block title %}Quick-come Admin{% endblock %}</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Bootstrap Bundle & jQuery -->
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    body {
+      background-color: #CCFFFF;
+    }
+    /* Add top margin to account for fixed navbar (adjust height as needed) */
+    .center-bodycontent {
+      margin-top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      scroll-behavior: auto;
+    }
+    .offcanvas {
+      transition: transform 0.6s ease-in-out !important;
+    }
+    .modal-content {
+      box-shadow: none !important;
+    }
+    
+    
+    .profile-section {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      background-color: #f8f9fa;
+    }
+    .profile-section img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+    }
+
+  </style>
 </head>
-<body style="height:100%; background:#2d6c8d40;">
 
-<!-- Navbar Start -->
-<nav class="navbar navbar-expand-lg navbar-custom" style="height:15vh; padding:10px;">
-    <div class="container" style="height: 100%;">
-        <div class="logo-wrapper">
-            <img src="{% static 'all-Pictures/logo.jpg' %}" class="logo">
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Services</a></li>                
-            </ul>
-        </div>
+<body>
+  <!-- Admin Panel Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-info fixed-top">
+    <div class="container-fluid">
+      <button class="btn btn-info me-3" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
     </div>
-</nav>
-<!-- Navbar End -->
+  </nav>
 
-{% block content %}{% endblock %}
+  <!-- Admin Menu (Offcanvas Sidebar) -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+    <div class="offcanvas-header">
+      <h5 id="sidebarLabel">Admin Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
 
+      <!-- Profile Section at the top -->
+      <div class="profile-section d-flex align-items-center">
+        <img src="{% static '/all-Pictures/admin-person.jpg' %}" alt="Profile" class="rounded-circle me-2">
+        <div>
+          <div class="fw-bold">John Doe</div>
+          <small>Admin</small>
+        </div>
+      </div>
+
+      <div class="list-group">
+
+        <!-- Admin Dashboard-->
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action">
+            <i class="bi bi-display"></i> Dashboard
+          </a>
+        </div>
+
+        <!-- Accordion Menu -->
+        <div class="accordion" id="accordionContainer">
+
+          <!-- Profile -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                      data-bs-target="#profile" aria-expanded="false" aria-controls="profile">
+                <i class="bi bi-person-circle me-2"></i> Profile
+              </button>
+            </h2>
+            <div id="profile" class="accordion-collapse collapse" data-bs-parent="#accordionContainer">
+              <div class="accordion-body p-0">
+                <div class="list-group">
+                  <a href="{% url 'user_profile' %}" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-person-check me-2"></i> My Profile
+                  </a>
+                  <a href="{% url 'logout' %}" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Users -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#users" aria-expanded="false" aria-controls="users">
+                <i class="bi bi-person-fill-gear me-2"></i> Users
+              </button>
+            </h2>
+            <div id="users" class="accordion-collapse collapse" data-bs-parent="#accordionContainer">
+              <div class="accordion-body p-0">
+                <div class="list-group">
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-people me-2"></i>List
+                  </a>
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-person-add me-2"></i> Create
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Garage -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#garage" aria-expanded="false" aria-controls="garage">
+                <i class="bi bi-car-front me-2"></i> Garage
+              </button>
+            </h2>
+            <div id="garage" class="accordion-collapse collapse" data-bs-parent="#accordionContainer">
+              <div class="accordion-body p-0">
+                <div class="list-group">
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-wrench me-2"></i>List
+                  </a>
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-gear me-2"></i> Create
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#service" aria-expanded="false" aria-controls="service">
+                <i class="bi bi-gear-wide-connected me-2"></i> Service
+              </button>
+            </h2>
+            <div id="service" class="accordion-collapse collapse" data-bs-parent="#accordionContainer">
+              <div class="accordion-body p-0">
+                <div class="list-group">
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-tools me-2"></i> List
+                  </a>
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-plus-circle me-2"></i> Create
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#payment" aria-expanded="false" aria-controls="payment">
+                <i class="bi bi-cash-stack me-2"></i> Payment
+              </button>
+            </h2>
+            <div id="payment" class="accordion-collapse collapse" data-bs-parent="#accordionContainer">
+              <div class="accordion-body p-0">
+                <div class="list-group">
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-file-earmark-text me-2"></i> List
+                  </a>
+                  <a href="" class="list-group-item list-group-item-action ps-4">
+                    <i class="bi bi-plus-circle me-2"></i> Create
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div> <!-- End accordion -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content Area -->
+  <div class="center-bodycontent">
+    <main class="container">
+      {% block content %}
+      <!-- Page-specific content will go here -->
+      {% endblock %}
+    </main>
+  </div>
+
+  <script>
+     // Adjust sidebar width responsively
+    const sidebar = document.getElementById("sidebar");
+    function updateSidebarWidth() {
+      if (window.innerWidth > 992) {
+        sidebar.classList.add("w-25");
+        sidebar.classList.remove("w-50");
+      } else {
+        sidebar.classList.add("w-50");
+        sidebar.classList.remove("w-25");
+      }
+    }
+    window.addEventListener("resize", updateSidebarWidth);
+    updateSidebarWidth();
+  </script>
 </body>
 </html>
