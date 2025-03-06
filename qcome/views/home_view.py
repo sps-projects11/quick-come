@@ -8,6 +8,12 @@ import random
 import time
 from ..models import User
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class HomeView(View):
@@ -108,6 +114,68 @@ class UserLogoutView(View):
         logout(request)
         request.session.flush()  # Destroy session
         return redirect("/sign-in/")
+    
+
+
+
+
+
+class PasswordResetView(View):
+    def get(self, request):
+        return render(request, 'enduser/home/password_reset.html')
+
+    def post(self, request):
+        email = request.POST.get("email")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "User with this email does not exist."})
+
+        # Generate password reset token
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        reset_link = f"{settings.SITE_URL}/password-reset-confirm/{uid}/{token}/"
+
+        # Send reset email
+        send_mail(
+            subject="Password Reset Request",
+            message=f"Click the link to reset your password: {reset_link}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({"status": "success", "message": "Password reset link sent to your email."})
+
+
+class PasswordResetConfirmView(View):
+    def get(self, request, uidb64, token):
+        return render(request, 'enduser/home/password_reset_confirm.html', {"uidb64": uidb64, "token": token})
+
+    def post(self, request, uidb64, token):
+        new_password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            return JsonResponse({"status": "error", "message": "Passwords do not match."})
+
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+
+            if not default_token_generator.check_token(user, token):
+                return JsonResponse({"status": "error", "message": "Invalid or expired token."})
+
+            user.password = make_password(new_password)
+            user.save()
+
+            return JsonResponse({"status": "success", "redirect": "/sign-in/"})
+
+        except (User.DoesNotExist, ValueError, TypeError):
+            return JsonResponse({"status": "error", "message": "Invalid reset link."})
+
 
     
 class ChangeMyThemeView(View):
