@@ -7,7 +7,7 @@ urlpatterns = [
     path('sign-in/', views.UserSigninView.as_view(), name='sign_in'),
 
     # Admin
-    path('admin/', views.AdminHomeView.as_view(), name='admin'),
+    path('admin/', views.AdminHomeView.as_view(), name='myadmin'),
     path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
 
     # Admin-Profile Management
