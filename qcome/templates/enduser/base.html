@@ -12,15 +12,10 @@
 <body style="height:100%; background:#2d6c8d40;">
 
 <!-- Navbar Start -->
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container">
+<nav class="navbar navbar-expand-lg navbar-custom" style="height:15vh; padding:10px;">
+    <div class="container" style="height: 100%;">
         <div class="logo-wrapper">
-            <div class="logo-div">
-                <img src="\static\logo.jpg" style="height:60px;width:100px;">
-            </div>
-            <div class="title-div">
-                <p class="navbar-brand">Quick-come</p>
-            </div>
+            <img src="\static\logo.jpg" class="logo">
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -69,19 +64,14 @@
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: bold;
     color: black;
 }
 
 .navbar-nav .nav-link {
-    justify-content: center;
-    align-items: end;
-    display: flex;
-    position: absolute;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: black;
+    font-size:20px;
+    color: white;
 }
 
 .navbar-nav .nav-link:hover {
@@ -123,13 +113,20 @@
     background-color: #ffcc00;
 }
 .logo-wrapper{
+    object-fit: cover;
+    width: 80px;
+    height: 80px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
 
 }
-.logo-div{
 
-}
-.title-div{
-    
+.logo{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
 }
 </style>
 </body>
