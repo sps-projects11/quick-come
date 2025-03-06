@@ -16,7 +16,7 @@ class EnduserProfileUpdate(View):
     def get(self, request, user_id):
         return
     
-    def post(self, request, service_id):
+    def post(self, request, user_id):
         return
     
 

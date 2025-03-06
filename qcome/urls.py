@@ -27,28 +27,30 @@ urlpatterns = [
     path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
 
-
-
-    # Garage paths
+    # Garage
     path('garages/', views.GarageListView.as_view(), name='garage_list'),
     path('garages/create/<int:garage_id>/', views.GarageCreateView.as_view(), name='garage_create'),
     path('garages/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garages/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 
-    #Booking Paths
+    #Booking
     path('booking/',views.BookingListView.as_view(), name='booking_list'),
     path('booking/create/<int:booking_id>/',views.BookingCreateView.as_view(), name='booking_create'),
     path('booking/update/<int:booking_id>/',views.BookingUpdateView.as_view(), name='booking_update'),
     path('booking/delete/<int:booking_id>/',views.BookingDeleteView.as_view(), name='booking_delete'),
 
+    # Work
+    path('work/', views.WorkListView.as_view(), name='work'),
+    path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
 
-    #Payment Paths
+    # Billing
+    path('billing/', views.BillingHomeView.as_view, name='billing,'),
+    path('billing/<int:billing_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
+
+    #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
-
-
-    #
 
 ]
