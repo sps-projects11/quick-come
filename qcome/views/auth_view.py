@@ -183,3 +183,5 @@ class PasswordResetConfirmView(View):
 
         except (User.DoesNotExist, ValueError, TypeError):
             return JsonResponse({"status": "error", "message": "Invalid reset link."})
+
+

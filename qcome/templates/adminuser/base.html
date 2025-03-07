@@ -204,6 +204,12 @@
       <a class="navbar-brand position-absolute start-50 translate-middle-x" href="#">
         Admin Dashboard
       </a>
+
+      <div class="ms-auto">
+        <!-- Logout button -->
+        <a href="{% url 'logout_myadmin' %}" class="btn btn-outline-light me-2">Logout</a>
+      </div>
+
     </div>
   </nav>
 
@@ -221,6 +227,22 @@
         <i class="bi bi-speedometer2 sidebar-icon"></i>
         <span class="sidebar-text">Dashboard</span>
       </a>
+
+      <!-- Profile with submenu -->
+      <div class="sidebar-dropdown">
+        <a href="#" class="list-group-item parent-item">
+          <i class="bi bi-person-circle"></i>
+          <span class="sidebar-text">Profile</span>
+          <i class="bi bi-chevron-down sidebar-caret"></i>
+        </a>
+        <div class="submenu">
+          <div class="submenu-header">Profile</div>
+          <hr class="submenu-divider">
+          <a href="#"><i class="bi bi-person-check"></i>My Profile</a>
+          <a href="{% url 'logout_myadmin' %}"><i class="bi bi-box-arrow-right"></i>Log Out</a>
+        </div>
+      </div>
+
       <!-- Users with submenu -->
       <div class="sidebar-dropdown">
         <a href="#" class="list-group-item parent-item">
