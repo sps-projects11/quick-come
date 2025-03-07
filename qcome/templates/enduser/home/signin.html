@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="login-container">
-        <form class="login-form" method="post" action="{% url 'sign_in' %}">
+        <form id="signin-form" class="login-form" method="post" action="{% url 'sign_in' %}">
             {% csrf_token %}
             <h2>Login</h2>
             
@@ -29,6 +29,33 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById("signin-form").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent normal form submission
+            
+            let formData = new FormData(this);
+
+            fetch("{% url 'sign_in' %}", {  // Send request to sign-in view
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    window.location.href = data.redirect;  // Redirect to home page
+                } else {
+                    alert(data.message);  // Show error message
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+
+
 
     <style>
         /* Reset some default styles */

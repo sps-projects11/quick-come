@@ -11,6 +11,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.contrib.auth.hashers import check_password
+
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -87,6 +89,10 @@ class VerifyOTPView(View):
 
         return JsonResponse({"status": "error", "message": "Invalid OTP."})
 
+
+
+
+
 class UserSigninView(View):
     def get(self, request):
         return render(request, "enduser/home/signin.html")
@@ -94,15 +100,20 @@ class UserSigninView(View):
     def post(self, request):
         email = request.POST.get("email")
         password = request.POST.get("password")
+        print("email:", email, "password:", password)
 
-        user = authenticate(request, username=email, password=password)
-
-        if user is not None:
-            login(request, user)
-            request.session["email"] = user.email  # Store email in session
-            return JsonResponse({"status": "success", "redirect": "/home/"})
-        else:
+        try:
+            user = User.objects.get(email=email)  # Get user by email
+            if check_password(password, user.password):  # Check hashed password
+                login(request, user)  # Log in user
+                request.session["email"] = user.email  # Store email in session
+                return JsonResponse({"status": "success", "redirect": "/"})
+            else:
+                return JsonResponse({"status": "error", "message": "Invalid email or password."})
+        except User.DoesNotExist:
             return JsonResponse({"status": "error", "message": "Invalid email or password."})
+
+
 
 class UserLogoutView(View):
     def get(self, request):
