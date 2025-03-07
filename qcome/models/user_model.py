@@ -6,7 +6,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50)
-    dob = models.DateField(null=False,blank=False)
+    dob = models.DateField(null=False, blank=False)
     profile_photo_url = models.URLField(max_length=200, null=True, blank=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=10)
@@ -17,16 +17,17 @@ class User(AbstractUser):
     roles = models.IntegerField(
         choices=[(r.value, r.name) for r in Role],
         db_default=Role.END_USER.value,
-        blank=True,null=True
+        blank=True, null=True
     )
-
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  # Fixed `auto_created=True`
+    updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     
+    # Use email as the username field.
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
 
     class Meta:

@@ -15,6 +15,8 @@ urlpatterns = [
     path("verify-otp/", views.VerifyOTPView.as_view(), name="verify-otp"),
 
     # Admin
+    path('login/admin/', views.LoginAdminView.as_view(), name='login_myadmin'),
+    path('log-out/admin/', views.LoginOutAdminView.as_view(), name='logout_myadmin'),
     path('admin/', views.AdminHomeView.as_view(), name='myadmin'),
     path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
 
