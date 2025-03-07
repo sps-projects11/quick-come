@@ -1,6 +1,7 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from ..decorators import auth_required, role_required
+from ..constants import Role
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages  # For user feedback
 
@@ -33,9 +34,8 @@ class LoginOutAdminView(View):
         return redirect("/login/admin/")
 
 
-
 @auth_required(login_url='/login/admin/')
-@role_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminHomeView(View):
     def get(self, request):
         return render(request, 'adminuser/home/index.html')
