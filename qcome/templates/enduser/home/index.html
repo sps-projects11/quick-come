@@ -1,82 +1,164 @@
 {% extends "enduser/base.html" %}
-
-{% block title %}Quick-come Home{% endblock %}
+{% block title %}Quick Come Home{% endblock %}
 {%load static %}
-
-
-
 {% block content %}
+<!-- SwiperJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<script src="static/js/home.js"></script>
 
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-    .carousel-container {
-        width: 80%;
-        height: 400px;
-        margin: auto;
-        overflow: hidden;
-        position: relative;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .carousel {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.6s ease-in-out;
-    }
-    .carousel img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        flex-shrink: 0;
-        border-radius: 10px;
-        background-color: #f0f0f0;
-    }
-    .prev, .next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        border: none;
-        padding: 12px;
-        cursor: pointer;
-        border-radius: 50%;
-        font-size: 24px;
-        transition: background 0.3s ease;
-    }
-    .prev:hover, .next:hover {
-        background: rgba(0, 0, 0, 0.9);
-    }
-    .prev { left: 15px; }
-    .next { right: 15px; }
-</style>
-
-<div class="carousel-container">
-    <div class="carousel">
-        <img src="https://cdn.wearemarmalade.co.uk/wam/2020-12/car-service.jpg" alt="Slide 1">
-        <img src="https://cdn.wearemarmalade.co.uk/wam/2020-12/car-service.jpg" alt="Slide 1">
-        <img src="https://cdn.wearemarmalade.co.uk/wam/2020-12/car-service.jpg" alt="Slide 1">
-        <img src="https://tse2.mm.bing.net/th?id=OIP.1YdWloi9jKvby6RCSxgJSgHaE8&pid=Api&P=0&h=180" alt="Slide 2">
-        <img src="https://tse4.mm.bing.net/th?id=OIP.SL_0pxhC0SbBisnD-TgI5AHaDa&pid=Api&P=0&h=180" alt="Slide 3">
+<!-- Hero section -->
+<div id="hero" class="swiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide hero-slide" style="background-image: url('static/all-Pictures/carousel/Lamborghini Revuelto-4.jpg');">
+            <div class="hero-content">
+                <h1><span>Fast</span> & Reliable Car Repairs</h1>
+                <p>Get your car fixed anytime, anywhere.</p>
+                <button class="cta-button">Book a Service</button>
+            </div>
+        </div>
+        <div class="swiper-slide hero-slide" style="background-image: url('static/all-Pictures/carousel/c3.jpg');">
+            <div class="hero-content">
+                <h1><span>24/7</span> Emergency Car Service</h1>
+                <p>Stuck somewhere? Don't worry, we're here to help!</p>
+                <button class="cta-button">Get Immediate Help</button>
+            </div>
+        </div>
+        <div class="swiper-slide hero-slide" style="background-image: url('static/all-Pictures/carousel/c1.avif');">
+            <div class="hero-content">
+                <h1><span>Professional</span> Mechanics </h1>
+                <p>Expert car repair assistance at your doorstep.</p>
+                <button class="cta-button">Call a Mechanic</button>
+            </div>
+        </div>
     </div>
-    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-    <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    
+    <!-- Navigation Buttons -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
 </div>
 
-<script>
-    let index = 0;
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel img');
-    function moveSlide(direction) {
-        index += direction;
-        if (index < 0) index = slides.length - 1;
-        if (index >= slides.length) index = 0;
-        carousel.style.transform = `translateX(-${index * 100}%)`;
-    }
-</script>
+
+<!-- Feature section -->
+<section id="feature" class="section-p1">
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/location.jpg" alt="">
+        </div>
+        <h6>Fast Roadside Assistance</h6>
+    </div>
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/online_car_booking_4x.jpg" alt="">
+        </div>
+        <h6>Book Service Online</h6>
+    </div>
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/save-money.png" alt="">
+        </div>
+        <h6>Affordable Pricing</h6>
+    </div>
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/promotion.png" alt="">
+        </div>
+        <h6>Special Offers & Discounts</h6>
+    </div>
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/th.jpeg" alt="">
+        </div>
+        <h6>Trusted Mechanics</h6>
+    </div>
+    <div class="fe-box">
+        <div class="img-container">
+            <img src="static/all-Pictures/Feature boxes/24hservice.avif" alt="">
+        </div>
+        <h6>24/7 Emergency Support</h6>
+    </div>
+</section>
+
+
+
+
+<!-- Services section -->
+
+<section id="services" class="container">
+    <h2>Our Services</h2>
+    <div class="services-grid">
+        <div class="service-card">
+            <i class="fas fa-car-battery"></i>
+            <h3>Battery Service</h3>
+            <p>Jump start and battery replacement services available 24/7.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-tools"></i>
+            <h3>Mechanical Repair</h3>
+            <p>On-spot mechanical repairs by certified technicians.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-gas-pump"></i>
+            <h3>Fuel Delivery</h3>
+            <p>Emergency fuel delivery when you're stranded.</p>
+        </div>
+        <div class="service-card">
+            <i class="fas fa-tire">🛞</i>
+            <h3>Tire Service</h3>
+            <p>Flat tire change and repair services.</p>
+        </div>
+    </div>
+</section>
+
+<!-- How it works section -->
+<section id="how-it-works" class="container">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Request Service</h3>
+            <p>Fill out our emergency form with your details and location.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Quick Response</h3>
+            <p>Our nearest technician will be assigned to your case.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Problem Solved</h3>
+            <p>Get your car fixed and back on the road quickly.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Payment</h3>
+            <p>Now you enjoy your ride.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- Banner1 section -->
+<section class="ride-section" style="background-image: url('static/all-Pictures/banners/bb1.png');background-size: cover;background-position: center;">
+    <div class="ride-content">
+        <h2>Booking quickly In Just , <br>Few Steps</h2>
+        <p>In Quick Come we ensure our customers get Solution quickly at the most affordable prices.</p>
+        <button class="ride-cta-button">Book a service →</button>
+    </div>
+    <div class="ride-image-grid">
+        <img src="static\all-Pictures\banners\Royal-Enfield-Classic-350.jpg" alt="">
+        <img src="static\all-Pictures\banners\swift.jpg" alt="">
+        <img src="static\all-Pictures\banners\worker.jpg" alt="">
+        <img src="static\all-Pictures\banners\worker-car-workshop-young-woman-happy-273058864.webp" alt="">
+    </div>
+</section>
+
+<!-- Banner2 section -->
+<section id="banner" class="section-m1">
+    <h1>Flexible Hours & High Earnings</h1>
+    <h2><span>Hurry Up</span> - Join as a Quick Come Expart Mechanic and earn on your own terms. </h2>
+    <button class="normal">Explore More</button>
+</section>
+
 {% endblock %}
