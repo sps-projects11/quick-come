@@ -33,7 +33,6 @@ urlpatterns = [
 
     # User-Profile
     path('profile/', views.EnduserProfileView.as_view(), name='user_profile'),
-    path('create/profile/', views.EnduserProfileCreate.as_view(), name='profile_create' ),
     path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
 
@@ -66,4 +65,5 @@ urlpatterns = [
     #check authentication
     path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
     path('api/check-login/', views.CheckLoginStatusUnauthenticated.as_view(), name='check-login-unauthenticated'),
+
 ]
