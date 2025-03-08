@@ -18,6 +18,9 @@ urlpatterns = [
     path('login/admin/', views.LoginAdminView.as_view(), name='login_myadmin'),
     path('log-out/admin/', views.LoginOutAdminView.as_view(), name='logout_myadmin'),
     path('admin/', views.AdminHomeView.as_view(), name='myadmin'),
+    path('admin/profile/', views.AdminProfileView.as_view(), name='myadmin_profile'),
+    path('admin/profile/update', views.AdminProfileUpdateView.as_view(), name='myadmin_profile_update'),
+    path('admin/password/update', views.AdminPasswordUpdateView.as_view(), name='myadmin_password_update'),
     path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
 
     # Admin-Profile Management
