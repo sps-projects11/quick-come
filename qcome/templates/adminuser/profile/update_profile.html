@@ -1,0 +1,64 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Profile Update{% endblock %}
+
+{% block navbar_extra %}
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+    Admin Profile
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2 class="mb-4 text-center">Update Profile</h2>
+      <form method="POST" action="{% url 'myadmin_profile_update' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_first_name" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="id_first_name" name="first_name" 
+                 value="{{ user.first_name|default:'' }}" placeholder="Enter your first name" required>
+        </div>
+        <div class="mb-3">
+          <label for="id_middle_name" class="form-label">Middle Name</label>
+          <input type="text" class="form-control" id="id_middle_name" name="middle_name" 
+                 value="{{ user.middle_name|default:'' }}" placeholder="Enter your middle name">
+        </div>
+        <div class="mb-3">
+          <label for="id_last_name" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="id_last_name" name="last_name" 
+                 value="{{ user.last_name|default:'' }}" placeholder="Enter your last name">
+        </div>
+        <div class="mb-3">
+          <label for="id_email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="id_email" name="email" 
+                 value="{{ user.email|default:'' }}" placeholder="Enter your email" required>
+        </div>
+        <div class="mb-3">
+          <label for="id_phone" class="form-label">Phone</label>
+          <input type="text" class="form-control" id="id_phone" name="phone" 
+                 value="{{ user.phone|default:'' }}" placeholder="Enter your phone number">
+        </div>
+        <div class="mb-3">
+          <label for="id_gender" class="form-label">Gender</label>
+          <input type="text" class="form-control" id="id_gender" name="gender" 
+                 value="{{ user.gender|default:'' }}" placeholder="Enter your gender">
+        </div>
+        <div class="mb-3">
+          <label for="id_dob" class="form-label">DOB</label>
+          <input type="date" class="form-control" id="id_dob" name="dob" 
+                 value="{{ user.dob|date:'Y-m-d'|default:'' }}" required>
+        </div>
+        <div class="mb-3">
+          <label for="id_profile_photo" class="form-label">Profile Photo</label>
+          <input type="file" class="form-control" id="id_profile_photo" name="profile_photo">
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
