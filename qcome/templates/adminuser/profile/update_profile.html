@@ -41,10 +41,14 @@
                  value="{{ user.phone|default:'' }}" placeholder="Enter your phone number">
         </div>
         <div class="mb-3">
-          <label for="id_gender" class="form-label">Gender</label>
-          <input type="text" class="form-control" id="id_gender" name="gender" 
-                 value="{{ user.gender|default:'' }}" placeholder="Enter your gender">
-        </div>
+            <label for="id_gender" class="form-label">Gender</label>
+            <select class="form-control" id="id_gender" name="gender">
+              <option value="">Select Gender</option>
+              <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
+              <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
+              <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
+            </select>
+          </div>          
         <div class="mb-3">
           <label for="id_dob" class="form-label">DOB</label>
           <input type="date" class="form-control" id="id_dob" name="dob" 
