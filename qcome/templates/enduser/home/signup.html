@@ -62,7 +62,7 @@
                 </div>
             </form>     
             <div class="extra-links">
-                <a href="{% url 'sign_in' %}">Already have account </a>
+                <a href="{% url 'sign_in' %}" style="text-decoration: none;">Already have account </a>
             </div>
         </div>
     </div>
@@ -261,6 +261,9 @@
         
         /* Signup Form Styles */
         .signup-container {
+            flex-direction: column;
+            display: flex;
+            gap: 10px;
             background: white;
             padding: 20px;
             border-radius: 10px;
