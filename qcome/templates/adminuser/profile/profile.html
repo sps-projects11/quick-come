@@ -1,0 +1,187 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Profile{% endblock %}
+
+{% block navbar_extra %}  
+        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+        Admin Profile
+      </a> 
+{% endblock %}
+
+{% block content %}
+
+<div id="profile-container">
+  <div class="profile-row">
+    <!-- Left column: Profile Picture & Basic Info -->
+    <div class="profile-col-left">
+      <img id="profile-picture" src="{% static user.profile_photo_url %}" alt="User Avatar">
+      <h3 class="profile-title">{{ user.get_full_name }}</h3>
+    </div>
+
+    <!-- Right column: Profile Details -->
+    <div class="profile-col-right">
+      <div class="profile-card">
+        <div class="profile-card-header">
+          Profile Information
+        </div>
+        <div class="profile-card-body">
+          <div><strong>Email:</strong> {{ user.email }}</div>
+          <div><strong>Phone:</strong>
+            {% if user.phone %}
+              {{ user.phone }}
+            {% else %}
+              No Phone Number Yet
+            {% endif %}
+          </div>
+          <div><strong>DOB:</strong> {{ user.dob|date:"F j, Y" }}</div>
+          <div><strong>Gender:</strong>
+            {% if user.gender %}
+              {{ user.gender }}
+            {% else %}
+              No Gender Yet
+            {% endif %}
+          </div>
+          <div><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</div>
+        </div>
+      </div>
+      <div>
+        <a href="{% url 'myadmin_profile_update' %}" class="button button-primary">Edit Profile</a>
+        <a href="{% url 'myadmin_password_update' %}" class="button button-secondary">Change Password</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset body margins and add a background */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+/* Container for the entire profile page */
+#profile-container {
+  width: 100%;
+  max-width: 900px;  /* Reduced max width for a narrower body */
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Row container to hold columns */
+.profile-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+}
+
+/* Left column (profile picture and basic info) */
+.profile-col-left {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+/* Right column (profile details and actions) */
+.profile-col-right {
+  flex: 0 0 66.6666%;
+  max-width: 66.6666%;
+  padding: 0 1rem;
+}
+
+/* Style for the profile picture */
+#profile-picture {
+  display: block;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  padding: 3px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+}
+
+/* Profile title styling */
+.profile-title {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Card container for profile details */
+.profile-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+/* Card header styling */
+.profile-card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
+  font-weight: bold;
+}
+
+/* Card body styling */
+.profile-card-body {
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+/* Custom button base */
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+/* Primary button styling */
+.button-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.button-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Secondary button styling */
+.button-secondary {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+}
+
+.button-secondary:hover {
+  background-color: #565e64;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-col-left,
+  .profile-col-right {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
+  .profile-row {
+    flex-direction: column;
+    margin: 0;
+  }
+}
+</style>
+
+{% endblock %}
