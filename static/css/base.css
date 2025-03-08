@@ -418,5 +418,18 @@ footer .copyright {
     footer .col-install .pay{
         height: 140px;
     }
-}    
+} 
+
+#profile-dropdown{
+    top: 10%;
+    right: 5%;
+    display: block;
+    position: fixed;
+    display: none;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+
   
