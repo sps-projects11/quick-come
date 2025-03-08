@@ -1,4 +1,5 @@
 from django.views import View
+from qcome.services import user_service
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
@@ -184,4 +185,14 @@ class PasswordResetConfirmView(View):
         except (User.DoesNotExist, ValueError, TypeError):
             return JsonResponse({"status": "error", "message": "Invalid reset link."})
 
+class CheckLoginStatus(View):
+    """Handles checking login status for authenticated users."""
+    def get(self, request):
+        if request.user.is_authenticated:
+            return JsonResponse(user_service.get_user_profile(request.user.id))
+        return JsonResponse({"logged_in": False, "profile_photo_url": None})
 
+class CheckLoginStatusUnauthenticated(View):
+    """Handles unauthenticated user response."""
+    def get(self, request):
+        return JsonResponse({"logged_in": False, "profile_photo_url": None})
