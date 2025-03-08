@@ -1,0 +1,312 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Hero Section */
+#hero {
+    height: 92vh;
+    overflow: hidden;
+}
+
+.hero-slide {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--white);
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    padding: 0 1rem;
+}
+
+.swiper-pagination {
+    bottom: 20px;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+.hero-content h1 span{
+    font-size: 40px;
+    background-color: aqua;
+    padding: 5px 28px 5px 28px;
+    border-radius: 12px;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* Buttons */
+.cta-button, .submit-button {
+    background-color: #ffca20;
+    color: var(--white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover, .submit-button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Feature section */
+
+#feature {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0; /* Adds spacing between items */
+}
+
+#feature .fe-box {
+    background-color: #fff;
+    width: 200px; /* Increased width for better layout */
+    text-align: center;
+    padding: 20px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #cce7d0;
+    border-radius: 10px;
+    margin: 10px;
+    position: relative;
+}
+
+#feature .fe-box:hover {
+    box-shadow: 10px 10px 54px rgba(70, 62, 221, 0.1);
+}
+
+/* Create a circular div around the image */
+#feature .fe-box .img-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    background-color: #f8f8f8;
+    border: 2px solid #cce7d0;
+}
+
+/* Make sure all images fit inside the circle */
+#feature .fe-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures images maintain proportion */
+}
+
+/* Fixed position and size for h6 */
+#feature .fe-box h6 {
+    display: inline-block;
+    padding: 10px;
+    line-height: 1;
+    border-radius: 4px;
+    color: #088178;
+    background-color: #fddde4;
+    width: 80%;
+    margin: 0 auto;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Background color variations */
+#feature .fe-box:nth-child(2) h6 { background-color: #cdebbc; }
+#feature .fe-box:nth-child(3) h6 { background-color: #d1e8f2; }
+#feature .fe-box:nth-child(4) h6 { background-color: #cdd4f8; }
+#feature .fe-box:nth-child(5) h6 { background-color: #f6bdf6; }
+#feature .fe-box:nth-child(6) h6 { background-color: #fff2e5; }
+
+
+/* Emergency Form */
+.form-container {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+/* Services Section */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.service-card {
+    background-color: #ffca20;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* How It Works Section */
+.steps-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.step {
+    text-align: center;
+    padding: 2rem;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-weight: bold;
+}
+
+/* Banner1 Section */
+.ride-section {
+    display: flex;
+    height: 65vh;
+    align-items: center;
+    width: 100%;
+    padding: 40px;
+}
+
+.ride-content {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.ride-content h2 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #222;
+}
+
+.ride-content p {
+    font-size: 16px;
+    color: #fff;
+    margin: 15px 0;
+}
+
+.ride-cta-button {
+    display: inline-block;
+    background: #222;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.ride-image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.ride-image-grid img {
+    width: 240px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+
+/* Banner2 Section */
+#banner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: url("https://okcredit-blog-images-prod.storage.googleapis.com/2021/02/automobilerepair1-1.jpg");
+    width: 100%;
+    height: 80vh;
+    background-size: cover;
+    background-position: center;
+}
+#banner h4{
+    color: #fff;
+    font-size: 16px;
+}
+
+#banner h2{
+    font-weight: 500;
+    color: #000;
+    font-size: 30px;
+    padding: 10px 0;
+}
+
+#banner h2 span{
+    color: #000;
+    font-size: 40px;
+    background-color: #ffca20;
+    padding: 5px 28px 5px 28px;
+    border-radius: 12px;
+}
+
+#banner button:hover{
+    background-color: #ffca20;
+}
+
+
+
