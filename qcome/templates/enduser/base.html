@@ -22,20 +22,35 @@
     
     <div>
         <ul id="navber">
-
-            <li><a class="active" href="#">Home</a></li>
+            <li><a class="active" href="/">Home</a></li>
             <li><a href="#">Services</a></li>    
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Blog</a></li>
             <form class="d-flex ms-3"><input class="form-control me-2" type="search" placeholder="Search"></form>
-            <li id="lg-bag"><a href="sign-in/"><i class="fas fa-user-circle" style="font-size: 18px;"></i></a></li>
+            <li id="lg-bag">
+                <a id="profile-link" href="sign-in/">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </li>
+            <!-- Dropdown Menu (Initially Hidden) -->
+            <div id="profile-dropdown" >
+                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
+                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+            </div>
             <a href="#" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>
     <div id="mobile">
         <a href="#"><i class="fas fa-search"></i></a>
-        <a href="sign-in/"><i class="fas fa-user-circle"></i></a>
+        <a id="profile-link" href="sign-in/">
+            <i class="fas fa-user-circle"></i>
+        </a>
+        <!-- Dropdown Menu (Initially Hidden) -->
+        <div id="profile-dropdown">
+            <a href="/profile" style="display: block; padding: 8px;">Profile</a>
+            <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+        </div>
         <i id="bar" class="fas fa-outdent"></i>
     </div>
 </section>
@@ -97,7 +112,6 @@
     </div>
 </footer>
 <!-- Footer End -->
-
 
 </body>
 </html>
