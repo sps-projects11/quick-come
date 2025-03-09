@@ -1,21 +1,3 @@
-    fetch('/api/check-login/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.logged_in) {
-                document.getElementById('profile-link').innerHTML = `
-                    <img src="${data.profile_photo_url}" alt="Profile" style="width:40px; height:40px; border-radius:50%;">
-                `;
-            }
-        })
-        .catch(error => console.error('Error checking login status:', error));
-
-  
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
     fetch('/api/check-login/')
         .then(response => response.json())
