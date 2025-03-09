@@ -1,0 +1,28 @@
+# Virtual environment directories
+venv/
+env/
+.venv/
+.env/
+
+# Python cache and bytecode
+qcome/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# Django specific
+db.sqlite3
+
+# Migrations (if you really want to ignore them, but it's common to track these)
+migrations/
+
+# Environment files (with sensitive information)
+.env
+
+# Specific auto-generated environment configuration file
+env_config.cpython-313.py
+
+# OS-specific files
+.DS_Store
+Thumbs.db
