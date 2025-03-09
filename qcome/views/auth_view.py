@@ -199,8 +199,3 @@ class CheckLoginStatus(View):
         if request.user.is_authenticated:
             return JsonResponse(user_service.get_user_profile(request.user.id))
         return JsonResponse({"logged_in": False, "profile_photo_url": None})
-
-class CheckLoginStatusUnauthenticated(View):
-    """Handles unauthenticated user response."""
-    def get(self, request):
-        return JsonResponse({"logged_in": False, "profile_photo_url": None})
