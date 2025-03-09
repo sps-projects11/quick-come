@@ -69,5 +69,6 @@ urlpatterns = [
     path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
     path('api/check-login/', views.CheckLoginStatusUnauthenticated.as_view(), name='check-login-unauthenticated'),
 
+
 ]
 
