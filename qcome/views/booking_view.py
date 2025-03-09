@@ -1,7 +1,8 @@
 from django.views import View
+from django.shortcuts import render, redirect
 class BookingListView(View):
     def get(self,request):
-        return
+        return render(request, 'enduser/booking.html')
     
 class BookingCreateView(View):
     def get(self,request):
