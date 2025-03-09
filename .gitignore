@@ -30,3 +30,8 @@ env_config.cpython-313.py
 Thumbs.db
 __pycache__/
 __pycache__/
+
+# Ignore migration files
+qcome/migrations/*.py
+!qcome/migrations/__init__.py
+
