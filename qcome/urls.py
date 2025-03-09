@@ -41,13 +41,13 @@ urlpatterns = [
 
     # Garage
     path('garages/', views.GarageListView.as_view(), name='garage_list'),
-    path('garages/create/<int:garage_id>/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garages/create/', views.GarageCreateView.as_view(), name='garage_create'),
     path('garages/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garages/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 
     #Booking
     path('booking/',views.BookingListView.as_view(), name='booking_list'),
-    path('booking/create/<int:booking_id>/',views.BookingCreateView.as_view(), name='booking_create'),
+    path('booking/create/',views.BookingCreateView.as_view(), name='booking_create'),
     path('booking/update/<int:booking_id>/',views.BookingUpdateView.as_view(), name='booking_update'),
     path('booking/delete/<int:booking_id>/',views.BookingDeleteView.as_view(), name='booking_delete'),
 
@@ -69,4 +69,6 @@ urlpatterns = [
     path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
     path('api/check-login/', views.CheckLoginStatusUnauthenticated.as_view(), name='check-login-unauthenticated'),
 
+
 ]
+

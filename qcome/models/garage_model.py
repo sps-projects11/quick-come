@@ -3,8 +3,8 @@ from ..constants import Vehicle_Type
 
 
 class Garage(models.Model):
+    garage_owner = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_garage_users_id')
     garage_name = models.CharField(max_length=50)
-    garage_owner = models.CharField(max_length=50)
     garage_image = models.URLField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=100)
     phone = models.CharField(max_length=10)

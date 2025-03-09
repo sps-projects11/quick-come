@@ -1,5 +1,4 @@
 from django.db import models
-from ..constants import Gender
 
 
 class Worker(models.Model):
