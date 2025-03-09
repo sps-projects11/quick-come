@@ -1,0 +1,35 @@
+    .profile-pic{
+        justify-content: center;
+        align-items: center;
+        display: flex ;
+        object-fit: cover;
+        border: 2px solid black;
+        border-radius: 50%;
+        height: 140px;
+        width: 140px;
+    }
+    .profile-container {
+        scrollbar-width: none;
+        overflow-y: scroll;
+        padding: 2% 10% 2% 10%;
+        background: #c8d6e2;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        position: relative;
+        height: 80vh;
+    }   
+    .wrapper{
+        height: 100%;
+        padding: 30px;
+        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
+        display: flex;
+        width: 100%;
+    }   
+    
+    @media (max-width: 480px) {
+
+    }
