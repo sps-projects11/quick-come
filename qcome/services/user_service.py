@@ -16,3 +16,14 @@ def get_user_profile(user_id):
         }
     
     return {"logged_in": False, "profile_photo_url": None}  # Handle case where user does not exist
+
+
+def get_user_details(user_id):
+    data=User.objects.filter(id=user_id,is_active=True).values('id','first_name','last_name','profile_photo_url').first()
+    print(data)
+    if data:
+        return{
+            'id':data['id'],
+            'fullname':f"{data['first_name']} {data['last_name']}",
+            'photo': data["profile_photo_url"] or '/static/all-Pictures/apps/avatar.jpg'
+        }
