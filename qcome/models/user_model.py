@@ -27,7 +27,7 @@ class User(AbstractUser):
     date_joined = models.DateTimeField(auto_now_add=True)
 
 
-        # fields required for abstract user
+    # fields required for abstract user
     groups = None
     user_permissions = None
     username = models.CharField(max_length=128, blank=True, null=True)    
@@ -36,7 +36,7 @@ class User(AbstractUser):
     
     # Use email as the username field.
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
         db_table = 'users'
