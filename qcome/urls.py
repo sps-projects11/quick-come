@@ -3,21 +3,24 @@ from . import views
 
 urlpatterns = [
     # Home
-    path("", views.HomeView.as_view(), name="home"),
-    path("sign-up/", views.UserSignupView.as_view(), name="sign_up"),
-    path("sign-in/", views.UserSigninView.as_view(), name="sign_in"),
-    path("logout/", views.UserLogoutView.as_view(), name="logout"),
+    path('', views.HomeView.as_view(), name='home'),
+    path('sign-up/', views.UserSignupView.as_view(), name='sign_up'),
+    path('sign-in/', views.UserSigninView.as_view(), name='sign_in'),
+    path('logout/', views.UserLogoutView.as_view(), name='logout'),
     path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    
+
     # Authentication
-    path("request-otp/", views.RequestOTPView.as_view(), name="request-otp"),
-    path("verify-otp/", views.VerifyOTPView.as_view(), name="verify-otp"),
+    path('request-otp/', views.RequestOTPView.as_view(), name='request-otp'),
+    path('verify-otp/', views.VerifyOTPView.as_view(), name='verify-otp'),
 
     # Admin
     path('login/admin/', views.LoginAdminView.as_view(), name='login_myadmin'),
     path('log-out/admin/', views.LoginOutAdminView.as_view(), name='logout_myadmin'),
     path('admin/', views.AdminHomeView.as_view(), name='myadmin'),
+    path('admin/profile/', views.AdminProfileView.as_view(), name='myadmin_profile'),
+    path('admin/profile/update', views.AdminProfileUpdateView.as_view(), name='myadmin_profile_update'),
+    path('admin/password/update', views.AdminPasswordUpdateView.as_view(), name='myadmin_password_update'),
     path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
 
     # Admin-Profile Management
@@ -33,7 +36,6 @@ urlpatterns = [
 
     # User-Profile
     path('profile/', views.EnduserProfileView.as_view(), name='user_profile'),
-    path('create/profile/', views.EnduserProfileCreate.as_view(), name='profile_create' ),
     path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
 
@@ -62,4 +64,9 @@ urlpatterns = [
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
+
+    #check authentication
+    path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
+    path('api/check-login/', views.CheckLoginStatusUnauthenticated.as_view(), name='check-login-unauthenticated'),
+
 ]
