@@ -15,7 +15,7 @@ class BookingListView(View):
 class BookingCreateView(View):
     def get(self,request):
         user=request.user
-        return render(request, 'enduser/booking.html')
+        return render(request, 'enduser/Booking/booking.html')
     
     def post(self,request):
         return
