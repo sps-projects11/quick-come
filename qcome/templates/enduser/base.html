@@ -13,6 +13,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="/static/js/base.js"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+  <!-- Toat Message Implemention Css & Js -->
+  <script>
+    window.djangoMessages = [
+      {% for message in messages %}
+        {
+          "tags": "{{ message.tags }}",
+          "message": "{{ message|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ];
+    console.log("djangoMessages:", window.djangoMessages);  // Debug output
+  </script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Include external toast script -->
+  <script src="{% static 'js/toast_message.js' %}"></script>
+
+  <!-- End Toast-->
+
 </head>
 <body>
 
@@ -23,21 +45,12 @@
     <div>
         <ul id="navber">
             <li><a class="active" href="/">Home</a></li>
-            <li><a href="#">Services</a></li>    
-            <li><a href="#">About</a></li>
+            <li><a href="/booking/create/">Services</a></li>    
+            <li><a href="{% url 'booking_create' %}">About</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Blog</a></li>
             <form class="d-flex ms-3"><input class="form-control me-2" type="search" placeholder="Search"></form>
-            <li id="lg-bag">
-                <a id="profile-link" href="sign-in/">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-            </li>
-            <!-- Dropdown Menu (Initially Hidden) -->
-            <div id="profile-dropdown" >
-                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
-            </div>
+            <li id="lg-bag"><a href="sign-in/"><i class="fas fa-user-circle" style="font-size: 18px;"></i></a></li>
             <a href="#" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>

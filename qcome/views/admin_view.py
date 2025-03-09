@@ -71,8 +71,9 @@ class AdminProfileView(View):
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminPasswordUpdateView(View):
     def get(self, request):
+        return render(request, 'adminuser/login/forgot_password.html')
+    def post(self, request):
         return
-    
 
 
 @auth_required(login_url='/login/admin/')
@@ -91,9 +92,7 @@ class AdminProfileUpdateView(View):
         gender_str = request.POST.get('gender', '').strip()  # gender as string initially
         dob_str = request.POST.get('dob', '').strip()  # expected in YYYY-MM-DD format
 
-
         user = user_service.get_user(auth_user.id)
-        print("POST data:", request.POST)
         gender = None
         if gender_str:
             try:
@@ -107,7 +106,7 @@ class AdminProfileUpdateView(View):
             try:
                 dob = datetime.datetime.strptime(dob_str, '%Y-%m-%d').date()
             except ValueError:
-                messages.error(request, "Invalid date format for DOB. Please use YYYY-MM-DD.")
+                messages.error(request, ErrorMessage.E00002.value)
                 return redirect('myadmin_profile')
 
         # Call your admin service to update the profile
