@@ -11,8 +11,29 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Bootstrap Bundle & jQuery -->
-  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Toat Message Implemention Css & Js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  {% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    {% for message in messages %}
+      Swal.fire({
+        icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% elif message.tags == "warning" %}warning{% else %}info{% endif %}',
+        title: "{{ message|escapejs }}",
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    {% endfor %}
+  });
+</script>
+{% endif %}
+
 
   <style>
     body {
@@ -178,7 +199,7 @@
     }
     /* Main Content Area */
     .center-bodycontent {
-      margin-top: 56px;
+      margin-top: 90px;
       margin-left: 60px;
       transition: margin-left 0.3s ease;
       height: calc(100vh - 56px);
@@ -192,6 +213,13 @@
       border-top-left-radius: 0 !important;
       border-top-right-radius: 0 !important;
     }
+
+    .sidebar-icon {
+      display: inline-block;
+      width: 30px;
+      text-align: center;
+    }
+    
   </style>
 </head>
 <body>
@@ -201,9 +229,12 @@
       <button class="btn btn-info me-3" id="sidebarToggle">
         <i class="bi bi-list"></i>
       </button>
-      <a class="navbar-brand position-absolute start-50 translate-middle-x" href="#">
+      {% comment %} <a class="navbar-brand position-absolute start-50 translate-middle-x" href="#">
         Admin Dashboard
-      </a>
+      </a> {% endcomment %}
+
+       <!-- Extra navbar content goes here -->
+    {% block navbar_extra %}{% endblock %}
 
       <div class="ms-auto">
         <!-- Logout button -->
@@ -217,13 +248,13 @@
   <div id="sidebar">
     <!-- Profile Section -->
     <div class="profile-section">
-      <img src="{% static '/all-Pictures/admin-person.jpg' %}" alt="Profile" class="rounded-circle">
-      <div class="profile-text">John Doe</div>
+      <img src="{% static user.profile_photo_url %}" alt="Profile" class="rounded-circle">
+      <div class="profile-text">{{user.get_full_name}}</div>
     </div>
     <!-- Menu -->
     <div class="list-group">
       <!-- Dashboard with hover tooltip and highlight effect -->
-      <a href="#" class="list-group-item dashboard" data-title="Dashboard">
+      <a href="{% url 'admin_dashboard' %}" class="list-group-item dashboard" data-title="Dashboard">
         <i class="bi bi-speedometer2 sidebar-icon"></i>
         <span class="sidebar-text">Dashboard</span>
       </a>
@@ -231,15 +262,16 @@
       <!-- Profile with submenu -->
       <div class="sidebar-dropdown">
         <a href="#" class="list-group-item parent-item">
-          <i class="bi bi-person-circle"></i>
+          <i class="bi bi-person-circle sidebar-icon me-3"></i>
+
           <span class="sidebar-text">Profile</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
         </a>
         <div class="submenu">
           <div class="submenu-header">Profile</div>
           <hr class="submenu-divider">
-          <a href="#"><i class="bi bi-person-check"></i>My Profile</a>
-          <a href="{% url 'logout_myadmin' %}"><i class="bi bi-box-arrow-right"></i>Log Out</a>
+          <a href="{% url 'myadmin_profile' %}"><i class="bi bi-person-check me-3"></i>My Profile</a>
+          <a href="{% url 'logout_myadmin' %}"><i class="bi bi-box-arrow-right me-3"></i>Log Out</a>
         </div>
       </div>
 
