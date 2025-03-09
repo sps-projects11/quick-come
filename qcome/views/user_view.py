@@ -11,7 +11,7 @@ class EnduserProfileView(View):
     def get(self, request):
         user_id=request.user.id
         user_details=user_service.get_user_details(user_id)
-        return render(request,'enduser/user_profile.html',{'user':user_details})
+        return render(request,'enduser/Profile/user_profile.html',{'user':user_details})
     
 
 class EnduserProfileCreate(View):
