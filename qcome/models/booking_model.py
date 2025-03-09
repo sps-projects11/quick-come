@@ -10,7 +10,7 @@ class Booking(models.Model):
     )
     current_location = models.CharField(max_length=255, null=False, blank=False)
     service = models.ForeignKey('ServiceCatalog', on_delete=models.CASCADE, blank=False, null=False)
-
+    description = models.CharField(blank=True,null=True,max_length=255)
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
