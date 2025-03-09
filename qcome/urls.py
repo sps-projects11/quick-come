@@ -13,6 +13,7 @@ urlpatterns = [
     # Authentication
     path('request-otp/', views.RequestOTPView.as_view(), name='request-otp'),
     path('verify-otp/', views.VerifyOTPView.as_view(), name='verify-otp'),
+    path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
 
     # Admin
     path('login/admin/', views.LoginAdminView.as_view(), name='login_myadmin'),
@@ -65,9 +66,6 @@ urlpatterns = [
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
 
-    #check authentication
-    path('api/check-login/', views.CheckLoginStatus.as_view(), name='check-login'),
-    path('api/check-login/', views.CheckLoginStatusUnauthenticated.as_view(), name='check-login-unauthenticated'),
 
 
 ]
