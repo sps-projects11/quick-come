@@ -9,6 +9,8 @@ qcome/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+__pycache__/
+*.pyc
 
 
 # Django specific
@@ -26,3 +28,6 @@ env_config.cpython-313.py
 # OS-specific files
 .DS_Store
 Thumbs.db
+env_config.py
+__pycache__/
+__pycache__/
