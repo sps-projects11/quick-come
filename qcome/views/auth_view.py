@@ -13,6 +13,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.hashers import check_password
+from ..constants.error_message import ErrorMessage
+from ..constants.success_message import SuccessMessage
+from ..package.response import success_response,error_response
+
 
 
 from django.contrib.auth import get_user_model
@@ -56,12 +60,15 @@ class RequestOTPView(View):
     def get(self, request):
         email = request.GET.get("email")
         if not email:
-            return JsonResponse({"status": "error", "message": "Email required."})
+            return JsonResponse(error_response(ErrorMessage.E00003.value))
+        
         if User.objects.filter(email=email).exists():
-            return JsonResponse({"status": "error", "message": "Email is already registered."})
+            return JsonResponse(error_response(ErrorMessage.E00004.value))
 
         otp = random.randint(100000, 999999)
         OTP_STORAGE[email] = {"otp": otp, "verified": False, "timestamp": time.time()}
+
+        print(f"Your {email} OTP is: {otp}")
 
         send_mail(
             subject="Your OTP Code",
@@ -71,7 +78,11 @@ class RequestOTPView(View):
             fail_silently=False,
         )
 
-        return JsonResponse({"status": "success", "message": "OTP sent to your email."})
+        msg = f"An OTP has been sent to {email}. Please check your email." # custom OTP Success Message
+        
+        return JsonResponse(success_response(msg), status=200)
+
+
 
 class VerifyOTPView(View):
     def post(self, request):
@@ -84,16 +95,13 @@ class VerifyOTPView(View):
 
             if time.time() - otp_timestamp > 300:
                 del OTP_STORAGE[email]
-                return JsonResponse({"status": "error", "message": "OTP expired. Please request a new one."})
+                return JsonResponse(error_response(ErrorMessage.E00005.value))
 
             if stored_otp == int(otp):
                 OTP_STORAGE[email]["verified"] = True
-                return JsonResponse({"status": "success", "message": "OTP verified."})
+                return JsonResponse(success_response(SuccessMessage.S00004.value))
 
-        return JsonResponse({"status": "error", "message": "Invalid OTP."})
-
-
-
+        return JsonResponse(error_response(ErrorMessage.E00006.value))
 
 
 class UserSigninView(View):
