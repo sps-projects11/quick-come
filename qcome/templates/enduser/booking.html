@@ -1,0 +1,79 @@
+{% extends "enduser/base.html" %}
+{% block title %}Quick Come Home{% endblock %}
+{%load static %}
+{% block content %}
+<!-- SwiperJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
+
+<section id="emergency-form" class="container">
+    <div class="form-container">
+        <h2>Request Emergency Service</h2>
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Current Location" required>
+            </div>
+            <div class="form-group">
+                <select required>
+                    <option value="">Select Issue Type</option>
+                    <option value="battery">Battery Issues</option>
+                    <option value="tire">Flat Tire</option>
+                    <option value="fuel">Out of Fuel</option>
+                    <option value="mechanical">Mechanical Problem</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Describe your problem"></textarea>
+            </div>
+            <button type="submit" class="submit-button">Send Request</button>
+        </form>
+    </div>
+</section>
+
+
+<style>
+    /* Emergency Form */
+.form-container {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+</style>
+
+{% endblock %}
