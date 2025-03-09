@@ -25,6 +25,14 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+
+
+        # fields required for abstract user
+    groups = None
+    user_permissions = None
+    username = models.CharField(max_length=128, blank=True, null=True)    
+    is_staff = models.BooleanField(db_default=False, blank=True)  # To allow admin access
+    is_superuser = models.BooleanField(db_default=False, blank=True)  # Superuser status
     
     # Use email as the username field.
     USERNAME_FIELD = 'email'
