@@ -28,6 +28,10 @@ env_config.cpython-313.py
 # OS-specific files
 .DS_Store
 Thumbs.db
-env_config.py
 __pycache__/
 __pycache__/
+
+# Ignore migration files
+qcome/migrations/*.py
+!qcome/migrations/__init__.py
+
