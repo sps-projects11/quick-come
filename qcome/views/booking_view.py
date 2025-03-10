@@ -58,8 +58,7 @@ class BookingCreateView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
-@auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+
 class BookingUpdateView(View):
     def get(self, request, booking_id):
         """Show the booking form with existing booking data for update."""

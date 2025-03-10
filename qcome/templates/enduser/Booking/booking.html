@@ -8,7 +8,7 @@
 
 <section id="emergency-form" class="container">
     <div class="form-container">
-        <h2>Booking a Service</h2>
+        <h2>{% if booking %}Update Booking{% else %}Booking a Service{% endif %}</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -18,35 +18,40 @@
                 <input type="tel" name="customer_phone" value="{{ user_phone }}" placeholder="Phone Number" required>
             </div>
             <div class="form-group">
-                <input type="text" name="current_location" id="current_location" placeholder="Current Location" required>
+                <input type="text" name="current_location" id="current_location" 
+                       value="{% if booking %}{{ booking.current_location }}{% endif %}" 
+                       placeholder="Current Location" required>
             </div>
             <div class="form-group">
                 <select name="vehicle_type" required>
                     <option value="">Vehicle Type</option>
-                    <option value="1">Car</option>
-                    <option value="2">Bike</option>
-                    <option value="3">Toto</option>
-                    <option value="4">Auto Riksha</option>
-                    <option value="5">Other</option>
+                    <option value="1" {% if booking.vehicle_type == "1" %}selected{% endif %}>Car</option>
+                    <option value="2" {% if booking.vehicle_type == "2" %}selected{% endif %}>Bike</option>
+                    <option value="3" {% if booking.vehicle_type == "3" %}selected{% endif %}>Toto</option>
+                    <option value="4" {% if booking.vehicle_type == "4" %}selected{% endif %}>Auto Riksha</option>
+                    <option value="5" {% if booking.vehicle_type == "5" %}selected{% endif %}>Other</option>
                 </select>
             </div>
             <div class="form-group">
                 <select name="service" required>
                     <option value="">Select Service</option>
                     {% for service in services %}
-                        <option value="{{ service.id }}">{{ service.service_name }}</option>
+                        <option value="{{ service.id }}" {% if booking.service.id == service.id %}selected{% endif %}>
+                            {{ service.service_name }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
-            
             <div class="form-group">
-                <textarea name="description" placeholder="Describe your problem"></textarea>
+                <textarea name="description" placeholder="Describe your problem">{% if booking %}{{ booking.description }}{% endif %}</textarea>
             </div>
-            <button type="submit" class="submit-button">Submit</button>
+            <button type="submit" class="submit-button">
+                {% if booking %}Update{% else %}Submit{% endif %}
+            </button>
         </form>
-        
     </div>
 </section>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
