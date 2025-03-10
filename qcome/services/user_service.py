@@ -26,3 +26,27 @@ def get_user_details(user_id):
     except User.DoesNotExist:
         return None
 
+def update_user_details(user, data, files):
+    user.first_name = data.get('first_name')
+    user.middle_name = data.get('middle_name')
+    user.last_name = data.get('last_name')
+    user.email = data.get('email')
+    user.phone = data.get('phone')
+
+    gender = data.get('gender')
+    if gender == 'Male':
+        user.gender = 1
+    elif gender == 'Female':
+        user.gender = 2
+    elif gender == 'Other':
+        user.gender = 3
+
+    user.dob = data.get('dob')
+
+    if 'profile_picture' in files:
+        user.profile_picture = files['profile_picture']
+
+    user.save()
+    return user
+
+
