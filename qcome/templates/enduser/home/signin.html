@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/sigin.css' %}"> 
+   <script src="{% static 'js/signin.js' %}" defer></script>
+
+   <script>
+    window.djangoMessages = [
+      {% for message in messages %}
+        {
+          "tags": "{{ message.tags }}",
+          "message": "{{ message|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ];
+    console.log("djangoMessages:", window.djangoMessages);  // Debug output
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Include external toast script -->
+  <script src="{% static 'js/toast_message.js' %}"></script>
 </head>
 <body>
     <div class="login-container">
@@ -30,114 +51,6 @@
         </form>
     </div>
 
-    <script>
-        document.getElementById("signin-form").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent normal form submission
-            
-            let formData = new FormData(this);
-
-            fetch("{% url 'sign_in' %}", {  // Send request to sign-in view
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    window.location.href = data.redirect;  // Redirect to home page
-                } else {
-                    alert(data.message);  // Show error message
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        });
-    </script>
-
-
-
-    <style>
-        /* Reset some default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.login-container {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-
-h2 {
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.input-group {
-    text-align: left;
-    margin-bottom: 1rem;
-}
-
-.input-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.login-btn {
-    width: 100%;
-    padding: 10px;
-    background: #667eea;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.login-btn:hover {
-    background: #764ba2;
-}
-
-.extra-links {
-    margin-top: 10px;
-}
-
-.extra-links a {
-    color: #667eea;
-    text-decoration: none;
-    font-size: 14px;
-    margin: 0 5px;
-}
-
-.extra-links a:hover {
-    text-decoration: underline;
-}
-</style>
+  
 </body>
 </html>
