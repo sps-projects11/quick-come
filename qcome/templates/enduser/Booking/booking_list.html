@@ -5,27 +5,109 @@
 <!-- SwiperJS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
+<section id="booking_details">
+    <h2>Your Bookings</h2>
+    <table>
+        <tr>
+            <th>Booking ID</th>
+            <th>Location</th>
+            <th>Vehicle Type</th>
+            <th>Service Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.current_location }}</td>
+            <td>{{ booking.get_vehicle_type_display }}</td>
+            <td>{{ booking.service.service_name }}</td>
+            <td>{{ booking.description|default:"No description" }}</td>
+            <td>{{ booking.is_active|yesno:"Active,Cancelled" }}</td>
+            <td>
+                <!-- Edit Button -->
+                <a href="{% url 'booking_update' booking.id %}"><button class="btn btn-primary">Edit</button></a>
 
-<h2>Your Bookings</h2>
-<table>
-    <tr>
-        <th>Booking ID</th>
-        <th>Location</th>
-        <th>Vehicle Type</th>
-        <th>Service</th>
-        <th>Status</th>
-    </tr>
-    {% for booking in bookings %}
-    <tr>
-        <td>{{ booking.id }}</td>
-        <td>{{ booking.current_location }}</td>
-        <td>{{ booking.get_vehicle_type_display }}</td>
-        <td>{{ booking.service.name }}</td>
-        <td>{{ booking.is_active|yesno:"Active,Cancelled" }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">No bookings found.</td></tr>
-    {% endfor %}
-</table>
+                <!-- Delete Form -->
+                <form action="{% url 'booking_delete' booking.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this booking?');">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No bookings found.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+
+
+
+<style>
+    #booking_details{
+        padding: 20px;
+    }
+    .btn btn-primary{
+        text-decoration: none;
+    }
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 100% 0;
+    font-size: 18px;
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s;
+}
+
+h2 {
+    margin-top: 30px;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+td {
+    color: #555;
+}
+
+/* Responsive Table */
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 10px;
+    }
+}
+
+</style>
 
 {% endblock %}
