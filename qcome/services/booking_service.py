@@ -1,13 +1,21 @@
 from ..models import Booking, ServiceCatalog
+from django.db.utils import IntegrityError
 
 def get_booking_list():
     """Fetch all active bookings."""
     return Booking.objects.filter(is_active=True)
 
 def create_booking(user, current_location, vehicle_type, service_id, description):
-    """Create a new booking for the user."""
+    """Allow only one booking per user."""
     try:
-        service = ServiceCatalog.objects.get(id=int(service_id))  # Convert to integer
+        service_id = int(service_id)
+        service = ServiceCatalog.objects.get(id=service_id)
+
+        # Check if the user already has ANY booking (active or inactive)
+        if Booking.objects.filter(customer=user).exists():
+            return "already_exists"  # Indicate that the user already booked
+
+        # Create a new booking
         booking = Booking.objects.create(
             customer=user,
             current_location=current_location,
@@ -18,9 +26,11 @@ def create_booking(user, current_location, vehicle_type, service_id, description
             updated_by=user
         )
         return booking
-    except (ServiceCatalog.DoesNotExist, ValueError):
-        return None  # Handle this case in the view
 
+    except ServiceCatalog.DoesNotExist:
+        return None  # Service does not exist
+    except (ValueError, Exception):
+        return "error"  # Handle unexpected errors
 
 def update_booking(booking_id, data):
     """Update an existing booking."""
