@@ -25,7 +25,7 @@ class BookingCreateView(View):
         services = ServiceCatalog.objects.filter(is_active=True)  # Fetch active services
         return render(request, 'enduser/Booking/booking.html', {
             'user_name': f"{user.first_name} {user.last_name}",
-            'user_phone': user.phone,
+            'user_phone': user.phone if user.phone else "",  # Default text
             'services': services  # Pass services to template
         })
     
