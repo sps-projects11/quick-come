@@ -6,15 +6,15 @@
 <div class="profile-container">
     <form method="POST" enctype="multipart/form-data" class="mt-4" action="">
         {% csrf_token %}  
-        <div class="image-card" style="background-color:red;">
-        <div class="text-center mb-4">
-            <div class="position-relative d-inline-block mt-3">
-                <img id="profilePic" src="{% static user_details.profile_photo_url |default:'static/all-Pictures/apps/avatar.jpg' %}" alt="Profile" class="rounded-circle" style="width: 125px; height: 125px;">
-                <button type="button" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle" onclick="selectImage()">+</button>
-                <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
+        <div class="image-card">
+            <div class="text-center mb-4">
+                <div class="position-relative d-inline-block mt-3" style="width: 125px; height: 125px; background-color: black; border-radius: 50%;">
+                    <img id="profilePic" src="{% static user_detaits.profile_photo_url|default:'' %}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                    <button type="button" class="btn btn-primary position-absolute top-50 start-50 translate-middle rounded-circle" onclick="selectImage()">+</button>
+                    <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
+                </div>
             </div>
-        </div> 
-    </div> 
+        </div>   
             <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="firstName" class="form-label"><i class="bi bi-person"></i> First Name</label>
@@ -77,11 +77,12 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById("profilePic").src = e.target.result;
+                    document.querySelector('.btn-primary').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
             }
         }
-        </script>
+    </script>    
 {% endblock %}
 
 
