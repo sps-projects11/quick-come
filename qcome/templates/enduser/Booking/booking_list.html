@@ -5,7 +5,7 @@
 <!-- SwiperJS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
-
+<section id="booking_details">
 <h2>Your Bookings</h2>
 <table>
     <tr>
@@ -27,5 +27,68 @@
     <tr><td colspan="5">No bookings found.</td></tr>
     {% endfor %}
 </table>
+</section>
+
+
+<style>
+    #booking_details{
+        padding: 20px;
+    }
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 100% 0;
+    font-size: 18px;
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s;
+}
+
+h2 {
+    margin-top: 30px;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+td {
+    color: #555;
+}
+
+/* Responsive Table */
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 10px;
+    }
+}
+
+</style>
 
 {% endblock %}
