@@ -1,0 +1,31 @@
+{% extends "enduser/base.html" %}
+{% block title %}Quick Come Home{% endblock %}
+{%load static %}
+{% block content %}
+<!-- SwiperJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
+
+<h2>Your Bookings</h2>
+<table>
+    <tr>
+        <th>Booking ID</th>
+        <th>Location</th>
+        <th>Vehicle Type</th>
+        <th>Service</th>
+        <th>Status</th>
+    </tr>
+    {% for booking in bookings %}
+    <tr>
+        <td>{{ booking.id }}</td>
+        <td>{{ booking.current_location }}</td>
+        <td>{{ booking.get_vehicle_type_display }}</td>
+        <td>{{ booking.service.name }}</td>
+        <td>{{ booking.is_active|yesno:"Active,Cancelled" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">No bookings found.</td></tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
