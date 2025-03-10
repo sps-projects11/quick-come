@@ -6,10 +6,8 @@
     <title>Login</title>
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'css/sigin.css' %}"> 
-   <script src="{% static 'js/signin.js' %}" defer></script>
-
-   <script>
+  <!-- Toat Message Implemention Css & Js -->
+  <script>
     window.djangoMessages = [
       {% for message in messages %}
         {
@@ -20,15 +18,22 @@
     ];
     console.log("djangoMessages:", window.djangoMessages);  // Debug output
   </script>
+  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <!-- Include external toast script -->
   <script src="{% static 'js/toast_message.js' %}"></script>
+
+  <!-- End Toast-->
+
+  <link rel="stylesheet" href="{% static 'css/sigin.css' %}"> 
+  <script src="{% static 'js/signin.js' %}" defer></script>
+
 </head>
 <body>
     <div class="login-container">
-        <form id="signin-form" class="login-form" method="post" action="{% url 'sign_in' %}">
+        <form id="signin-form" class="login-form" method="post">
             {% csrf_token %}
             <h2>Login</h2>
             
