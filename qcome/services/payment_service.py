@@ -19,10 +19,10 @@ def create_payment(request, booking_id):
         payment = Payment.objects.create(
             booking=booking,
             type=data.get('type'),
-            bank_ac=data.get('bank_ac'),
+            bank_ac=data.get('bank_ac') or None,
             amount=data.get('amount'),
             pay_status=data.get('pay_status'),
-            created_by_id=data.get('created_by'),
+            created_by=data.get('created_by'),
         )
 
         return {"message": "✅ Payment created successfully", "payment_id": payment.id}
