@@ -8,36 +8,64 @@
 
 <section id="emergency-form" class="container">
     <div class="form-container">
-        <h2>Request Emergency Service</h2>
-        <form>
+        <h2>Booking a Service</h2>
+        <form method="post">
+            {% csrf_token %}
             <div class="form-group">
-                <input type="text" placeholder="Your Name" required>
+                <input type="text" name="customer_name" value="{{ user_name }}" placeholder="Your Name" required>
             </div>
             <div class="form-group">
-                <input type="tel" placeholder="Phone Number" required>
+                <input type="tel" name="customer_phone" value="{{ user_phone }}" placeholder="Phone Number" required>
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Current Location" required>
+                <input type="text" name="current_location" id="current_location" placeholder="Current Location" required>
             </div>
             <div class="form-group">
-                <select required>
-                    <option value="">Select Issue Type</option>
-                    <option value="battery">Battery Issues</option>
-                    <option value="tire">Flat Tire</option>
-                    <option value="fuel">Out of Fuel</option>
-                    <option value="mechanical">Mechanical Problem</option>
-                    <option value="other">Other</option>
+                <select name="vehicle_type" required>
+                    <option value="">Vehicle Type</option>
+                    <option value="1">Car</option>
+                    <option value="2">Bike</option>
+                    <option value="3">Toto</option>
+                    <option value="4">Auto Riksha</option>
+                    <option value="5">Other</option>
                 </select>
             </div>
             <div class="form-group">
-                <textarea placeholder="Describe your problem"></textarea>
+                <select name="service" required>
+                    <option value="">Select Service</option>
+                    {% for service in services %}
+                        <option value="{{ service.id }}">{{ service.service_name }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <button type="submit" class="submit-button">Send Request</button>
+            
+            <div class="form-group">
+                <textarea name="description" placeholder="Describe your problem"></textarea>
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
+        
     </div>
 </section>
 
-
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.getElementById("current_location").value =
+                        position.coords.latitude + ", " + position.coords.longitude;
+                },
+                function (error) {
+                    console.error("Error getting location:", error);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    });
+    </script>
+    
 <style>
     /* Emergency Form */
 .form-container {
@@ -46,7 +74,7 @@
     border-radius: 1rem;
     box-shadow: var(--shadow);
     max-width: 600px;
-    margin: 0 auto;
+    margin: 40px auto;
 }
 
 .form-container h2 {
@@ -72,6 +100,22 @@
 .form-group textarea {
     height: 120px;
     resize: vertical;
+}
+/* Buttons */
+.cta-button, .submit-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover, .submit-button:hover {
+    background-color: var(--secondary-color);
 }
 
 </style>

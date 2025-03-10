@@ -1,72 +1,51 @@
 {% extends "enduser/base.html" %}
-{%load static %}
-{% block title %}Payment Gateway {% endblock %}
-{% block content%}
-    
-    <h2>Make a Payment</h2>
-    <form id="paymentForm">
-        <label>Email:</label>
-        <input type="email" id="email" required>
+{% load static %}
+{% block title %}Payment Gateway{% endblock %}
 
-        <label>Amount:</label>
-        <input type="number" id="amount" required>
+{% block content %}
+   <link rel="stylesheet" href="{% static 'css/payment.css' %}"> 
+   <script src="{% static 'js/payment.js' %}" defer></script>
 
-        <label>Payment Method:</label>
-        <select id="paymentMethod">
-            <option value="UPI">UPI</option>
-            <option value="NetBanking">Net Banking</option>
-        </select>
+   <div class="wrapper">
+      <div class="payment-container">
+         <h2>Make a Payment</h2>
+         <div class="form-wrapper">
+            <form id="paymentForm">
+                {% csrf_token %}
+                <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+                
+                <label>Payment Method:</label>
+                <select id="paymentMethod" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="UPI">UPI</option>
+                    <option value="NetBanking">Net Banking</option>
+                    <option value="CashOnDelivery">Cash On Delivery</option>
+                </select>
 
-        <div id="upiSection">
-            <label>UPI ID:</label>
-            <input type="text" id="upiId">
-        </div>
+                <label>Amount:</label>
+                <input type="number" id="amount" required>
 
-        <div id="netBankingSection" style="display:none;">
-            <label>Bank Name:</label>
-            <input type="text" id="bankName">
-        </div>
+                <!-- UPI Section -->
+                <div id="upiSection" style="display: none;">
+                    <label>UPI ID:</label>
+                    <input type="text" id="upiId">
+                </div>
 
-        <button type="submit">Pay Now</button>
-    </form>
+                <!-- Net Banking Section -->
+                <div id="netBankingSection" style="display:none;">
+                    <label>Bank Name:</label>
+                    <input type="text" id="bankName">
+                    <label>Account Number:</label>
+                    <input type="text" id="accountNumber">
+                    <label>IFSC Code:</label>
+                    <input type="text" id="ifscCode">
+                </div>
 
-    <script>
-        document.getElementById('paymentMethod').addEventListener('change', function() {
-            if (this.value === 'UPI') {
-                document.getElementById('upiSection').style.display = 'block';
-                document.getElementById('netBankingSection').style.display = 'none';
-            } else {
-                document.getElementById('upiSection').style.display = 'none';
-                document.getElementById('netBankingSection').style.display = 'block';
-            }
-        });
+                <!-- Submit Button -->
+                <button type="submit">Pay Now</button>
+            </form>        
+         </div>    
+      </div>
+   </div>
 
-        document.getElementById('paymentForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const amount = document.getElementById('amount').value;
-            const method = document.getElementById('paymentMethod').value;
-            const upiId = document.getElementById('upiId').value;
-            const bankName = document.getElementById('bankName').value;
-
-            const data = {
-                user_email: email,
-                amount: amount,
-                method: method,
-                upi_id: method === 'UPI' ? upiId : null,
-                bank_name: method === 'NetBanking' ? bankName : null,
-                status: 'Pending'
-            };
-
-            fetch('/payments/transaction/create/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => alert('Payment Initiated! Transaction ID: ' + data.id))
-            .catch(error => alert('Error: ' + error));
-        });
-    </script>
 {% endblock %}

@@ -17,7 +17,7 @@ class Payment(models.Model):
     paid_at = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
+    updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
 
     class Meta:
         db_table = 'payments'
