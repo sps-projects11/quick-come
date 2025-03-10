@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import get_object_or_404
-from qcome.models import Payment, Booking
+from qcome.models import Payment, Booking,User
 
     
 def get_all_payments(user_id):
@@ -14,20 +14,33 @@ def create_payment(request, booking_id):
         data = json.loads(request.body)
         print("✅ Received Payment Data:", data)  # Debugging
 
-        booking = get_object_or_404(Booking, id=booking_id)
+        booking = Booking.objects.filter(id=booking_id).first()
+        print("Booking:", booking)
+        if not booking:
+            return {"error": "❌ Booking not found"}
 
+        # Ensure created_by is an integer
+        created_by_id = int(data.get('created_by'))  # Convert to int
+        print("Created_by ID:", created_by_id)
+
+        # Fetch the actual User instance
+        user = User.objects.get(id=created_by_id)  # Use get() to ensure a single User instance
+        print("User:", user, "Type:", type(user))
+
+        # Create payment
         payment = Payment.objects.create(
-            booking=booking,
+            booking_id=booking,
             type=data.get('type'),
             bank_ac=data.get('bank_ac') or None,
             amount=data.get('amount'),
             pay_status=data.get('pay_status'),
-            created_by=data.get('created_by'),
+            created_by=user,  # Ensure we pass a User instance
         )
 
         return {"message": "✅ Payment created successfully", "payment_id": payment.id}
     except Exception as e:
         return {"error": str(e)}
+
 
 def update_payment(request, booking_id):
     """Update an existing payment"""
