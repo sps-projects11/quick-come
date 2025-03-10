@@ -6,17 +6,16 @@ class Booking(models.Model):
     customer = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_users_id')
     vehicle_type = models.IntegerField(
         choices=[(v_type.value, v_type.name) for v_type in Vehicle_Type],
-        blank=False, null=False
     )
-    current_location = models.CharField(max_length=255, null=False, blank=False)
-    service = models.ForeignKey('ServiceCatalog', on_delete=models.CASCADE, blank=False, null=False)
+    current_location = models.CharField(max_length=255)
+    service = models.ForeignKey('ServiceCatalog', on_delete=models.CASCADE, related_name='fk_service_booking_services_id')
     description = models.CharField(blank=True,null=True,max_length=255)
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
-    created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_created_users_id')
-    updated_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_updated_users_id')
+    updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
+    created_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_created_users_id', blank=True, null=False)
+    updated_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fk_user_bookings_updated_users_id', null=True, blank=True)
 
 
     class Meta:

@@ -9,7 +9,7 @@ class User(AbstractUser):
     dob = models.DateField(null=False, blank=False)
     profile_photo_url = models.URLField(max_length=200, null=True, blank=True)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=10, null=True, blank=True)
     gender = models.IntegerField(
         choices=[(gender.value, gender.name) for gender in Gender],
         blank=True, null=True
@@ -22,7 +22,7 @@ class User(AbstractUser):
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=False)
     last_login = models.DateTimeField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
