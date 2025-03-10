@@ -5,8 +5,8 @@ from django.shortcuts import render
 from ..decorators import auth_required, role_required
 from ..constants import Role
 
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class PaymentListView(View):
     """Retrieve all payments"""
     def get(self, request):
@@ -15,31 +15,31 @@ class PaymentListView(View):
         return render(request, 'enduser/payment/payment.html', {"payments": payments})
 
 
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class PaymentCreateView(View):
     """Create a payment"""
     def post(self, request, booking_id):
         response = payment_service.create_payment(request, booking_id)
         return JsonResponse(response)
 
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class PaymentUpdateView(View):
     """Update an existing payment"""
     def post(self, request, booking_id):
         response = payment_service.update_payment(request, booking_id)
         return JsonResponse(response)
 
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class PaymentDeleteView(View):
     """Delete a payment"""
     def post(self, request, booking_id):
         response = payment_service.delete_payment(booking_id)
         return JsonResponse(response)
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')   
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class PaymentReceipt(View):
     def get(self,request):
         return render(request, 'enduser/payment/reciept.html')
