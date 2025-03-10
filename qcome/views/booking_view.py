@@ -38,14 +38,20 @@ class BookingCreateView(View):
 
         booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description)
 
+        if booking == "already_exists":
+            messages.error(request, "You have already made a booking. You cannot book again.")
+            return redirect('home')  # Redirect user to home or booking page
+
+        if booking == "error":
+            messages.error(request, "Something went wrong. Please try again.")
+            return redirect('booking_create')
+
         if booking:
             messages.success(request, "Booking created successfully!")
-            return redirect('home')  # Redirect to home or another page
-        else:
-            messages.error(request, "Invalid service selection.")
-            return redirect('booking_create')
-    
+            return redirect('home')
 
+        messages.error(request, "Invalid service selection.")
+        return redirect('booking_create')
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')  
