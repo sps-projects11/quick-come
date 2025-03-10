@@ -15,6 +15,25 @@
       <h2 class="mb-4 text-center">Update Profile</h2>
       <form method="POST" action="{% url 'myadmin_profile_update' %}" enctype="multipart/form-data">
         {% csrf_token %}
+        
+        <!-- Profile Photo Section with Plus Icon at Bottom Right -->
+        <div class="mb-3 text-center">
+          <label class="form-label d-block">Profile Photo</label>
+          <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+            {% if user.profile_photo %}
+              <img src="{{ user.profile_photo.url }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
+            {% else %}
+              <img src="{% static 'images/default_profile.png' %}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
+            {% endif %}
+            <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
+              <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;"></i>
+            </div>            
+          </div>
+          <!-- Hidden file input -->
+          <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
+        </div>
+        
+        <!-- Form Fields -->
         <div class="mb-3">
           <label for="id_first_name" class="form-label">First Name</label>
           <input type="text" class="form-control" id="id_first_name" name="first_name" 
@@ -41,23 +60,20 @@
                  value="{{ user.phone|default:'' }}" placeholder="Enter your phone number">
         </div>
         <div class="mb-3">
-            <label for="id_gender" class="form-label">Gender</label>
-            <select class="form-control" id="id_gender" name="gender">
-              <option value="">Select Gender</option>
-              <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
-              <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
-              <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
-            </select>
-          </div>          
+          <label for="id_gender" class="form-label">Gender</label>
+          <select class="form-control" id="id_gender" name="gender">
+            <option value="">Select Gender</option>
+            <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
+            <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
+            <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
+          </select>
+        </div>
         <div class="mb-3">
           <label for="id_dob" class="form-label">DOB</label>
           <input type="date" class="form-control" id="id_dob" name="dob" 
                  value="{{ user.dob|date:'Y-m-d'|default:'' }}" required>
         </div>
-        <div class="mb-3">
-          <label for="id_profile_photo" class="form-label">Profile Photo</label>
-          <input type="file" class="form-control" id="id_profile_photo" name="profile_photo">
-        </div>
+
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Update Profile</button>
         </div>
@@ -65,4 +81,31 @@
     </div>
   </div>
 </div>
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const profileContainer = document.querySelector('.profile-picture-container');
+  const fileInput = document.getElementById('id_profile_photo');
+  const profilePreview = document.getElementById('profilePreview');
+
+  // Trigger file input when the container is clicked
+  profileContainer.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  // Update the image preview after selecting a file
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        profilePreview.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+});
+</script>
+{% endblock %}
 {% endblock %}
