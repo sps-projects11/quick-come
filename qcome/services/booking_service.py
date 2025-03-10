@@ -43,3 +43,7 @@ def delete_booking(booking_id):
         return booking
     except Booking.DoesNotExist:
         return None  # Handle this in the view
+    
+
+def get_booking_id(user_id):
+    return Booking.objects.filter(customer=user_id).first() 
