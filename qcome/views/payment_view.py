@@ -1,13 +1,15 @@
 from django.http import JsonResponse
 from django.views import View
 from qcome.services import payment_service
+from django.shortcuts import render
 
 class PaymentListView(View):
     """Retrieve all payments"""
     def get(self, request):
-        user_id=request.user.id
+        user_id = request.user.id
         payments = payment_service.get_all_payments(user_id)
-        return JsonResponse({"payments": payments}, safe=False)
+        return render(request, 'enduser/payment/payment.html', {"payments": payments})
+
 
 
 class PaymentCreateView(View):
