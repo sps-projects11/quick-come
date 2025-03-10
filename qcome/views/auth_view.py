@@ -38,11 +38,11 @@ class UserSignupView(View):
 
         # Password confirmation check
         if password != confirm_password:
-            return JsonResponse({"status": "error", "message": "Passwords do not match."})
+            return JsonResponse(error_response(ErrorMessage.E00007.value))
 
         # Check if email is verified
         if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
-            return JsonResponse({"status": "error", "message": "Email not verified."})
+            return JsonResponse(error_response(ErrorMessage.E00008.value))
 
         # Save user
         user = User.objects.create(
@@ -120,9 +120,9 @@ class UserSigninView(View):
                 request.session["email"] = user.email  # Store email in session
                 return JsonResponse({"status": "success", "redirect": "/"})
             else:
-                return JsonResponse({"status": "error", "message": "Invalid email or password."})
+                return JsonResponse(error_response(ErrorMessage.E00009.value))
         except User.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Invalid email or password."})
+            return JsonResponse(error_response(ErrorMessage.E00010.value))
 
 
 
