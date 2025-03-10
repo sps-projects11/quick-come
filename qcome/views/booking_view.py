@@ -23,7 +23,6 @@ class BookingCreateView(View):
     def get(self, request):
         user = request.user
         services = ServiceCatalog.objects.filter(is_active=True)  # Fetch active services
-        # print(f"Fetching ServiceCatalog with ID: {service_id}")
         return render(request, 'enduser/Booking/booking.html', {
             'user_name': f"{user.first_name} {user.last_name}",
             'user_phone': user.phone,

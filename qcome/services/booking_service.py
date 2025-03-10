@@ -7,7 +7,6 @@ def get_booking_list():
 def create_booking(user, current_location, vehicle_type, service_id, description):
     """Create a new booking for the user."""
     try:
-        print(f"Fetching ServiceCatalog with ID: {service_id}")
         service = ServiceCatalog.objects.get(id=int(service_id))  # Convert to integer
         booking = Booking.objects.create(
             customer=user,
