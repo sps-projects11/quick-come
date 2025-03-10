@@ -31,3 +31,7 @@ class PaymentDeleteView(View):
     def post(self, request, booking_id):
         response = payment_service.delete_payment(booking_id)
         return JsonResponse(response)
+    
+class PaymentReceipt(View):
+    def get(self,request):
+        return render(request, 'enduser/payment/reciept.html')
