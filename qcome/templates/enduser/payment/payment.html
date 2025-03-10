@@ -9,41 +9,43 @@
    <div class="wrapper">
       <div class="payment-container">
          <h2>Make a Payment</h2>
-         <form id="paymentForm">
-            {% csrf_token %}
-            <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+         <div class="form-wrapper">
+            <form id="paymentForm">
+                {% csrf_token %}
+                <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+                
+                <label>Payment Method:</label>
+                <select id="paymentMethod" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="UPI">UPI</option>
+                    <option value="NetBanking">Net Banking</option>
+                    <option value="CashOnDelivery">Cash On Delivery</option>
+                </select>
 
-            <label>Amount:</label>
-            <input type="number" id="amount" required>
+                <label>Amount:</label>
+                <input type="number" id="amount" required>
 
-            <label>Payment Method:</label>
-            <select id="paymentMethod">
-               <option value="UPI">UPI</option>
-               <option value="NetBanking">Net Banking</option>
-               <option value="CashOnDelivery">Cash On Delivery</option>
-            </select>
+                <!-- UPI Section -->
+                <div id="upiSection" style="display: none;">
+                    <label>UPI ID:</label>
+                    <input type="text" id="upiId">
+                </div>
 
-            <!-- UPI Section -->
-            <div id="upiSection" style="display: none;">
-               <label>UPI ID:</label>
-               <input type="text" id="upiId">
-            </div>
+                <!-- Net Banking Section -->
+                <div id="netBankingSection" style="display:none;">
+                    <label>Bank Name:</label>
+                    <input type="text" id="bankName">
+                    <label>Account Number:</label>
+                    <input type="text" id="accountNumber">
+                    <label>IFSC Code:</label>
+                    <input type="text" id="ifscCode">
+                </div>
 
-            <!-- Net Banking Section -->
-            <div id="netBankingSection" style="display:none;">
-               <label>Bank Name:</label>
-               <input type="text" id="bankName">
-
-               <label>Account Number:</label>
-               <input type="text" id="accountNumber">
-
-               <label>IFSC Code:</label>
-               <input type="text" id="ifscCode">
-            </div>
-
-            <button type="submit">Pay Now</button>
-         </form>
-      </div>    
+                <!-- Submit Button -->
+                <button type="submit">Pay Now</button>
+            </form>        
+         </div>    
+      </div>
    </div>
 
 {% endblock %}
