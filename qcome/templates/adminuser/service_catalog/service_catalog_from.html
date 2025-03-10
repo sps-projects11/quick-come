@@ -1,0 +1,112 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Service Catalog Entry{% endblock %}
+
+{% block navbar_extra %}
+    <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_service_list' %}">
+        Service
+    </a>
+{% endblock %}
+
+{% block content %}
+<div id="form-container">
+    <h2 id="form-title">Service Catalog</h2>
+    <form id="service-form" method="post" action="{% url 'manage_service_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="service-name-field">
+            <label for="id_service_name" id="service-name-label">Service Name</label>
+            <input type="text" id="id_service_name" name="service_name" required>
+        </div>
+        <div id="service-image-field">
+            <label for="id_service_image" id="service-image-label">Service Image</label>
+            <input type="file" id="id_service_image" name="service_image" accept="image/*">
+        </div>
+        <div id="spare-part-field">
+            <label for="id_spare_part" id="spare-part-label">Spare Part</label>
+            <input type="text" id="id_spare_part" name="spare_part">
+        </div>
+        <div id="price-field">
+            <label for="id_price" id="price-label">Price</label>
+            <input type="number" step="0.01" id="id_price" name="price" required>
+        </div>
+        <button type="submit" id="submit-button">Save</button>
+    </form>
+</div>
+
+<style>
+  /* Navbar styling */
+  #navbar-service {
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    color: #333;
+    text-decoration: none;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* Form container styling */
+  #form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+
+  /* Form title styling */
+  #form-title {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+  }
+
+  /* Form field container */
+  #service-form > div {
+    margin-bottom: 15px;
+  }
+
+  /* Labels */
+  #service-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  /* Input fields */
+  #service-form input[type="text"],
+  #service-form input[type="number"],
+  #service-form input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+  }
+
+  /* Submit button */
+  #submit-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #submit-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+{% endblock %}

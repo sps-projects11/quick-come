@@ -1,11 +1,100 @@
 {% extends "adminuser/base.html" %}
 {% load static %}
-{% block title %}Quick Come Admin-Profile{% endblock %}
+{% block title %}Service Catalog List{% endblock %}
 
-{% block navbar_extra %}  
-        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
-        Admin Profile
-      </a> 
+{% block navbar_extra %}
+    <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_service_list' %}">
+        Service
+    </a>
 {% endblock %}
 
 {% block content %}
+<div id="services-container">
+    <h2>Service Catalog</h2>
+    <div id="services-list">
+        {% for service in services %}
+            <div class="service-item">                
+              <img src="{{ service.service_image|default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="{{ service.service_name }}" class="service-image">
+                <div class="service-details">
+                    <h3 class="service-name">{{ service.service_name }}</h3>
+                    <p class="service-spare-part">Spare Part: {{ service.spare_part }}</p>
+                    <p class="service-price">Price: ₹ {{ service.price }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p>No services available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+  /* Container styling */
+  #services-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+  }
+  
+  #services-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+  }
+  
+  /* Services list grid */
+  #services-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .service-item {
+    flex: 1 1 calc(33.333% - 20px);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .service-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .service-details {
+    padding: 15px;
+  }
+  
+  .service-name {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .service-spare-part,
+  .service-price {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .service-item {
+      flex: 1 1 calc(50% - 20px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .service-item {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+{% endblock %}
