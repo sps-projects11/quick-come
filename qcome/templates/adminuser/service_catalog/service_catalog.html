@@ -1,0 +1,11 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Profile{% endblock %}
+
+{% block navbar_extra %}  
+        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+        Admin Profile
+      </a> 
+{% endblock %}
+
+{% block content %}
