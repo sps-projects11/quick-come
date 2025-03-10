@@ -1,10 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ JS Loaded!");
+
     const paymentMethod = document.getElementById("paymentMethod");
     const upiSection = document.getElementById("upiSection");
     const netBankingSection = document.getElementById("netBankingSection");
     const paymentForm = document.getElementById("paymentForm");
 
-    // Show relevant fields based on payment method selection
+    if (!paymentForm) {
+        console.error("⚠️ Payment form not found!");
+        return;
+    }
+
+    // Show/hide fields based on payment method
     paymentMethod.addEventListener("change", function () {
         if (this.value === "UPI") {
             upiSection.style.display = "block";
@@ -18,25 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Handle form submission
+    // Form submission handler
     paymentForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
+        console.log("✅ Submit button clicked!");
 
         const selectedMethod = paymentMethod.value;
         const amount = document.getElementById("amount").value;
         const csrfToken = document.getElementById("csrfToken").value;
 
         if (!selectedMethod) {
-            alert("Please select a valid payment method.");
+            alert("❌ Please select a valid payment method.");
             return;
         }
 
         if (!amount || amount <= 0) {
-            alert("Please enter a valid amount.");
+            alert("❌ Please enter a valid amount.");
             return;
         }
 
-        // Collect form data
+        // Prepare payment data
         let data = {
             amount: parseFloat(amount),
             type: selectedMethod === "UPI" ? 3 : selectedMethod === "NetBanking" ? 2 : 1, // Enum Mapping
@@ -47,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedMethod === "UPI") {
             const upiId = document.getElementById("upiId").value;
             if (!upiId) {
-                alert("Please enter your UPI ID.");
+                alert("❌ Please enter your UPI ID.");
                 return;
             }
             data.upi_id = upiId;
@@ -57,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const ifscCode = document.getElementById("ifscCode").value;
 
             if (!bankName || !accountNumber || !ifscCode) {
-                alert("Please enter all bank details.");
+                alert("❌ Please enter all bank details.");
                 return;
             }
 
@@ -66,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             data.ifsc_code = ifscCode;
         }
 
-        let BookingId = 123; // Replace dynamically if needed
+        let bookingId = 123; // Replace dynamically if needed
 
-        // Send request to the backend
-        fetch(`/payment/create/${BookingId}/`, {
+        // Send data to Django backend
+        fetch(`/payment/create/${bookingId}/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -79,17 +87,17 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(responseData => {
-            console.log("Server Response:", responseData);
+            console.log("✅ Server Response:", responseData);
             if (responseData.payment_id) {
-                // Redirect to receipt page with transaction details
                 window.location.href = `/payment/receipt/?transaction_id=${responseData.payment_id}&amount=${amount}`;
             } else {
-                alert("Payment Failed: " + (responseData.error || "Unknown Error"));
+                alert("❌ Payment Failed: " + (responseData.error || "Unknown Error"));
             }
         })
         .catch(error => {
-            console.error("Error:", error);
-            alert("Payment request failed. Please try again.");
+            console.error("❌ Error:", error);
+            alert("❌ Payment request failed. Please try again.");
         });
     });
 });
+

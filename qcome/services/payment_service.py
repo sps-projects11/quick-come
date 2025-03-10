@@ -12,10 +12,12 @@ def create_payment(request, booking_id):
     """Create a new payment for a given booking"""
     try:
         data = json.loads(request.body)
+        print("✅ Received Payment Data:", data)  # Debugging
+
         booking = get_object_or_404(Booking, id=booking_id)
 
         payment = Payment.objects.create(
-            booking_id=booking,
+            booking=booking,
             type=data.get('type'),
             bank_ac=data.get('bank_ac'),
             amount=data.get('amount'),
@@ -23,7 +25,7 @@ def create_payment(request, booking_id):
             created_by_id=data.get('created_by'),
         )
 
-        return {"message": "Payment created successfully", "payment_id": payment.id}
+        return {"message": "✅ Payment created successfully", "payment_id": payment.id}
     except Exception as e:
         return {"error": str(e)}
 
