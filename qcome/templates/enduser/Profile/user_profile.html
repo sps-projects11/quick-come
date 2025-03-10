@@ -1,0 +1,17 @@
+{% extends "enduser/base.html" %}
+{% block title %}Profile{% endblock %}
+{%load static %}
+{% block content %}
+    <link rel="stylesheet" href="/static/css/user_profile.css">
+    <script src="/static/js/profile.js"></script>
+        <div class="profile-container">
+            <div class="wrapper">
+                <img src={{user.photo}} alt="Profile Picture" class="profile-pic">
+                <h3 class="profile-name">{{user.fullname}}</h3>
+                <p class="profile-info"></p>
+                <a href="#" class="profile-btn">Edit Profile</a>
+            </div>
+        </div>
+{% endblock %}
+
+
