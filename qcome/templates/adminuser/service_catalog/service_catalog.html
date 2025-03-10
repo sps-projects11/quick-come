@@ -3,34 +3,37 @@
 {% block title %}Service Catalog List{% endblock %}
 
 {% block navbar_extra %}
-    <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_service_list' %}">
-        Service
-    </a>
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_service_list' %}">
+      Service
+  </a>
 {% endblock %}
 
 {% block content %}
 <div id="services-container">
-    <h2>Service Catalog</h2>
-    <div id="services-list">
-        {% for service in services %}
-            <div class="service-item">                
-              <img src="{{ service.service_image|default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="{{ service.service_name }}" class="service-image">
-                <div class="service-details">
-                    <h3 class="service-name">{{ service.service_name }}</h3>
-                    <p class="service-spare-part">Spare Part: {{ service.spare_part }}</p>
-                    <p class="service-price">Price: ₹ {{ service.price }}</p>
-                </div>
-            </div>
-        {% empty %}
-            <p>No services available.</p>
-        {% endfor %}
-    </div>
+  <h2>Service Catalog</h2>
+  <div id="services-list">
+    {% for service in services %}
+      <div class="service-item">
+        <div class="service-image-container" 
+             style="background-image: url('{{ service.service_image|default:'/static/all-Pictures/Feature boxes/location.jpg' }}');">
+        </div>
+        <div class="service-details">
+          <h3 class="service-name">{{ service.service_name }}</h3>
+          <p class="service-spare-part">Spare Part: {{ service.spare_part }}</p>
+          <p class="service-price">Price: ₹ {{ service.price }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p>No services available.</p>
+    {% endfor %}
+  </div>
 </div>
 
 <style>
   /* Container styling */
   #services-container {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1200px;
     margin: 30px auto;
     padding: 20px;
   }
@@ -42,15 +45,14 @@
     color: #333;
   }
   
-  /* Services list grid */
+  /* Grid layout for service items */
   #services-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
   }
   
   .service-item {
-    flex: 1 1 calc(33.333% - 20px);
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
@@ -59,12 +61,16 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    box-sizing: border-box;
   }
   
-  .service-image {
+  /* Fixed-size container using background-image */
+  .service-image-container {
     width: 100%;
-    height: auto;
-    display: block;
+    height: 250px; /* For larger screens; adjust as needed */
+    background-size: contain;  /* Scale image to show full image */
+    background-repeat: no-repeat;
+    background-position: center;
   }
   
   .service-details {
@@ -84,16 +90,40 @@
     margin: 5px 0;
   }
   
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .service-item {
-      flex: 1 1 calc(50% - 20px);
+  /* Adjustments for medium screens (e.g., tablets) */
+  @media (max-width: 1024px) {
+    #services-list {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .service-name {
+      font-size: 18px;
+    }
+    .service-spare-part,
+    .service-price {
+      font-size: 14px;
     }
   }
   
-  @media (max-width: 480px) {
-    .service-item {
-      flex: 1 1 100%;
+  /* Adjustments for small screens (e.g., 500px and below) */
+  @media (max-width: 500px) {
+    #services-list {
+      grid-template-columns: 1fr;
+    }
+    .service-image-container {
+      height: 180px; /* Reduced height for small screens */
+    }
+    #services-container {
+      padding: 10px;
+    }
+    #services-container h2 {
+      font-size: 20px;
+    }
+    .service-name {
+      font-size: 16px;
+    }
+    .service-spare-part,
+    .service-price {
+      font-size: 14px;
     }
   }
 </style>
