@@ -7,7 +7,7 @@ class Payment(models.Model):
         choices=[(paytype.value, paytype.name) for paytype in PayType ],
         blank=True,null=True
     )
-    bank_ac = models.CharField(max_length=50) 
+    bank_ac = models.CharField(max_length=50,null=True,blank=True) 
     amount = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     pay_status = models.IntegerField(
         choices = [(paystatus.value,paystatus.name) for paystatus in PayStatus],
