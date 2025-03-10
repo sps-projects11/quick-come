@@ -9,7 +9,7 @@
                 <img src={{user.photo}} alt="Profile Picture" class="profile-pic">
                 <h3 class="profile-name">{{user.fullname}}</h3>
                 <p class="profile-info"></p>
-                <a href="#" class="profile-btn">Edit Profile</a>
+                <a href="{% url 'profile_update' user_id=user.id %}" class="profile-btn">Edit Profile</a>
             </div>
         </div>
 {% endblock %}
