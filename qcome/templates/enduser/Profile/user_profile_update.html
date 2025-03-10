@@ -25,7 +25,6 @@
                         <input type="text" class="form-control" id="middleName" name="middle_name" value="{{ user_details.middle_name|default:'' }}">
                     </div>
                 </div>
-    
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="lastName" class="form-label"><i class="bi bi-person"></i>Last Name</label>
@@ -60,12 +59,12 @@
                 <div class="d-flex justify-content-center gap-3">
                     <button type="submit" class="btn btn-primary w-25">Update</button>
                     <a href="javascript:history.back()" class="btn btn-danger w-25">Cancel</a>
-                </div>
-            
+                </div>          
             </form>
         </div>
     </div>
-    </form>
+</form>
+</div>
     <script>
         function selectImage() {
             document.getElementById("imageInput").click();

@@ -4,6 +4,9 @@ from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
 from ..services import get_user_details,update_user_details
+from django.core.files.storage import default_storage
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
 @auth_required(login_url='/sign-in/')
@@ -19,15 +22,8 @@ class EnduserProfileCreate(View):
     def get(self, request):
         return
     
+  
 
-
-
-
-
-
-from django.core.files.storage import default_storage
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 
 class EnduserProfileUpdate(View):
     def get(self, request, user_id):
@@ -50,12 +46,10 @@ class EnduserProfileUpdate(View):
             return redirect('user_profile')
         return redirect('user_profile')
 
-
-
 class EnduserProfileDelete(View):
     def get(self, request, user_id):
-        user_del = get_user_details(user_id)
-        context = {'user_del': user_del}
+        user_details = get_user_details(user_id)
+        context = {'user_details': user_details}
         return render(request, 'enduser/profile/user_profile_delete.html', context)
 
     def post(self, request, user_id):
@@ -64,6 +58,3 @@ class EnduserProfileDelete(View):
             user.delete()
             return redirect('user_profile')  
         return redirect('user_profile')
-  
-    
-#user_profile_update.html

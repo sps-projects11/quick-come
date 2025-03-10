@@ -1,1 +1,47 @@
-<h1>ifjofjio</h1>
+{% extends "enduser/base.html" %}
+{% block title %}Profile{% endblock %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/user_profile.css">
+<script src="/static/js/profile.js"></script>
+<div class="profile-container">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="worker" class="form-label"><i class="bi bi-person"></i> Worker</label>
+            <p class="form-control-static" id="worker">{{ worker.worker }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="garage" class="form-label"><i class="bi bi-person"></i> Garage</label>
+            <p class="form-control-static" id="garage">{{ worker.garage }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="experience" class="form-label"><i class="bi bi-person"></i> Experience</label>
+            <p class="form-control-static" id="experience">{{ worker.experience }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="expertise" class="form-label"><i class="bi bi-person"></i> Expertise</label>
+            <p class="form-control-static" id="expertise">{{ worker.expertise }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="is_verified" class="form-label"><i class="bi bi-person"></i> Verified</label>
+            <p class="form-control-static" id="is_verified">{{ worker.is_verified|yesno:"Yes,No" }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="is_active" class="form-label"><i class="bi bi-person"></i> Active</label>
+            <p class="form-control-static" id="is_active">{{ worker.is_active|yesno:"Yes,No" }}</p>
+        </div>
+    </div>  
+    <div class="row">
+      <div class="col-md-6 mb-3">
+          <a href=""class="btn btn-primary">Update</a>
+        </div>
+        <div class="col-md-6 mb-3">           
+      <a href="javascript:history.back()" class="btn btn-danger">Cancel</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
