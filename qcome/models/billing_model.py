@@ -6,13 +6,13 @@ class Billing(models.Model):
     service = models.ForeignKey('ServiceCatalog', on_delete=models.CASCADE, related_name='fk_service_billing_services_id')
     
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.DecimalField(max_digits=5, decimal_places=2)
-    final_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    final_amount = models.DecimalField(max_digits=10, decimal_places=2)
 
 
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
+    updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
     created_by = models.ForeignKey('Worker', on_delete=models.CASCADE, null=False, blank=True, related_name='fk_worker_billing_create_workers_id')
     updated_by = models.ForeignKey('Worker', on_delete=models.CASCADE, null=True, blank=True, related_name='fk_worker_billing_update_workers_id')
 

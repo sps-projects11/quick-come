@@ -16,7 +16,7 @@ class Garage(models.Model):
     
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
+    updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
     created_by = models.ForeignKey('User', on_delete=models.CASCADE, null=False, blank=True, related_name='fk_user_garage_create_users_id')
     updated_by = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True, related_name='fk_user_garage_update_users_id')
 

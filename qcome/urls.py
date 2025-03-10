@@ -65,6 +65,7 @@ urlpatterns = [
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
     path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
     path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
+    path('payment/receipt/', views.PaymentReceipt.as_view(), name='payment_receipt')
 
 
 

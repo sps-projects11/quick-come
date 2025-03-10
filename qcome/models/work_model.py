@@ -13,7 +13,7 @@ class Work(models.Model):
     work_photo_url = models.URLField(max_length=200, null=True, blank=True)
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_created=True)
+    updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
 
     class Meta:
         db_table = 'works'
