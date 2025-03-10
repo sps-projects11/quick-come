@@ -25,8 +25,7 @@ def get_user_details(user_id):
         return User.objects.get(id=user_id)
     except User.DoesNotExist:
         return None
-
-def update_user_details(user, data, files):
+def update_user_details(user, data):
     user.first_name = data.get('first_name')
     user.middle_name = data.get('middle_name')
     user.last_name = data.get('last_name')
@@ -42,11 +41,10 @@ def update_user_details(user, data, files):
         user.gender = 3
 
     user.dob = data.get('dob')
-
-    if 'profile_picture' in files:
-        user.profile_picture = files['profile_picture']
+    user.profile_photo_url = data.get('profile_photo_url', user.profile_photo_url)
 
     user.save()
     return user
+
 
 
