@@ -1,6 +1,8 @@
 from ..models import Booking, ServiceCatalog
 from django.db.utils import IntegrityError
 
+
+
 def get_booking_list():
     """Fetch all active bookings."""
     return Booking.objects.filter(is_active=True)
@@ -32,23 +34,40 @@ def create_booking(user, current_location, vehicle_type, service_id, description
     except (ValueError, Exception):
         return "error"  # Handle unexpected errors
 
-def update_booking(booking_id, data):
-    """Update an existing booking."""
-    try:
-        booking = Booking.objects.get(id=booking_id)
-        for key, value in data.items():
-            setattr(booking, key, value)
-        booking.save()
-        return booking
-    except Booking.DoesNotExist:
-        return None  # Handle this in the view
 
-def delete_booking(booking_id):
-    """Soft delete a booking by marking it inactive."""
+
+
+
+def update_booking(user, booking_id, current_location, vehicle_type, service_id, description):
+    """Allow user to update their booking instead of blocking them."""
     try:
-        booking = Booking.objects.get(id=booking_id)
-        booking.is_active = False
+        booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
+        service = ServiceCatalog.objects.get(id=int(service_id))  # Validate service
+
+        booking.current_location = current_location
+        booking.vehicle_type = vehicle_type
+        booking.service = service
+        booking.description = description
+        booking.updated_by = user  # Track who updated it
         booking.save()
+        
         return booking
     except Booking.DoesNotExist:
-        return None  # Handle this in the view
+        return "not_found"  
+    except ServiceCatalog.DoesNotExist:
+        return "invalid_service"  
+    except Exception:
+        return "error"
+
+
+def delete_booking(user, booking_id):
+    """Soft delete a booking (only if the user owns it)."""
+    try:
+        booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
+        booking.delete()  # Hard delete instead of soft delete
+        return "deleted"
+    except Booking.DoesNotExist:
+        return "not_found"
+    except Exception:
+        return "error"
+
