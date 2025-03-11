@@ -25,4 +25,11 @@ def get_user_details(user_id):
         return User.objects.get(id=user_id)
     except User.DoesNotExist:
         return None
+    
+def updateFCMToken(user_id,fcm_token):
+    user = User.objects.get(id=user_id)
+    user.fcm_token = fcm_token
+    user.save()
 
+def getFCMtoken(user_id):
+    return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()

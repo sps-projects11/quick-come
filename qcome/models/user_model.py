@@ -33,6 +33,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=128, blank=True, null=True)    
     is_staff = models.BooleanField(db_default=False, blank=True)  # To allow admin access
     is_superuser = models.BooleanField(db_default=False, blank=True)  # Superuser status
+    fcm_token = models.CharField(max_length=512, blank=True, null=True)
     
     # Use email as the username field.
     USERNAME_FIELD = 'email'
