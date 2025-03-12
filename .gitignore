@@ -34,5 +34,5 @@ __pycache__/
 # Ignore migration files
 qcome/migrations/*.py
 !qcome/migrations/__init__.py
-echo "static/js/serviceAccountkey (2).json" >> .gitignore
+
 
