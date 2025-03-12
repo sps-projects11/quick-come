@@ -47,4 +47,11 @@ def update_user_details(user, data):
     return user
 
 
+    
+def updateFCMToken(user_id,fcm_token):
+    user = User.objects.get(id=user_id)
+    user.fcm_token = fcm_token
+    user.save()
 
+def getFCMtoken(user_id):
+    return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()

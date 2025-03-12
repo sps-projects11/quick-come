@@ -1,0 +1,31 @@
+{% extends "enduser/base.html" %}
+{% load static %}
+{% block title %}Work_list{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/work_list.css' %}"> 
+
+<div class="wrapper">   
+     <div class="container">
+        <h2>Work List</h2>
+        <div class="work-list">
+            {% if booking %}
+                {% for work in booking %}
+                    <div class="work-card">
+                        <img src="{{ work.customer_photo }}" alt="Customer Photo" class="customer-photo">
+                        <div class="work-details">
+                            <h3>{{ work.customer_id }}</h3>
+                            <p><strong>Address:</strong> {{ work.address }}</p>
+                            <p><strong>Service:</strong> {{ work.service }}</p>
+                            <p><strong>Vehicle Type:</strong> {{ work.vehicle_type }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-data">No work available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

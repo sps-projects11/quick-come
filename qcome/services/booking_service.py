@@ -1,4 +1,4 @@
-from ..models import Booking, ServiceCatalog
+from ..models import Booking, ServiceCatalog,Work
 from django.db.utils import IntegrityError
 
 
@@ -71,3 +71,6 @@ def delete_booking(user, booking_id):
     except Exception:
         return "error"
 
+
+def get_booking_worker(worker_id):
+    return list(Work.objects.filter(work_by=worker_id))

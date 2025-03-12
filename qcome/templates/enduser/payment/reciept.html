@@ -3,39 +3,30 @@
 {% block title %}Payment Receipt{% endblock %}
 
 {% block content %}
-   <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+   <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
 
    <div class="wrapper">
       <div class="receipt-container">
-         <h2>Payment Receipt</h2>
-         <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
-         <p><strong>Amount Paid:</strong> ₹<span id="amountPaid"></span></p>
+         <div class="receipt-header">
+            <i class="fas fa-arrow-left back-btn" onclick="goBack()"></i>
+            <h2  style="font-size: 30px;font-weight: bold;">Payment Receipt</h2>
+         </div>
+
+         <div class="receipt-content">
+            <div class="item"><strong>Transaction ID:</strong> <span>{{ payment.id }}</span></div>
+            <div class="item"><strong>Amount Paid:</strong> <span>₹ {{ payment.amount }}</span></div>
+            <div class="item"><strong>Paid At:</strong> <span>{{ payment.paid_at }}</span></div>
+            <div class="item"><strong>Paid By:</strong> <span>{{ payment.created_by__first_name }} {{ payment.created_by__last_name }}</span></div>
+         </div>
+
          <a href="{% url 'home' %}" class="btn">Back to Home</a>
       </div>
    </div>
 
    <script>
-      // Get query parameters from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      document.getElementById('transactionId').textContent = urlParams.get('transaction_id');
-      document.getElementById('amountPaid').textContent = urlParams.get('amount');
+      function goBack() {
+         window.history.back();
+      }
    </script>
-   <style>
-      .receipt-container{
-         border-radius: 10px;
-         margin: auto;
-         background: white;
-         justify-content: center;
-         align-items: center;
-         flex-direction: column;
-         display: flex;
-         height: 100%;
-         width: 60%;
-     }
-     .btn,
-     .btn:hover,
-     .btn:active{
-      background: #3de288;
-     }
-   </style>
 {% endblock %}
+
