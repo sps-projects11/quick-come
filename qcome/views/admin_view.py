@@ -8,6 +8,10 @@ import datetime
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..services import user_service, admin_service
+import os
+import hashlib
+from django.conf import settings
+
 
 class LoginAdminView(View):
     def get(self, request):
@@ -84,24 +88,21 @@ class AdminProfileUpdateView(View):
 
     def post(self, request):
         auth_user = request.user
-        first_name = request.POST.get('first_name', '').strip()
-        middle_name = request.POST.get('middle_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        email = request.POST.get('email', '').strip()
-        phone = request.POST.get('phone', '').strip()
-        gender_str = request.POST.get('gender', '').strip()  # gender as string initially
-        dob_str = request.POST.get('dob', '').strip()  # expected in YYYY-MM-DD format
-
         user = user_service.get_user(auth_user.id)
-        gender = None
-        if gender_str:
-            try:
-                gender = int(gender_str)
-            except ValueError:
-                gender = None
 
-        # Convert dob string to date object if provided
-        dob = None
+        # Fetch form data and strip whitespace
+        first_name = request.POST.get('first_name').strip() or user.first_name
+        middle_name = request.POST.get('middle_name').strip() or user.middle_name
+        last_name = request.POST.get('last_name').strip() or user.last_name
+        email = request.POST.get('email').strip() or user.email
+        phone = request.POST.get('phone').strip() or user.phone
+        gender_str = request.POST.get('gender')
+        dob_str = request.POST.get('dob') or user.dob
+
+        gender = user.gender
+        if gender_str:
+            gender = int(gender_str)
+                
         if dob_str:
             try:
                 dob = datetime.datetime.strptime(dob_str, '%Y-%m-%d').date()
@@ -109,11 +110,36 @@ class AdminProfileUpdateView(View):
                 messages.error(request, ErrorMessage.E00002.value)
                 return redirect('myadmin_profile')
 
-        # Call your admin service to update the profile
+        # Profile photo handling
+        profile_photo = request.FILES.get('profile_photo')
+        profile_photo_path = user.profile_photo_url
+
+        if profile_photo:
+            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures')
+            if not os.path.exists(profile_photo_img_dir):
+                os.makedirs(profile_photo_img_dir)
+
+            md5_hash = hashlib.md5()
+            for chunk in profile_photo.chunks():
+                md5_hash.update(chunk)
+            file_hash = md5_hash.hexdigest()
+
+            _, ext = os.path.splitext(profile_photo.name)
+            new_file_name = f"{file_hash}{ext}"
+            file_path = os.path.join(profile_photo_img_dir, new_file_name)
+
+            if not os.path.exists(file_path):
+                profile_photo.seek(0)
+                with open(file_path, 'wb+') as destination:
+                    for chunk in profile_photo.chunks():
+                        destination.write(chunk)
+
+            profile_photo_path = f'/static/all-Pictures/{new_file_name}'
+
+        
         admin_service.admin_profile_update(
-            user, first_name, middle_name, last_name, email, phone, gender, dob
+            user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
         )
-            
+
         messages.success(request, SuccessMessage.S00002.value)
         return redirect('myadmin_profile')
-

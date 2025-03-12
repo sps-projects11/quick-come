@@ -14,7 +14,7 @@
   <div class="profile-row">
     <!-- Left column: Profile Picture & Basic Info -->
     <div class="profile-col-left">
-      <img id="profile-picture" src="{% static user.profile_photo_url %}" alt="User Avatar">
+      <img id="profile-picture" src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="User Avatar">
       <h3 class="profile-title">{{ user.get_full_name }}</h3>
     </div>
 
