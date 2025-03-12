@@ -3,18 +3,18 @@
 {% block title %}Payment Receipt{% endblock %}
 
 {% block content %}
-   <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+   <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
 
    <div class="wrapper">
       <div class="receipt-container">
          <div class="receipt-header">
             <i class="fas fa-arrow-left back-btn" onclick="goBack()"></i>
-            <div style="font-size: 30px;font-weight: bold;">Payment Receipt</div>
+            <h2  style="font-size: 30px;font-weight: bold;">Payment Receipt</h2>
          </div>
 
          <div class="receipt-content">
             <div class="item"><strong>Transaction ID:</strong> <span>{{ payment.id }}</span></div>
-            <div class="item"><strong>Amount Paid:</strong><span> ₹ {{ payment.amount }}</span></div>
+            <div class="item"><strong>Amount Paid:</strong> <span>₹ {{ payment.amount }}</span></div>
             <div class="item"><strong>Paid At:</strong> <span>{{ payment.paid_at }}</span></div>
             <div class="item"><strong>Paid By:</strong> <span>{{ payment.created_by__first_name }} {{ payment.created_by__last_name }}</span></div>
          </div>
@@ -28,98 +28,5 @@
          window.history.back();
       }
    </script>
-
-   <style>
-      .wrapper {
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         min-height: 100vh;
-         padding: 20px;
-      }
-
-      .receipt-container {
-         background: #fff;
-         border-radius: 12px;
-         padding: 25px;
-         width: 100%;
-         max-width: 500px;
-         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-         text-align: center;
-      }
-
-      .receipt-header {
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         gap: 15px;
-         margin-bottom: 20px;
-      }
-
-      .back-btn {
-         right: 20%;
-         position: relative;
-         font-size: 24px;
-         cursor: pointer;
-         color: #333;
-         transition: 0.3s;
-      }
-
-      .back-btn:hover {
-         color: #3de288;
-      }
-
-      h2 {
-         margin: 0;
-         font-size: 22px;
-      }
-
-      .receipt-content {
-         text-align: left;
-         margin-bottom: 20px;
-      }
-
-      .item {
-         background: #f9f9f9;
-         padding: 10px;
-         border-radius: 5px;
-         margin: 8px 0;
-         font-size: 16px;
-         display: flex;
-         justify-content: space-between;
-      }
-
-      .btn {
-         display: block;
-         width: 100%;
-         text-align: center;
-         background: #3de288;
-         color: #fff;
-         padding: 12px;
-         border-radius: 5px;
-         text-decoration: none;
-         font-size: 16px;
-         font-weight: bold;
-         transition: 0.3s;
-      }
-
-      .btn:hover {
-         background: #32c377;
-      }
-
-      @media (max-width: 600px) {
-         .receipt-container {
-            max-width: 90%;
-            padding: 20px;
-         }
-
-         .item {
-            font-size: 14px;
-         }
-
-         h2 {
-            font-size: 20px;
-         }
-      }
-   </style>
 {% endblock %}
+

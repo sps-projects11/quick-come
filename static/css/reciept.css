@@ -1,0 +1,94 @@
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.receipt-container {
+    width: 90%;
+    max-width: 500px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.receipt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    color: #3de288;
+}
+
+h2 {
+    margin: 0;
+    font-size: 22px;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.receipt-content {
+    text-align: left;
+    flex-grow: 1;
+}
+
+.item {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 8px 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    width: 100%;
+    text-align: center;
+    background: #3de288;
+    color: #fff;
+    padding: 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background: #32c377;
+}
+
+@media (max-width: 600px) {
+    .receipt-container {
+        padding: 20px;
+    }
+
+    .item {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
