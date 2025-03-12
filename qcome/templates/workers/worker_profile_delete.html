@@ -1,0 +1,50 @@
+{% extends "enduser/base.html" %}
+{% block title %}Profile{% endblock %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+<script src="{% static 'js/profile.js' %}"></script>
+<div class="profile-container">
+    <form method="POST" enctype="multipart/form-data"  class="mt-4">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="worker" class="form-label"><i class="bi bi-person"></i> Worker</label>
+                <input type="text" class="form-control" id="worker" name="worker" value="{{ worker_details.worker }}" disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="garage" class="form-label"><i class="bi bi-person"></i> Garage</label>
+                <input type="text" class="form-control" id="garage" name="garage" value="{{ worker_details.garage }}" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="experience" class="form-label"><i class="bi bi-person"></i> Experience</label>
+                <input type="text" class="form-control" id="experience" name="experience" value="{{ worker_details.experience }}" disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="expertise" class="form-label"><i class="bi bi-person"></i> Expertise</label>
+                <textarea class="form-control" id="expertise" name="expertise" disabled>{{ worker_details.expertise }}</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="is_verified" class="form-label"><i class="bi bi-person"></i> Verified</label>
+                <input type="checkbox" class="form-check-input" id="is_verified" name="is_verified" {% if worker_details.is_verified %}checked{% endif %} disabled>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="is_active" class="form-label"><i class="bi bi-person"></i> Active</label>
+                <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if worker_details.is_active %}checked{% endif %} disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <button class="btn btn-primary" type="submit">Delete</button>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="javascript:history.back()" class="btn btn-danger">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
