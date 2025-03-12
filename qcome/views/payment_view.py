@@ -49,5 +49,7 @@ class PaymentCreateView(View):
 auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
 class PaymentReceipt(View):
-    def get(self,request):
-        return render(request, 'enduser/payment/reciept.html')
+    def get(self,request,payment_id):
+        payment=payment_service.payment_details_by_payment_id(payment_id)
+        print(payment)
+        return render(request, 'enduser/payment/reciept.html',{'payment':payment})

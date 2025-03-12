@@ -63,7 +63,7 @@ urlpatterns = [
     #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
-    path('payment/receipt/', views.PaymentReceipt.as_view(), name='payment_receipt')
+    path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt')
 
 
 

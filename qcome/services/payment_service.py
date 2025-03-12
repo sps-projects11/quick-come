@@ -75,4 +75,10 @@ def delete_payment(booking_id):
         return {"message": "Payment deleted successfully"}
     except Exception as e:
         return {"error": str(e)}
+    
+def payment_details_by_payment_id(payment_id):
+    return Payment.objects.filter(id=payment_id, is_active=True).values(
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+    ).first()  # This ensures only one result is returned
+
 

@@ -3,44 +3,46 @@
 {% block title %}Payment List{% endblock %}
 
 {% block content %}
+<div class="wrapper">
     <div class="container">
         <h2>Payment History</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Payment ID</th>
-                    <th>Amount</th>
-                    <th>Type</th>
-                    <th>Time</th>
-                    <th>Paid By</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if payment_data %}
-                    {% for payment in payment_data %}
-                        <tr>
-                            <td>{{ payment.payment_id }}</td>
-                            <td>₹{{ payment.amount }}</td>
-                            <td>{{ payment.type }}</td>
-                            <td>{{ payment.time }}</td>
-                            <td>{{ payment.payment_by }}</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="5" class="no-data">No payments found.</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+        <div class="payment-list">
+            {% if payment_data %}
+                {% for payment in payment_data %}
+                <div class="payment-item" onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
+                        <div class="payment-avatar">
+                            <img src="{% static 'images/user_avatar.png' %}" alt="User">
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-name">{{ payment.payment_by }}</div>
+                            <div class="payment-time">{{ payment.time }}</div>
+                        </div>
+                        <div class="payment-amount {% if payment.amount > 0 %}positive{% else %}negative{% endif %}">
+                            ₹{{ payment.amount }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-data">No payments found.</div>
+            {% endif %}
+        </div>
     </div>
+</div>
 
-
-    <style>
+<style>
+.wrapper {
+    height:85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+}
 
 .container {
+    height:100%;
     width: 90%;
-    max-width: 900px;
+    max-width: 600px;
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -53,36 +55,62 @@ h2 {
     margin-bottom: 20px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.payment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-thead {
-    background-color: #007bff;
-    color: white;
+.payment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
+.payment-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+.payment-details {
+    flex-grow: 1;
+    margin-left: 15px;
+    text-align: left;
 }
 
-tbody tr:hover {
-    background-color: #d6e4ff;
+.payment-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.payment-time {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.payment-amount {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.positive {
+    color: #4caf50;
+}
+
+.negative {
+    color: #f44336;
 }
 
 .no-data {
     text-align: center;
     font-size: 18px;
     color: #999;
+    padding: 20px;
 }
-
-    </style>
+</style>
 {% endblock %}
