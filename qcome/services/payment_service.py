@@ -5,8 +5,11 @@ from qcome.models import Payment, Booking,User
     
 def get_all_payments(user_id):
     """Retrieve all payments"""
-    payments = Payment.objects.filter(created_by=user_id).values()
+    payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+    )
     return list(payments)
+
 def get_current_payment(booking_id):
     """Retrieve all payments"""
     payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()

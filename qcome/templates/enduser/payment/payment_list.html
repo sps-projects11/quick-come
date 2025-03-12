@@ -1,0 +1,88 @@
+{% extends "enduser/base.html" %}
+{% load static %}
+{% block title %}Payment List{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Payment History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Time</th>
+                    <th>Paid By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if payment_data %}
+                    {% for payment in payment_data %}
+                        <tr>
+                            <td>{{ payment.payment_id }}</td>
+                            <td>₹{{ payment.amount }}</td>
+                            <td>{{ payment.type }}</td>
+                            <td>{{ payment.time }}</td>
+                            <td>{{ payment.payment_by }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="no-data">No payments found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <style>
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+thead {
+    background-color: #007bff;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #d6e4ff;
+}
+
+.no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+}
+
+    </style>
+{% endblock %}

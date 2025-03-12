@@ -3,7 +3,8 @@ from django.views import View
 from qcome.services import payment_service,booking_service
 from django.shortcuts import render
 from ..decorators import auth_required, role_required
-from ..constants import Role
+from ..constants import Role,PayType
+from ..models import User
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -11,8 +12,21 @@ class PaymentListView(View):
     """Retrieve all payments"""
     def get(self, request):
         user_id = request.user.id
-        payments = payment_service.get_all_payments(user_id)
-        return render(request, 'enduser/payment/payment.html', {"payments": payments})
+        payments = payment_service.get_all_payments(user_id)  # Now returns dicts
+
+        payment_data = [
+                {
+                'payment_id': payment['id'],
+                'amount': payment['amount'],
+                'type': PayType(payment['type']).name if payment['type'] else "N/A",
+                'time': payment['paid_at'].strftime('%Y-%m-%d %H:%M:%S') if payment['paid_at'] else "N/A",
+                'payment_by': f"{payment.get('created_by__first_name', 'Unknown')} {payment.get('created_by__last_name', '')}".strip()
+                }
+                for payment in payments
+            ]
+        return render(request, 'enduser/payment/payment_list.html', {"payment_data": payment_data})
+
+
 
 
 @auth_required(login_url='/sign-in/')
