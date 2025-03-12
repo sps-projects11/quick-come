@@ -36,3 +36,7 @@ qcome/migrations/*.py
 !qcome/migrations/__init__.py
 
 
+serviceAccountkey.json
+firebase-messaging-sw.js
+
+
