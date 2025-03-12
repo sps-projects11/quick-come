@@ -57,14 +57,12 @@ urlpatterns = [
     path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
 
     # Billing
-    path('billing/<int:booking_id>/', views.BillingHomeView.as_view(), name='billing,'),
+    path('billing/', views.BillingHomeView.as_view(), name='billing,'),
     path('billing/<int:billing_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
 
     #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
-    path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
-    path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
     path('payment/receipt/', views.PaymentReceipt.as_view(), name='payment_receipt')
 
 

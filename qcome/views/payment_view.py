@@ -32,22 +32,7 @@ class PaymentCreateView(View):
         response = payment_service.create_payment(request, booking.id)
         return JsonResponse(response) 
 
-@auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
-class PaymentUpdateView(View):
-    """Update an existing payment"""
-    def post(self, request, booking_id):
-        response = payment_service.update_payment(request, booking_id)
-        return JsonResponse(response)
-
-@auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
-class PaymentDeleteView(View):
-    """Delete a payment"""
-    def post(self, request, booking_id):
-        response = payment_service.delete_payment(booking_id)
-        return JsonResponse(response)
-@auth_required(login_url='/sign-in/')
+auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
 class PaymentReceipt(View):
     def get(self,request):

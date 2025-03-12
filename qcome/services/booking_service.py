@@ -1,4 +1,4 @@
-from ..models import Booking, ServiceCatalog
+from ..models import Booking, ServiceCatalog,Work
 
 def get_booking_list():
     """Fetch all active bookings."""
@@ -47,3 +47,6 @@ def delete_booking(booking_id):
 
 def get_booking_id(user_id):
     return Booking.objects.filter(customer=user_id).first() 
+
+def get_booking_worker(worker_id):
+    return list(Work.objects.filter(work_by=worker_id))

@@ -1,0 +1,94 @@
+{% extends "enduser/base.html" %}
+{% load static %}
+{% block title %}Work_list{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Work List</h2>
+        <div class="work-list">
+            {% if booking %}
+                {% for work in booking %}
+                    <div class="work-card">
+                        <img src="{{ work.customer_photo }}" alt="Customer Photo" class="customer-photo">
+                        <div class="work-details">
+                            <h3>{{ work.customer_id }}</h3>
+                            <p><strong>Address:</strong> {{ work.address }}</p>
+                            <p><strong>Service:</strong> {{ work.service }}</p>
+                            <p><strong>Vehicle Type:</strong> {{ work.vehicle_type }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-data">No work available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.work-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.work-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.work-card:hover {
+    transform: translateY(-5px);
+}
+
+.customer-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    margin-right: 15px;
+}
+
+.work-details {
+    text-align: left;
+}
+
+.work-details h3 {
+    margin: 0;
+    color: #007bff;
+}
+
+.work-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.no-data {
+    font-size: 18px;
+    color: #999;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
