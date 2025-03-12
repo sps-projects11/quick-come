@@ -68,9 +68,10 @@ urlpatterns = [
     path('payment/receipt/', views.PaymentReceipt.as_view(), name='payment_receipt'),
 
     # Workers
-    path('worker/',views.Worker.as_view(),name='workers'),
-    path('worker/<int:worker_id>/update',views.WorkerUpdate.as_view(),name='workers_update'),
-    path('worker/<int:worker_id>/delete',views.WorkerDelete.as_view(),name='workers_delete'),
+    path('worker/',views.WorkerListView.as_view(),name='worker_list'),
+    path('worker/<int:worker_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
+    path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
+    path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
 
 ]
 
