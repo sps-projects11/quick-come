@@ -7,6 +7,10 @@ def get_all_payments(user_id):
     """Retrieve all payments"""
     payments = Payment.objects.filter(created_by=user_id).values()
     return list(payments)
+def get_current_payment(booking_id):
+    """Retrieve all payments"""
+    payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()
+    return list(payment)
 
 def create_payment(request, booking_id):
     """Create a new payment for a given booking"""

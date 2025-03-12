@@ -57,7 +57,7 @@ urlpatterns = [
     path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
 
     # Billing
-    path('billing/', views.BillingHomeView.as_view, name='billing,'),
+    path('billing/<int:booking_id>/', views.BillingHomeView.as_view(), name='billing,'),
     path('billing/<int:billing_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
 
     #Payment

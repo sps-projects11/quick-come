@@ -18,6 +18,10 @@ class PaymentListView(View):
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
 class PaymentCreateView(View):
+    def get(self, request,booking_id):
+        payment = payment_service.get_current_payment(booking_id)
+        return render(request, 'enduser/payment/payment.html', {"payment": payment})
+
     """Create a payment"""
     def post(self, request, booking_id):
         booking = booking_service.get_booking_id(request.user.id)

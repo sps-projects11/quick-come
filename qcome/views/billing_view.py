@@ -1,9 +1,14 @@
 from django.views import View
+from django.shortcuts import render
+from ..decorators import auth_required, role_required
+from ..constants import Role
 
-
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class BillingHomeView(View):
-    def get(self, request):
-        return
+    def get(self, request,booking_id):
+        booking_id = booking_id
+        return render(request,'enduser/Booking/cart.html',{'booking_id':booking_id})
     
 
 class BillingUpdate(View):
