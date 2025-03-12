@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 FIREBASE_CREDENTIALS_PATH = os.path.join(settings.BASE_DIR, 'static/js/serviceAccountKey.json')
 if not firebase_admin._apps:
-    cred = credentials.Certificate("static/js/serviceAccountkey (2).json")
+    cred = credentials.Certificate("static/js/serviceAccountkey.json")
     firebase_admin.initialize_app(cred)
 
 
