@@ -7,8 +7,6 @@ class HomeView(View):
         user=request.user
         garage = garage_service.is_user_a_garage_owner(user)
         worker = workers_service.is_user_a_garage_worker(user)
-        print(garage)
-        print(worker)
 
         if garage:
             return render(request, 'garage/index.html', {'garage':garage})
