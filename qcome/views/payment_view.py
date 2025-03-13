@@ -33,7 +33,7 @@ class PaymentListView(View):
 @role_required(Role.END_USER.value, page_type='enduser')
 class PaymentCreateView(View):
     def get(self, request,booking_id):
-        booking=booking_id
+        booking_id=booking_id
         payment = payment_service.get_current_payment(booking_id)
         return render(request, 'enduser/payment/payment.html', {"payment": payment,'booking_id':booking_id})
 
