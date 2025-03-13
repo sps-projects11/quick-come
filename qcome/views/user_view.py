@@ -4,7 +4,9 @@ from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
 from ..services import get_user_details,update_user_details
-from django.core.files.storage import FileSystemStorage
+import os
+import hashlib
+from django.conf import settings
 
 
 @auth_required(login_url='/sign-in/')
@@ -31,17 +33,42 @@ class EnduserProfileUpdate(View):
     def post(self, request, user_id):
         user = get_user_details(user_id)
         if user:
-            profile_picture = request.FILES.get('profile_picture')
-            if profile_picture:
-                fs = FileSystemStorage(location='static/profile_pictures')
-                filename = fs.save(profile_picture.name, profile_picture)
-                profile_photo_url = fs.url(filename)
-                request.POST = request.POST.copy()
-                request.POST['profile_photo_url'] = profile_photo_url
+            profile_photo = request.FILES.get('profile_picture')
+            profile_photo_path = user.profile_photo_url  # Default to existing photo
 
-            update_user_details(user, request.POST)
+            if profile_photo:
+                profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures')
+                os.makedirs(profile_photo_img_dir, exist_ok=True)  # Ensure the directory exists
+
+                # Generate unique file name using MD5 hash
+                md5_hash = hashlib.md5()
+                for chunk in profile_photo.chunks():
+                    md5_hash.update(chunk)
+                file_hash = md5_hash.hexdigest()
+
+                _, ext = os.path.splitext(profile_photo.name)
+                new_file_name = f"{file_hash}{ext}"
+                file_path = os.path.join(profile_photo_img_dir, new_file_name)
+
+                # Save file only if it does not exist
+                if not os.path.exists(file_path):
+                    profile_photo.seek(0)
+                    with open(file_path, 'wb+') as destination:
+                        for chunk in profile_photo.chunks():
+                            destination.write(chunk)
+
+                profile_photo_path = f'/static/all-Pictures/{new_file_name}'
+                print("Updated profile photo path:", profile_photo_path)
+
+            # ✅ Make a mutable copy of request.POST
+            mutable_post = request.POST.copy()
+            mutable_post['profile_photo_url'] = profile_photo_path  # Add new profile photo path
+
+            update_user_details(user, mutable_post)  # Pass the modified request data
             return redirect('user_profile')
+
         return redirect('user_profile')
+
 
 
 class EnduserProfileDelete(View):

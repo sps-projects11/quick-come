@@ -28,6 +28,8 @@ def get_user_details(user_id):
         return User.objects.get(id=user_id)
     except User.DoesNotExist:
         return None
+    
+    
 def update_user_details(user, data):
     user.first_name = data.get('first_name')
     user.middle_name = data.get('middle_name')

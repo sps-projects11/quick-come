@@ -9,7 +9,7 @@
         <div class="image-card">
             <div class="text-center mb-4">
                 <div class="position-relative d-inline-block mt-3" style="width: 125px; height: 125px; background-color: black; border-radius: 50%;">
-                    <img id="profilePic" src="{% static user_detaits.profile_photo_url|default:'' %}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                    <img id="profilePic" src="{{user_details.profile_photo_url }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
                     <button type="button" class="btn btn-primary position-absolute top-50 start-50 translate-middle rounded-circle" onclick="selectImage()">+</button>
                     <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
                 </div>
