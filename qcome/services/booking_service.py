@@ -74,3 +74,6 @@ def delete_booking(user, booking_id):
 
 def get_booking_worker(worker_id):
     return list(Work.objects.filter(work_by=worker_id))
+
+def get_booking_by_id(user_id):
+    return Booking.objects.filter(customer=user_id).first() 
