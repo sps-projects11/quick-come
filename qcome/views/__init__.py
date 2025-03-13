@@ -9,4 +9,5 @@ from .billing_view import *
 from .auth_view import *
 from .manage_service_view import *
 from .manage_user_view import *
-from .workers_view import * 
+from .workers_view import *
+from .firebase_view import *

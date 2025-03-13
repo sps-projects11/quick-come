@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(responseData => {
             console.log("✅ Server Response:", responseData);
             if (responseData.payment_id) {
-                window.location.href = `/payment/receipt/?transaction_id=${responseData.payment_id}&amount=${amount}`;
+                window.location.href = `/payment/receipt/${responseData.payment_id}`;
             } else {
                 alert("❌ Payment Failed: " + (responseData.error || "Unknown Error"));
             }

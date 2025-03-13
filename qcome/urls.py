@@ -57,20 +57,19 @@ urlpatterns = [
     path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
 
     # Billing
-    path('billing/', views.BillingHomeView.as_view, name='billing,'),
+    path('billing/', views.BillingHomeView.as_view(), name='billing,'),
     path('billing/<int:billing_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
 
     #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
-    path('payment/update/<int:booking_id>/',views.PaymentUpdateView.as_view(), name='payment_update'),
-    path('payment/delete/<int:booking_id>/',views.PaymentDeleteView.as_view(), name='payment_delete'),
-    path('payment/receipt/', views.PaymentReceipt.as_view(), name='payment_receipt'),
+    path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt'),
 
     # Workers
-    path('worker/',views.Worker.as_view(),name='workers'),
-    path('worker/<int:worker_id>/update',views.WorkerUpdate.as_view(),name='workers_update'),
-    path('worker/<int:worker_id>/delete',views.WorkerDelete.as_view(),name='workers_delete'),
+    path('worker/',views.WorkerListView.as_view(),name='worker_list'),
+    path('worker/<int:worker_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
+    path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
+    path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
 
 ]
 

@@ -5,8 +5,15 @@ from qcome.models import Payment, Booking,User
     
 def get_all_payments(user_id):
     """Retrieve all payments"""
-    payments = Payment.objects.filter(created_by=user_id).values()
+    payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+    )
     return list(payments)
+
+def get_current_payment(booking_id):
+    """Retrieve all payments"""
+    payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()
+    return list(payment)
 
 def create_payment(request, booking_id):
     """Create a new payment for a given booking"""
@@ -68,4 +75,10 @@ def delete_payment(booking_id):
         return {"message": "Payment deleted successfully"}
     except Exception as e:
         return {"error": str(e)}
+    
+def payment_details_by_payment_id(payment_id):
+    return Payment.objects.filter(id=payment_id, is_active=True).values(
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+    ).first()  # This ensures only one result is returned
+
 
