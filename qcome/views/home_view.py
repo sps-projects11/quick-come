@@ -10,7 +10,7 @@ class HomeView(View):
 
         if garage:
             return render(request, 'garage/index.html', {'garage':garage})
-        if worker:
+        elif worker:
             return render(request, 'worker/index.html', {'worker':worker})
         else:
             return render(request, 'enduser/home/index.html', {'user':user})

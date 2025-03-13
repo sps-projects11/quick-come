@@ -19,7 +19,7 @@ class WorkListView(View):
             } for booking in bookings]
 
         print(booking_data)
-        return render(request,'enduser/work/work_list.html')
+        return render(request,'worker/work/work_list.html')
     
 
 class WorkUpdate(View):
