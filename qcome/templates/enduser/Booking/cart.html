@@ -2,154 +2,167 @@
 {% block title %}Quick-Come Cart{% endblock %}
 {%load static %}
 {% block content %}
-    <style>
-        .wrapper{
-            justify-content: flex-start;
-            align-items: center;
-            flex-direction: column;
-            display: flex;
-            padding: 20px;
-            width: 80%;
-            margin: auto;
-            height: 85vh;
-        }
-        .cart-container {
-            height: 100%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 40%;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
-        .cart-container:hover {
-            transform: scale(1.02);
-        }
-        .cart-items {
-            scrollbar-width: none; /* Hide scrollbar in Firefox */
-            -ms-overflow-style: none; 
-            height: 70%;
-            overflow-y: scroll;
-            margin: 20px 0;
-        }
-        .cart-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background: #f1f1f1;
-            transition: background 0.3s;
-        }
-        .cart-item:hover {
-            background: #e0e0e0;
-        }
-        .cart-item img {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            margin-right: 15px;
-        }
-        .item-details {
-            flex-grow: 1;
-            text-align: left;
-        }
-        .remove-btn {
-            background: #ff4d4d;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .remove-btn:hover {
-            background: #cc0000;
-        }
-        .cart-total {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-        .checkout-btn {
-            background: #28a745;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .checkout-btn:hover {
-            background: #218838;
-        }
-    </style>
-    <div class="wrapper">
-        <div class="cart-container">
-            <h3>Shopping Cart</h3>
-            <div class="cart-items">
-                {% for service in services %}
-                <div class="cart-item">
-                    <img src="{{ service.service_image }}" alt="Product" width="100">
-                    <div class="item-details">
-                        <h5>{{ service.service_name }}</h5>
-                        <p>${{ service.service_price }}</p>
-                        <button class="remove-btn">Remove</button>
+<link rel="stylesheet" href="{% static 'css/cart.css' %}"> 
+
+
+        <div class="wrapper">
+            <div class="cart-container">
+                <h3>Shopping Cart</h3>
+                <div class="cart-items">
+                    <input type="hidden" id="bookingId" value="{{ booking_id }}">
+                    <script>
+                        let bookingId = document.getElementById('bookingId').value; 
+                        console.log("Booking ID:", bookingId);
+                    </script>
+                    
+                    {% for service in services %}
+                    <div class="cart-item">
+                        <img src="{{ service.service_image }}" alt="Product" width="100">
+                        <div class="item-details">
+                            <h5>{{ service.service_name }}</h5>
+                            <p>${{ service.service_price }}</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-            <div class="cart-total">
-                <h5>Total: ${{ total_price }}</h5>
-                {% if booking_id %}
-                    <a href="{% url 'payment_create' booking_id %}">Proceed to Payment</a>
-                {% else %}
-                    <p>No active bookings available.</p>
-                {% endif %}
+        
+                <button onclick="openServiceModal()">Add Service</button>
+        
+                <div class="cart-total">
+                    <h5>Total: ${{ total_price }}</h5>
+                    {% if booking_id %}
+                        <a href="{% url 'payment_create' booking_id %}">Proceed to Payment</a>
+                    {% else %}
+                        <p>No active bookings available.</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+        
+        <!-- Service Selection Modal -->
+        <div id="serviceModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h4>Select a Service</h4>
+                <ul id="serviceList"></ul>
+            </div>
+        </div>
 
-
-        <script>
+      <script>  
+        function openServiceModal() {
+            console.log("Opening service modal...");
+            
+            fetch("/services/list/")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched service data:", data);
+    
+                if (!data.services || data.services.length === 0) {
+                    alert("No services available to add.");
+                    return;
+                }
+    
+                let serviceList = document.getElementById("serviceList");
+                serviceList.innerHTML = "";  // Clear previous entries
+    
+                data.services.forEach(service => {
+                    let listItem = document.createElement("li");
+                    listItem.innerText = service.service_name;
+                    listItem.onclick = function() {
+                        console.log("Selected service:", service);
+                        addServiceToBooking(service.id);
+                    };
+                    serviceList.appendChild(listItem);
+                });
+    
+                document.getElementById("serviceModal").style.display = "flex";
+            })
+            .catch(error => console.error("Error fetching services:", error));
+        }
+    
+        function closeModal() {
+            console.log("Closing service modal...");
+            document.getElementById("serviceModal").style.display = "none";
+        }
+    
+        function addServiceToBooking(serviceId) {
+            let bookingId = document.getElementById("bookingId").value.trim();
+            let csrfToken = "{{ csrf_token }}";
+        
+            if (!bookingId) {
+                console.error("Booking ID is missing.");
+                alert("Error: No active booking found.");
+                return;
+            }
+        
+            console.log(`Adding service ${serviceId} to booking ${bookingId}...`);
+        
+            fetch(`/billing/${bookingId}/update`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ service_id: serviceId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Add service response:", data);
+        
+                if (data.success) {
+                    alert("Service added successfully!");
+                    location.reload(); // Refresh to update the cart
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error adding service:", error));
+        
+            closeModal();
+        }
+        
             document.addEventListener("DOMContentLoaded", function () {
+                console.log("Page loaded. Initializing event listeners...");
+        
                 document.querySelectorAll(".remove-btn").forEach(button => {
                     button.addEventListener("click", function () {
-                        let cartItem = this.closest(".cart-item"); // Get the cart item element
-                        let serviceName = cartItem.querySelector("h5").textContent.trim(); // Get service name
-            
+                        let cartItem = this.closest(".cart-item");
+                        let serviceName = cartItem.querySelector("h5").textContent.trim();
+        
                         if (!confirm(`Are you sure you want to remove "${serviceName}"?`)) {
-                            return; // If the user cancels, do nothing
+                            console.log("Removal canceled for", serviceName);
+                            return;
                         }
-            
-                        let billingId = "{{ booking_id.id }}"; // Get the booking ID
-                        let csrfToken = "{{ csrf_token }}"; // CSRF token for security
-            
-                        fetch(`/billing/${billingId}/update`, {
-                            method: "DELETE", // Use DELETE request
+        
+                        let bookingId = "{{ booking_id }}";
+                        let csrfToken = "{{ csrf_token }}";
+        
+                        console.log(`Removing service ${serviceName} from booking ${bookingId}...`);
+        
+                        fetch(`/billing/${bookingId}/delete`, {
+                            method: "DELETE",
                             headers: {
                                 "X-CSRFToken": csrfToken,
                                 "Content-Type": "application/json"
                             },
-                            body: JSON.stringify({ service_name: serviceName }) // Send service name
+                            body: JSON.stringify({ service_name: serviceName })
                         })
                         .then(response => response.json())
                         .then(data => {
+                            console.log("Remove service response:", data);
+        
                             if (data.success) {
-                                cartItem.remove(); // Remove item from UI
-                                window.location.href = "/billing/"; // Reload cart page
+                                cartItem.remove();
+                                console.log(`${serviceName} removed successfully.`);
+                                window.location.href = "/billing/";
                             } else {
                                 alert("Failed to remove item. Try again.");
                             }
                         })
-                        .catch(error => console.error("Error:", error));
+                        .catch(error => console.error("Error removing service:", error));
                     });
                 });
             });
-            
         </script>
-    
-
-    
-{% endblock %}
+        {% endblock %}

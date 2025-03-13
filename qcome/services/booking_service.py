@@ -119,3 +119,32 @@ def remove_service_from_booking(booking_id, service_name):
 
     except Exception as e:
         return {"success": False, "error": str(e)}
+    
+
+def add_service_to_booking(booking_id, service_id):
+    """
+    Adds a service to a booking without removing existing services.
+    """
+    try:
+        # Get the service
+        service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
+        if not service:
+            return {"success": False, "error": "Service not found"}
+
+        # Get the active booking
+        booking = Booking.objects.filter(id=booking_id, is_active=True).first()
+        if not booking:
+            return {"success": False, "error": "Booking not found"}
+
+        # Ensure the service is not already in the booking
+        if booking.services.filter(id=service_id).exists():
+            return {"success": False, "error": "Service already added to booking"}
+
+        # Add the new service
+        booking.services.add(service)
+        booking.save()
+
+        return {"success": True, "message": "Service added successfully"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
