@@ -44,15 +44,11 @@
     
     <div>
         <ul id="navber">
-            <li><a class="active" href="{{ navbar_urls.home|default:'/' }}">{{ navbar_labels.home|default:"Home" }}</a></li>
-        
-            {% if not is_garage_page and not is_worker_page %}
-                <li><a href="{{ navbar_urls.services|default:'/services/' }}">{{ navbar_labels.services|default:"Services" }}</a></li>
-            {% endif %}
-        
-            <li><a href="{{ navbar_urls.booking|default:'/booking/' }}">{{ navbar_labels.booking|default:"Booking Details" }}</a></li>
-            <li><a href="{{ navbar_urls.contact|default:'/contact/' }}">{{ navbar_labels.contact|default:"Contact" }}</a></li>
-            <li><a href="{{ navbar_urls.blog|default:'/blog/' }}">{{ navbar_labels.blog|default:"Blog" }}</a></li>
+            <li><a class="active" href="/">Home</a></li>
+            <li><a href="/services/">Services</a></li>
+            <li><a href="/booking/">Booking Details</a></li>
+            <li><a href="/contact/">Contact</a></li>
+            <li><a href="/about/">About</a></li>
         
             <form class="d-flex ms-3">
                 <input class="form-control me-2" type="search" placeholder="Search">
