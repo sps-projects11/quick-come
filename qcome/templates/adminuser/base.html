@@ -248,7 +248,7 @@
   <div id="sidebar">
     <!-- Profile Section -->
     <div class="profile-section">
-      <img src="{% static user.profile_photo_url %}" alt="Profile" class="rounded-circle">
+      <img src="{{ user.profile_photo_url | default:" static/all-Pictures/admin-person.jpg"}}" alt="Profile" class="rounded-circle">
       <div class="profile-text">{{user.get_full_name}}</div>
     </div>
     <!-- Menu -->
@@ -262,7 +262,7 @@
       <!-- Profile with submenu -->
       <div class="sidebar-dropdown">
         <a href="#" class="list-group-item parent-item">
-          <i class="bi bi-person-circle sidebar-icon me-3"></i>
+          <i class="bi bi-person-circle sidebar-icon"></i>
 
           <span class="sidebar-text">Profile</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
