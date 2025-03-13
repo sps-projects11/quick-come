@@ -31,8 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Submit button clicked!");
 
         const selectedMethod = paymentMethod.value;
-        const amount = document.getElementById("amount").value;
         const csrfToken = document.getElementById("csrfToken").value;
+        const amount = document.getElementById("amount").value;
+        if (!amount || amount <= 0) {
+            alert("❌ Invalid payment amount.");
+            return;
+        }
+
 
         if (!selectedMethod) {
             alert("❌ Please select a valid payment method.");
