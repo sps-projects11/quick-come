@@ -36,7 +36,6 @@ class BookingCreateView(View):
         service_id = request.POST.get('service')
         description = request.POST.get('description')
 
-        print("hiiihbhhv")
         booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description)
 
         if booking == False:
