@@ -17,7 +17,7 @@ class BillingHomeView(View):
 
         services = booking_service.get_services_by_id(booking.id)
         total_price = sum(service["service_price"] for service in services)
-
+        print("booking",booking)
         return render(request, 'enduser/Booking/cart.html', {
             'booking_id': booking.id,  # ✅ Ensure it's an integer
             'services': services,
@@ -25,9 +25,27 @@ class BillingHomeView(View):
         })
 
 
-
-
 class BillingUpdate(View):
+    def post(self, request, booking_id):
+        """Handles adding a service to an existing booking."""
+        try:
+            data = json.loads(request.body)
+            service_id = data.get("service_id")
+
+            if not service_id:
+                return JsonResponse({"success": False, "error": "Missing service_id"}, status=400)
+
+            response = booking_service.add_service_to_booking(booking_id, service_id)
+            status_code = 200 if response["success"] else 400
+
+            return JsonResponse(response, status=status_code)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+class BillingDelete(View):
     def delete(self, request, booking_id):
         try:
             data = json.loads(request.body)
