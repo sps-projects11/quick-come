@@ -16,7 +16,7 @@ class BillingHomeView(View):
             return render(request, 'enduser/Booking/cart.html')  # No active booking
 
         services = booking_service.get_services_by_id(booking.id)
-        total_price = sum(service["service_price"] for service in services)
+        total_price = sum(service["price"] for service in services)
         print("booking",booking)
         return render(request, 'enduser/Booking/cart.html', {
             'booking_id': booking.id,  # ✅ Ensure it's an integer

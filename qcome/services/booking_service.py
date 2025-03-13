@@ -79,28 +79,24 @@ def get_booking_by_id(user_id):
     return Booking.objects.filter(customer=user_id,is_active=True).first() 
 
 def get_services_by_id(booking_id):
-    services = Booking.objects.filter(
-        id=booking_id, is_active=True
-    ).select_related('service').values(
-        'service__service_name', 
-        'service__service_image', 
-        'service__price'
-    )
+    try:
+        booking = Booking.objects.get(id=booking_id, is_active=True)
+        service_ids = booking.service  # This is a list of service IDs
 
-    service_data = [
-        {
-            'service_name': service['service__service_name'],
-            'service_image': service['service__service_image'],
-            'service_price': service['service__price'],
-        }
-        for service in services
-    ]
-    return service_data
+        services = ServiceCatalog.objects.filter(id__in=service_ids).values(
+            'service_name', 'service_image', 'price'
+        )
+
+        service_data = list(services)
+        return service_data
+
+    except Booking.DoesNotExist:
+        return []
 
 
 def remove_service_from_booking(booking_id, service_name):
     """
-    Removes a service from a booking if the service is linked.
+    Removes a service from a booking's service list if the service exists.
     """
     try:
         # Get the active service
@@ -108,17 +104,26 @@ def remove_service_from_booking(booking_id, service_name):
         if not service:
             return {"success": False, "error": "Service not found"}
 
-        # Get the active booking linked to this service
-        booking = Booking.objects.filter(id=booking_id, service=service, is_active=True).first()
+        # Get the active booking
+        booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         if not booking:
-            return {"success": False, "error": "Booking not found or not linked to the service"}
+            return {"success": False, "error": "Booking not found"}
 
-        # Delete the booking
-        booking.delete()
+        # Ensure the service ID exists in the ArrayField
+        if service.id not in booking.service:
+            return {"success": False, "error": "Service not linked to this booking"}
+
+        # Remove the service ID from the list
+        booking.service.remove(service.id)
+        
+        # Update the booking record
+        booking.save(update_fields=["service"])
+
         return {"success": True}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
+
     
 
 def add_service_to_booking(booking_id, service_id):
@@ -136,13 +141,15 @@ def add_service_to_booking(booking_id, service_id):
         if not booking:
             return {"success": False, "error": "Booking not found"}
 
-        # Ensure the service is not already in the booking
-        if booking.services.filter(id=service_id).exists():
+        # Ensure the service ID is not already in the booking's service list
+        if service.id in booking.service:
             return {"success": False, "error": "Service already added to booking"}
 
-        # Add the new service
-        booking.services.add(service)
-        booking.save()
+        # Append the new service ID to the list
+        booking.service.append(service.id)
+        
+        # Save the updated booking
+        booking.save(update_fields=["service"])
 
         return {"success": True, "message": "Service added successfully"}
 
