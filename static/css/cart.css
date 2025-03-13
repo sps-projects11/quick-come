@@ -25,7 +25,7 @@
 .cart-items {
     scrollbar-width: none; /* Hide scrollbar in Firefox */
     -ms-overflow-style: none; 
-    height: 70%;
+    height: 60%;
     overflow-y: scroll;
     margin: 20px 0;
 }
@@ -115,4 +115,10 @@
     }
     li:hover {
         background-color: #f0f0f0;
+    }
+    .btn{
+        border-radius: 5px;
+        padding: 5px;
+        border: transparent;
+        background: #00ff00;
     }
