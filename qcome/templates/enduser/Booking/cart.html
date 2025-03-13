@@ -102,11 +102,54 @@
             </div>
             <div class="cart-total">
                 <h5>Total: ${{ total_price }}</h5>
-                <button class="checkout-btn" onclick="window.location.href='{% url 'payment_create' booking_id.id %}'">
-                    Pay Now
-                </button>
+                {% if booking_id %}
+                    <a href="{% url 'payment_create' booking_id %}">Proceed to Payment</a>
+                {% else %}
+                    <p>No active bookings available.</p>
+                {% endif %}
             </div>
         </div>
     </div>
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".remove-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        let cartItem = this.closest(".cart-item"); // Get the cart item element
+                        let serviceName = cartItem.querySelector("h5").textContent.trim(); // Get service name
+            
+                        if (!confirm(`Are you sure you want to remove "${serviceName}"?`)) {
+                            return; // If the user cancels, do nothing
+                        }
+            
+                        let billingId = "{{ booking_id.id }}"; // Get the booking ID
+                        let csrfToken = "{{ csrf_token }}"; // CSRF token for security
+            
+                        fetch(`/billing/${billingId}/update`, {
+                            method: "DELETE", // Use DELETE request
+                            headers: {
+                                "X-CSRFToken": csrfToken,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ service_name: serviceName }) // Send service name
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                cartItem.remove(); // Remove item from UI
+                                window.location.href = "/billing/"; // Reload cart page
+                            } else {
+                                alert("Failed to remove item. Try again.");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                    });
+                });
+            });
+            
+        </script>
+    
+
     
 {% endblock %}

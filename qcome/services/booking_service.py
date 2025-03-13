@@ -96,3 +96,26 @@ def get_services_by_id(booking_id):
         for service in services
     ]
     return service_data
+
+
+def remove_service_from_booking(booking_id, service_name):
+    """
+    Removes a service from a booking if the service is linked.
+    """
+    try:
+        # Get the active service
+        service = ServiceCatalog.objects.filter(service_name=service_name, is_active=True).first()
+        if not service:
+            return {"success": False, "error": "Service not found"}
+
+        # Get the active booking linked to this service
+        booking = Booking.objects.filter(id=booking_id, service=service, is_active=True).first()
+        if not booking:
+            return {"success": False, "error": "Booking not found or not linked to the service"}
+
+        # Delete the booking
+        booking.delete()
+        return {"success": True}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
