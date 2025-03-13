@@ -42,7 +42,9 @@
                 </div>
                 <script>
                     let userId = "{{ request.user.id }}";  // Ensure it's enclosed in quotes
-                    console.log(userId)
+                    
+                    let bookingId = "{{booking_id}}"
+                    console.log(bookingId)
                 </script>
                 <!-- Submit Button -->
                 <button type="submit">Pay Now</button>
