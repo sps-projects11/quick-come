@@ -6,7 +6,28 @@ from ..models import Worker
 class WorkerListView(View):
     def get(self, request):
         workers = Worker.objects.all()
-        return render(request, 'workers/worker_profile.html', {'workers': workers})
+
+        navbar_labels = {
+            "home": "Worker Home",
+            "booking": "Bookings",
+            "contact": "Billing",
+            "blog": "Payment",
+        }
+
+        navbar_urls = {
+            "home": "/worker/",
+            "booking": "/worker/booking/",
+            "contact": "/worker/management/",
+            "blog": "/worker/reports/",
+        }
+
+        return render(request, 'workers/index.html', {
+            'workers': workers,
+            'navbar_labels': navbar_labels,
+            'navbar_urls': navbar_urls,
+            'is_worker_page': True  # Flag for worker page
+        })
+
 
     def post(self, request):
         return None

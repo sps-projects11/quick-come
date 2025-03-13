@@ -44,17 +44,27 @@
     
     <div>
         <ul id="navber">
-            <li><a class="active" href="/">Home</a></li>
-            <li><a href="/">Services</a></li>    
-            <li><a href="/booking/">Booking Details</a></li>
-            <li><a href="/">Contact</a></li>
-            <li><a href="/">Blog</a></li>
-            <form class="d-flex ms-3"><input class="form-control me-2" type="search" placeholder="Search"></form>
+            <li><a class="active" href="{{ navbar_urls.home|default:'/' }}">{{ navbar_labels.home|default:"Home" }}</a></li>
+        
+            {% if not is_garage_page and not is_worker_page %}
+                <li><a href="{{ navbar_urls.services|default:'/services/' }}">{{ navbar_labels.services|default:"Services" }}</a></li>
+            {% endif %}
+        
+            <li><a href="{{ navbar_urls.booking|default:'/booking/' }}">{{ navbar_labels.booking|default:"Booking Details" }}</a></li>
+            <li><a href="{{ navbar_urls.contact|default:'/contact/' }}">{{ navbar_labels.contact|default:"Contact" }}</a></li>
+            <li><a href="{{ navbar_urls.blog|default:'/blog/' }}">{{ navbar_labels.blog|default:"Blog" }}</a></li>
+        
+            <form class="d-flex ms-3">
+                <input class="form-control me-2" type="search" placeholder="Search">
+            </form>
+        
             <li id="lg-bag">
                 <a id="profile-link" href="/sign-in/">
-                    <i class="fas fa-user-circle" style="font-size: 18px;" ></i>
+                    <i class="fas fa-user-circle" style="font-size: 18px;"></i>
                 </a>
             </li>
+    
+        
             <!-- Dropdown Menu (Initially Hidden) -->
             <div id="profile-dropdown" >
                 <a href="/profile" style="display: block; padding: 8px;">Profile</a>
