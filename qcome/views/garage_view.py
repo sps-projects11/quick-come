@@ -11,10 +11,10 @@ class GarageListView(View):
         }
 
         navbar_urls = {
-            "home": "/garages/",
-            "booking": "/garages/booking/",
-            "contact": "/garages/workers/",
-            "blog": "/garages/payment/",
+            "home": "/garage/",
+            "booking": "/garage/booking/",
+            "contact": "/garage/workers/",
+            "blog": "/garage/payment/",
         }
 
         return render(request, 'garage/index.html', {

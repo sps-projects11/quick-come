@@ -3,7 +3,17 @@ from django.shortcuts import render,redirect
 from ..services import *
 from ..models import Worker
 
-class WorkerListView(View):
+
+
+class GarageWorkerListView(View):
+    def get(self, request):
+        workers = Worker.objects.all()
+        return render(request, 'workers/worker_profile.html', {'workers': workers})
+
+
+    
+
+class WorkerHomeView(View):
     def get(self, request):
         workers = Worker.objects.all()
 
