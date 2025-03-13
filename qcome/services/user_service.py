@@ -4,6 +4,9 @@ from ..models import User
 def get_user(user_id):
     return User.objects.get(id=user_id)
 
+def get_all_user():
+    return User.objects.all()
+
 
 def get_user_profile(user_id):
     """Fetch user profile details by user ID."""

@@ -10,7 +10,8 @@ class Work(models.Model):
         choices=[(status.value, status.name) for status in Status],
         blank=True, null=True
     )
-    work_photo_url = models.URLField(max_length=200, null=True, blank=True)
+
+
     is_active = models.BooleanField(default=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_created=True, null=True, blank=True)
