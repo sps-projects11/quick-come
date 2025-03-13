@@ -38,12 +38,14 @@ class PaymentCreateView(View):
 
     """Create a payment"""
     def post(self, request, booking_id):
-        booking = booking_service.get_booking_id(request.user.id)
+        print("actual payment :  ",request.user.id)
+        user_id=request.user.id
+        booking = booking_service.get_booking_by_id(request.user.id)
         print("booking:", booking)
         if not booking:
             return JsonResponse({"error": "❌ No booking found for user"}, status=400)
 
-        response = payment_service.create_payment(request, booking.id)
+        response = payment_service.create_payment(request, booking.id,user_id)
         return JsonResponse(response) 
 
 auth_required(login_url='/sign-in/')

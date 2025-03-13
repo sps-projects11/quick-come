@@ -43,14 +43,14 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("❌ Please enter a valid amount.");
             return;
         }
-
-        // Prepare payment data
+        
         let data = {
             amount: parseFloat(amount),
             type: selectedMethod === "UPI" ? 3 : selectedMethod === "NetBanking" ? 2 : 1, // Enum Mapping
             pay_status: 1, // Pending status
-            created_by: 1, // Replace with actual user ID
+            created_by: parseInt(userId), // Ensure it's sent as an integer
         };
+        console.log(data)
 
         if (selectedMethod === "UPI") {
             const upiId = document.getElementById("upiId").value;
@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
             data.ifsc_code = ifscCode;
         }
 
-        let bookingId = 123; // Replace dynamically if needed
 
         // Send data to Django backend
         fetch(`/payment/create/${bookingId}/`, {
