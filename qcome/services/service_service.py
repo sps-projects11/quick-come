@@ -11,3 +11,5 @@ def service_create(user,service_name, service_image, spare_part, price):
         price = price,
         created_by = user,
     )
+
+ 

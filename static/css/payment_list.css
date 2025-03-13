@@ -1,6 +1,6 @@
 
 .wrapper {
-    height:85vh;
+    height:90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,8 +9,9 @@
 }
 
 .container {
-    height:100%;
-    width: 90%;
+    margin: auto;
+    height:90%;
+    width: 80%;
     max-width: 600px;
     background: #fff;
     padding: 20px;
@@ -53,6 +54,7 @@ h2 {
 }
 
 .payment-name {
+    color: black;
     font-weight: bold;
     font-size: 16px;
 }

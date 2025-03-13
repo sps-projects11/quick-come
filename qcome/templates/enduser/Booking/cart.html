@@ -86,32 +86,27 @@
         }
     </style>
     <div class="wrapper">
-    <div class="cart-container">
-        <h3>Shopping Cart</h3>
-        <div class="cart-items">
-            <div class="cart-item">
-                <img src="https://via.placeholder.com/100" alt="Product">
-                <div class="item-details">
-                    <h5>Product Name</h5>
-                    <p>$20.00</p>
-                    <button class="remove-btn">Remove</button>
+        <div class="cart-container">
+            <h3>Shopping Cart</h3>
+            <div class="cart-items">
+                {% for service in services %}
+                <div class="cart-item">
+                    <img src="{{ service.service_image }}" alt="Product" width="100">
+                    <div class="item-details">
+                        <h5>{{ service.service_name }}</h5>
+                        <p>${{ service.service_price }}</p>
+                        <button class="remove-btn">Remove</button>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            <div class="cart-item">
-                <img src="https://via.placeholder.com/100" alt="Product">
-                <div class="item-details">
-                    <h5>Another Product</h5>
-                    <p>$15.00</p>
-                    <button class="remove-btn">Remove</button>
-                </div>
+            <div class="cart-total">
+                <h5>Total: ${{ total_price }}</h5>
+                <button class="checkout-btn" onclick="window.location.href='{% url 'payment_create' booking_id.id %}'">
+                    Pay Now
+                </button>
             </div>
-        </div>
-        <div class="cart-total">
-            <h5>Total: $35.00</h5>
-            <button class="checkout-btn" onclick="window.location.href='{% url 'payment_create' booking_id %}'">
-                Pay Now
-            </button>            
         </div>
     </div>
-</div>
+    
 {% endblock %}

@@ -15,23 +15,19 @@ def get_current_payment(booking_id):
     payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()
     return list(payment)
 
-def create_payment(request, booking_id):
+def create_payment(request, booking_id,user_id):
     """Create a new payment for a given booking"""
     try:
         data = json.loads(request.body)
-        print("✅ Received Payment Data:", data)  # Debugging
 
         booking = Booking.objects.filter(id=booking_id).first()
-        print("Booking:", booking)
         if not booking:
             return {"error": "❌ Booking not found"}
 
-        # Ensure created_by is an integer
-        created_by_id = int(data.get('created_by'))  # Convert to int
-        print("Created_by ID:", created_by_id)
+        
 
         # Fetch the actual User instance
-        user = User.objects.get(id=created_by_id)  # Use get() to ensure a single User instance
+        user = User.objects.get(id=user_id)  # Use get() to ensure a single User instance
         print("User:", user, "Type:", type(user))
 
         # Create payment

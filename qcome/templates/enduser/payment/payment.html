@@ -40,7 +40,10 @@
                     <label>IFSC Code:</label>
                     <input type="text" id="ifscCode">
                 </div>
-
+                <script>
+                    let userId = "{{ request.user.id }}";  // Ensure it's enclosed in quotes
+                    console.log(userId)
+                </script>
                 <!-- Submit Button -->
                 <button type="submit">Pay Now</button>
             </form>        

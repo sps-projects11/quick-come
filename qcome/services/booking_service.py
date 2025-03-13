@@ -76,4 +76,23 @@ def get_booking_worker(worker_id):
     return list(Work.objects.filter(work_by=worker_id))
 
 def get_booking_by_id(user_id):
-    return Booking.objects.filter(customer=user_id).first() 
+    return Booking.objects.filter(customer=user_id,is_active=True).first() 
+
+def get_services_by_id(booking_id):
+    services = Booking.objects.filter(
+        id=booking_id, is_active=True
+    ).select_related('service').values(
+        'service__service_name', 
+        'service__service_image', 
+        'service__price'
+    )
+
+    service_data = [
+        {
+            'service_name': service['service__service_name'],
+            'service_image': service['service__service_image'],
+            'service_price': service['service__price'],
+        }
+        for service in services
+    ]
+    return service_data
