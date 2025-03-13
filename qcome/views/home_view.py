@@ -1,9 +1,21 @@
 from django.views import View
 from django.shortcuts import render, redirect
+from qcome.services import garage_service, workers_service
 
 class HomeView(View):
     def get(self, request):
-        return render(request, 'enduser/home/index.html')
+        user=request.user
+        garage = garage_service.is_user_a_garage_owner(user)
+        worker = workers_service.is_user_a_garage_worker(user)
+        print(garage)
+        print(worker)
+
+        if garage:
+            return render(request, 'garage/index.html', {'garage':garage})
+        if worker:
+            return render(request, 'worker/index.html', {'worker':worker})
+        else:
+            return render(request, 'enduser/home/index.html', {'user':user})
 
     
 class ChangeMyThemeView(View):

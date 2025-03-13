@@ -15,3 +15,7 @@ def update_garage_list(garage_id):
 def delete_garage_list(garage_id):
     Garage.objects.delete()
     return
+
+
+def is_user_a_garage_owner(user):
+    return Garage.objects.filter(garage_owner=user, is_active=True).exists()
