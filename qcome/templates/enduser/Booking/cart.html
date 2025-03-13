@@ -3,8 +3,6 @@
 {%load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}"> 
-
-
         <div class="wrapper">
             <div class="cart-container">
                 <h3>Shopping Cart</h3>
@@ -26,16 +24,20 @@
                     </div>
                     {% endfor %}
                 </div>
-        
-                <button onclick="openServiceModal()">Add Service</button>
+                <div class="footer">
+                <button class="btn" onclick="openServiceModal()">Add Service</button>
         
                 <div class="cart-total">
                     <h5>Total: ${{ total_price }}</h5>
+                    
+                </div>
+                <div>
                     {% if booking_id %}
-                        <a href="{% url 'payment_create' booking_id %}">Proceed to Payment</a>
+                        <button class="btn" href="{% url 'payment_create' booking_id %}">Go to Payment</button>
                     {% else %}
                         <p>No active bookings available.</p>
                     {% endif %}
+                </div>
                 </div>
             </div>
         </div>
