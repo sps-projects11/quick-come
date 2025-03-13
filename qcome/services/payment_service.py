@@ -1,6 +1,8 @@
 import json
 from django.shortcuts import get_object_or_404
 from qcome.models import Payment, Booking,User
+from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
     
 def get_all_payments(user_id):
@@ -15,20 +17,21 @@ def get_current_payment(booking_id):
     payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()
     return list(payment)
 
-def create_payment(request, booking_id,user_id):
-    """Create a new payment for a given booking"""
+def create_payment(request, booking_id, user_id):
+    """Create a new payment for a given booking and deactivate the booking"""
     try:
         data = json.loads(request.body)
 
-        booking = Booking.objects.filter(id=booking_id).first()
+        # Get the booking
+        booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         if not booking:
-            return {"error": "❌ Booking not found"}
+            return JsonResponse({"error": "❌ Booking not found or already inactive"}, status=400)
 
-        
-
-        # Fetch the actual User instance
-        user = User.objects.get(id=user_id)  # Use get() to ensure a single User instance
-        print("User:", user, "Type:", type(user))
+        # Get the user
+        try:
+            user = User.objects.get(id=user_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "❌ User not found"}, status=400)
 
         # Create payment
         payment = Payment.objects.create(
@@ -37,12 +40,17 @@ def create_payment(request, booking_id,user_id):
             bank_ac=data.get('bank_ac') or None,
             amount=data.get('amount'),
             pay_status=data.get('pay_status'),
-            created_by=user,  # Ensure we pass a User instance
+            created_by=user,
         )
 
-        return {"message": "✅ Payment created successfully", "payment_id": payment.id}
+        # **Deactivate the booking**
+        booking.is_active = False
+        booking.save(update_fields=["is_active"])
+
+        return JsonResponse({"message": "✅ Payment created successfully", "payment_id": payment.id})
+    
     except Exception as e:
-        return {"error": str(e)}
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 def update_payment(request, booking_id):

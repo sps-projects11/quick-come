@@ -153,3 +153,7 @@ def add_service_to_booking(booking_id, service_id):
 
     except Exception as e:
         return {"success": False, "error": str(e)}
+    
+
+def total_price(services):
+    return sum(service["price"] for service in services)
