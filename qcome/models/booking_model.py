@@ -13,7 +13,7 @@ class Booking(models.Model):
         models.IntegerField(),
         blank=False,
         null=False,
-        default=list 
+        default=list
     )
     description = models.CharField(blank=True,null=True,max_length=255)
     assigned_worker = models.ForeignKey('Worker', on_delete=models.CASCADE, null=True, blank=True, related_name='fk_worker_booking_workers_id')

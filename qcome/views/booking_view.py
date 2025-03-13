@@ -36,9 +36,10 @@ class BookingCreateView(View):
         service_id = request.POST.get('service')
         description = request.POST.get('description')
 
+        print("hiiihbhhv")
         booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description)
 
-        if booking == "already_exists":
+        if booking == False:
             messages.error(request, "You have already made a booking. You cannot book again.")
             return redirect('home')  # Redirect user to home or booking page
 

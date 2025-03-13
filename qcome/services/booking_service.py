@@ -10,13 +10,11 @@ def get_booking_list():
 def create_booking(user, current_location, vehicle_type, service_id, description):
     """Allow only one booking per user."""
     try:
-        service_id = int(service_id)
-        service = ServiceCatalog.objects.get(id=service_id)
-
+        service = int(service_id)
         # Check if the user already has ANY booking (active or inactive)
-        if Booking.objects.filter(customer=user).exists():
-            return "already_exists"  # Indicate that the user already booked
-
+        if Booking.objects.filter(customer=user, is_active=True).exists():
+            return False
+        
         # Create a new booking
         booking = Booking.objects.create(
             customer=user,
