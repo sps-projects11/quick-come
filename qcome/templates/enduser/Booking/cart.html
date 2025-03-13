@@ -33,7 +33,9 @@
                 </div>
                 <div>
                     {% if booking_id %}
-                        <button class="btn" href="{% url 'payment_create' booking_id %}">Go to Payment</button>
+                    <button class="btn" onclick="window.location.href='{% url 'payment_create' booking_id %}'">
+                        Go to Payment
+                    </button>                    
                     {% else %}
                         <p>No active bookings available.</p>
                     {% endif %}
