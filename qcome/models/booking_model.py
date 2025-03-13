@@ -9,7 +9,12 @@ class Booking(models.Model):
         choices=[(v_type.value, v_type.name) for v_type in Vehicle_Type],
     )
     current_location = models.CharField(max_length=255)
-    service = models.ManyToManyField('ServiceCatalog', related_name='fk_service_booking_services_id')
+    service = ArrayField(
+        models.IntegerField(),
+        blank=False,
+        null=False,
+        default=list 
+    )
     description = models.CharField(blank=True,null=True,max_length=255)
     assigned_worker = models.ForeignKey('Worker', on_delete=models.CASCADE, null=True, blank=True, related_name='fk_worker_booking_workers_id')
 
