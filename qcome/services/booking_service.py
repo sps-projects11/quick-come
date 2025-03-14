@@ -1,11 +1,25 @@
-from ..models import Booking, ServiceCatalog,Work
+from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 
 
 def get_booking_list():
-    """Fetch all active bookings."""
-    return Booking.objects.filter(is_active=True)
+    """Fetch all active bookings with service names."""
+    bookings = Booking.objects.filter(is_active=True)
+
+    for booking in bookings:
+         # Add customer details
+        booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
+        booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
+         # Debugging Output
+        print(f"Booking {booking.id} | Name: {booking.customer_name} | Phone: {booking.customer_phone}")
+
+        
+        service_ids = booking.service  # List of service IDs
+        services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
+        booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
+
+    return bookings
 
 
 def create_booking(user, current_location, vehicle_type, service_id, description):
@@ -37,14 +51,14 @@ def create_booking(user, current_location, vehicle_type, service_id, description
 
 
 def update_booking(user, booking_id, current_location, vehicle_type, service_id, description):
-    """Allow user to update their booking instead of blocking them."""
+    """Allow user to update their booking correctly."""
     try:
         booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
         service = ServiceCatalog.objects.get(id=int(service_id))  # Validate service
 
         booking.current_location = current_location
         booking.vehicle_type = vehicle_type
-        booking.service = service
+        booking.service = [service.id]  # Store service ID in a list
         booking.description = description
         booking.updated_by = user  # Track who updated it
         booking.save()
@@ -54,8 +68,10 @@ def update_booking(user, booking_id, current_location, vehicle_type, service_id,
         return "not_found"  
     except ServiceCatalog.DoesNotExist:
         return "invalid_service"  
-    except Exception:
+    except Exception as e:
+        print("Error:", e)
         return "error"
+
 
 
 def delete_booking(user, booking_id):
