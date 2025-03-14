@@ -8,6 +8,14 @@ class ManageUsersListView(View):
         return render(request, 'adminuser/user/user_list.html',{'users':users})
     
 
+class ManageUsersCreateView(View):
+    def get(self, request):
+        return
+    
+    def post(self, request, user_id):
+        return
+
+
 class ManageUserProfile(View):
     def get(self , request, user_id):
         return

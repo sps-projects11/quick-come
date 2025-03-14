@@ -20,9 +20,9 @@
         <div class="mb-3 text-center">
           <label class="form-label d-block">Profile Photo</label>
           <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-              <img src="{{ user.profile_photo.url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
+              <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
           <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
-              <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5px;"></i>
+              <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
           </div>            
           </div>
           <!-- Hidden file input -->
