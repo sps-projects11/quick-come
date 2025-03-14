@@ -15,7 +15,6 @@ class GarageCreateView(View):
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', context)
 
 
-
 class GarageUpdateView(View):
     def get(self, request, garage_id):
         return
