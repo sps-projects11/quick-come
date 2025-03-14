@@ -44,3 +44,22 @@ class WorkerDeleteView(View):
             worker.delete()
             return redirect('worker_list')
         return redirect('worker_list')
+class WorkerPaymentListView(View):
+    def get(self, request):
+        worker_user_id = request.user.id
+        payments = payment_service.get_worker_payments(worker_user_id)
+
+        # Convert Decimal to string for safe rendering
+        for payment in payments:
+            payment["amount"] = str(payment["amount"])
+
+        print("Payments Data:", payments)  # Debugging
+
+        return render(request, "enduser/payment/worker_payment_list.html", {"payments": payments})
+    
+class CheckWorkerStatus(View):
+    def get(self, request):
+        user_id = request.user.id
+        is_worker = workers_service.is_user_a_garage_worker(user_id)
+        
+        return JsonResponse({"is_worker": is_worker})

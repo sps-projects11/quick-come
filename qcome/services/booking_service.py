@@ -170,3 +170,7 @@ def add_service_to_booking(booking_id, service_id):
 
 def total_price(services):
     return sum(service["price"] for service in services)
+
+
+def get_booking(booking_id):
+    return Booking.objects.filter(id=booking_id).select_related('assigned_worker').first()
