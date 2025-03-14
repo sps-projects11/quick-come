@@ -1,0 +1,23 @@
+{% extends "enduser/base.html" %}
+{% block title %}Profile{% endblock %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+<div class="container">
+    <div class="garage-profile">
+        <h2>{{ garage.garage_name }}</h2>
+        <img src="{{ garage.garage_image }}" alt="Garage Image" class="garage-image">
+        <p><strong>Address:</strong> {{ garage.address }}</p>
+        <p><strong>Phone:</strong> {{ garage.phone }}</p>
+        <p><strong>Vehicle Type:</strong> {{ garage.get_vehicle_type_display }}</p>
+        <p><strong>Garage AC:</strong> {{ garage.garage_ac }}</p>
+
+        <a href="{% url 'garage_update' garage.id %}" class="btn btn-primary">Edit</a>
+        <form action="{% url 'garage_delete' garage.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
