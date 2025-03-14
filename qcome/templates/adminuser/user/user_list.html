@@ -30,7 +30,7 @@
           <td>{{ user.first_name }} {{ user.last_name }}</td>
           <td>{{ user.email }}</td>
           <td>
-            <a href="{% url 'manage_user' user.id %}" class="btn btn-sm btn-primary">Edit</a>
+            <a href="{% url 'manage_user_update' user.id %}" class="btn btn-sm btn-primary">Edit</a>
             <a href="{% url 'manage_user_delete' user.id %}" class="btn btn-sm btn-danger">Delete</a>
           </td>
         </tr>

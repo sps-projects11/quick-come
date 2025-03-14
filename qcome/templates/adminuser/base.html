@@ -261,7 +261,7 @@
 
       <!-- Profile with submenu -->
       <div class="sidebar-dropdown">
-        <a href="#" class="list-group-item parent-item">
+        <a href="{% url 'myadmin_profile' %}" class="list-group-item parent-item">
           <i class="bi bi-person-circle sidebar-icon"></i>
 
           <span class="sidebar-text">Profile</span>
@@ -277,7 +277,7 @@
 
       <!-- Users with submenu -->
       <div class="sidebar-dropdown">
-        <a href="#" class="list-group-item parent-item">
+        <a href="{% url 'manage_users' %}" class="list-group-item parent-item">
           <i class="bi bi-people sidebar-icon"></i>
           <span class="sidebar-text">Users</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
@@ -305,7 +305,7 @@
       </div>
       <!-- Service with submenu -->
       <div class="sidebar-dropdown">
-        <a href="#" class="list-group-item parent-item">
+        <a href="{% url 'manage_service_list' %}" class="list-group-item parent-item">
           <i class="bi bi-gear-wide-connected sidebar-icon"></i>
           <span class="sidebar-text">Service</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
