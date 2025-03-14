@@ -1,14 +1,15 @@
 import json
 from django.shortcuts import get_object_or_404
-from qcome.models import Payment, Booking,User
+from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
+from ..constants import PayType
 
     
-def get_all_payments(user_id):
+def get_all_payments_created_by(user_id):
     """Retrieve all payments"""
     payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
-        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
     )
     return list(payments)
 
@@ -46,7 +47,6 @@ def create_payment(request, booking_id, user_id):
         payment = Payment.objects.create(
             booking_id=booking,
             type=data.get('type'),
-            bank_ac=data.get('bank_ac') or None,
             amount=data.get('amount'),
             pay_status=data.get('pay_status'),
             created_by=user,
@@ -99,7 +99,32 @@ def delete_payment(booking_id):
     
 def payment_details_by_payment_id(payment_id):
     return Payment.objects.filter(id=payment_id, is_active=True).values(
-        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name'
+        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
     ).first()  # This ensures only one result is returned
+
+
+def get_worker_payments(worker_user_id):
+    """Retrieve payments for a worker if they are of type CashOnDelivery."""
+    worker_id=Worker.objects.filter(worker=worker_user_id).first()
+    all_bookings_by_worker = Booking.objects.filter(assigned_worker=worker_id.id)
+    payments = []
+    for booking in all_bookings_by_worker:
+        payment = Payment.objects.filter(
+            booking_id=booking.id, 
+            type=PayType.CASHONDELIVERY.value,  # Ensures only CashOnDelivery payments are considered
+            is_active=True
+        ).first()  # Fetch a single matching payment
+
+        if payment:
+            payments.append({
+                "payment_id": payment.id,
+                "amount": payment.amount,
+                "paid_at": payment.paid_at.strftime('%Y-%m-%d'),
+                "booking_id": booking.id,
+                "customer": f"{booking.customer.first_name} {booking.customer.last_name}",
+                "created_by": f"{payment.created_by.first_name} {payment.created_by.last_name}",
+            })
+
+    return payments
 
 

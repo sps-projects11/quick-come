@@ -64,21 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             data.upi_id = upiId;
-        } else if (selectedMethod === "NetBanking") {
-            const bankName = document.getElementById("bankName").value;
-            const accountNumber = document.getElementById("accountNumber").value;
-            const ifscCode = document.getElementById("ifscCode").value;
-
-            if (!bankName || !accountNumber || !ifscCode) {
-                alert("❌ Please enter all bank details.");
-                return;
-            }
-
-            data.bank_name = bankName;
-            data.bank_ac = accountNumber;
-            data.ifsc_code = ifscCode;
-        }
-
+        } 
 
         // Send data to Django backend
         fetch(`/payment/create/${bookingId}/`, {

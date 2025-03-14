@@ -27,8 +27,7 @@ class Vehicle_Type(Enum):
     
 class PayType(Enum):
     CASHONDELIVERY = 1
-    NETBANKING = 2
-    UPI = 3
+    UPI = 2
 
 class PayStatus(Enum):
     PENDING = 1
