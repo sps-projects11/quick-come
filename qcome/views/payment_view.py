@@ -2,12 +2,13 @@ from django.http import JsonResponse
 from django.views import View
 from qcome.services import payment_service,booking_service
 from django.shortcuts import render
-from ..decorators import auth_required, role_required
+from ..decorators import auth_required, role_required, garage_required, worker_required
 from ..constants import Role,PayType
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
-# @role_required(Role.END_USER.value, interface='worker', page_type='enduser')
+# @garage_required
+# @worker_required
 class PaymentListView(View):
     """Retrieve all payments"""
     def get(self, request):

@@ -172,3 +172,17 @@ def role_required(*allowed_roles, interface=None, page_type='default'):
             return _role_decorator(view)
     
     return decorator
+
+
+def garage_required(view_or_func=None, *, login_url='/sign-in/'):
+    decorator = role_required(Role.END_USER.value, interface='garage', page_type='enduser')
+    if view_or_func:
+        return auth_required(login_url=login_url)(decorator(view_or_func))
+    return lambda view: auth_required(login_url=login_url)(decorator(view))
+
+
+def worker_required(view_or_func=None, *, login_url='/sign-in/'):
+    decorator = role_required(Role.END_USER.value, interface='worker', page_type='enduser')
+    if view_or_func:
+        return auth_required(login_url=login_url)(decorator(view_or_func))
+    return lambda view: auth_required(login_url=login_url)(decorator(view))
