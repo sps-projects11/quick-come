@@ -9,7 +9,9 @@ class HomeView(View):
         worker = workers_service.is_user_a_garage_worker(user)
 
         if garage:
-            return render(request, 'garage/bookings.html', {'garage':garage})
+            bookings = garage_service.get_garage_bookings()
+            print("vcsdh",bookings)
+            return render(request, 'garage/bookings.html', {'garage':garage,'bookings':bookings})
         elif worker:
             return render(request, 'worker/index.html', {'worker':worker})
         else:

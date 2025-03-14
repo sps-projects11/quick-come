@@ -8,6 +8,7 @@ class GarageCreateView(View):
     def get(self, request):
         user = request.user
         bookings = get_garage_bookings(user)
+        print( "jshvjhsvdhj",bookings)
 
         if bookings is None:
             return render(request, 'garage/bookings.html', {'error': 'No garage found for this user.'})
