@@ -14,19 +14,6 @@ class GarageCreateView(View):
         }
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', context)
 
-# class GarageCreateView(View):
-#     def get(self, request):
-#         user = request.user
-#         bookings = get_garage_bookings(user)
-#         print( "jshvjhsvdhj",bookings)
-
-#         if bookings is None:
-#             return render(request, 'garage/bookings.html', {'error': 'No garage found for this user.'})
-
-#         return render(request, 'garage/bookings.html', {'bookings': bookings})
-
-#     def post(self, request):
-#         return
 
 
 class GarageUpdateView(View):
