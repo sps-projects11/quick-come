@@ -1,9 +1,13 @@
+from django.http import JsonResponse
 from django.views import View
 from qcome.services import user_service
 from django.shortcuts import redirect,render
 import os
 import hashlib
 from quickcome import settings
+from ..constants.error_message import ErrorMessage
+from ..constants.success_message import SuccessMessage
+from ..package.response import success_response,error_response
 
 class ManageUsersListView(View):
     def get(self, request):
@@ -63,7 +67,14 @@ class ManageUserUpdateView(View):
     def post(self, request, user_id):
         return
     
-class ManageUserDeleteView(View):
+
+class ManageUserToggleView(View):
     def post(self, request, user_id):
-        return
+        # Toggle the user's status using the service function.
+        user = user_service.toggle_user_status(user_id)
+        if user is None:
+            return JsonResponse(error_response(ErrorMessage.E00012.value))
+        # Return the updated status in JSON format.
+        return JsonResponse(success_response(SuccessMessage.S00005.value))
+
     

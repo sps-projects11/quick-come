@@ -1,5 +1,6 @@
 from qcome.models import User
 from ..models import User,Worker
+from django.shortcuts import get_object_or_404
 
 def get_user(user_id):
     return User.objects.get(id=user_id)
@@ -87,3 +88,17 @@ def user_create(first_name, middle_name, last_name, dob, email, phone, gender, p
        gender = gender,
        profile_photo_url = profile_photo_path
     )
+
+
+def toggle_user_status(user_id):
+    try:
+        # Use the primary key field "id" to get the user.
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return None
+
+    # Toggle the user's is_active status.
+    user.is_active = not user.is_active
+    user.save()
+    return user
+   

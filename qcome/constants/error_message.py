@@ -13,7 +13,7 @@ class ErrorMessage(Enum):
     E00009 = "Invalid email or password."
     E00010 = "User Doesn't Exists."
     E00011 = "Unauthorized Access! Please try again."
-    E00012 = ""
+    E00012 = "Error updating user status. Please try again."
     E00013 = ""
     E00014 = ""
     E00015 = ""

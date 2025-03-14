@@ -9,39 +9,126 @@
 {% endblock %}
 
 {% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">User List</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Profile Photo</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr id="user-row-{{ user.id }}">
+        <td>
+          <img src="{{ user.profile_photo_url|default:'/static/all-Pictures/admin-person.jpg' }}" alt="Profile" class="rounded-circle" width="50" height="50">
+        </td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <!-- Toggle switch for active status -->
+          <label class="switch">
+            <input type="checkbox" class="user-toggle" data-user-id="{{ user.id }}" {% if user.is_active %}checked{% endif %}>
+            <span class="slider round"></span>
+          </label>
+        </td>
+        <td>
+          <a href="{% url 'manage_user_update' user.id %}" class="btn btn-sm btn-primary">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No users found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-  <div class="container mt-5">
-    <h1 class="mb-4">User List</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Profile Photo</th>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>
-            <img src="{{ user.profile_photo_url | default:" /static/all-Pictures/admin-person.jpg"}}" alt="Profile" class="rounded-circle" width="50" height="50">
-          </td>
-          <td>{{ user.first_name }} {{ user.last_name }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <a href="{% url 'manage_user_update' user.id %}" class="btn btn-sm btn-primary">Edit</a>
-            <a href="{% url 'manage_user_delete' user.id %}" class="btn btn-sm btn-danger">Delete</a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="text-center">No users found.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
- 
+<script>
+  $(document).ready(function(){
+    $('.user-toggle').change(function(){
+      var checkbox = $(this);
+      var userId = checkbox.data('user-id');
+      var isActive = checkbox.is(':checked');
 
-  {% endblock %}
+      // Construct the URL using the user ID.
+      var toggleUrl = '{% url "manage_user_toggle" 0 %}'.replace("0", userId);
+
+      $.ajax({
+        url: toggleUrl,
+        type: 'POST',
+        data: {
+          'is_active': isActive,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response){
+          // Optionally update the UI or display a message
+          console.log("User status toggled successfully");
+        },
+        error: function(xhr, status, error){
+          alert("Error toggling user status");
+          // Revert the checkbox state if there is an error
+          checkbox.prop('checked', !isActive);
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Optional CSS for the switch (if not already included in your CSS) -->
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #28a745;  /* Green when active */
+}
+
+input:not(:checked) + .slider {
+  background-color: #dc3545;  /* Red when inactive */
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+</style>
+{% endblock %}
