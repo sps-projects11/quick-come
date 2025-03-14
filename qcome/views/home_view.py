@@ -2,6 +2,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from qcome.services import garage_service, workers_service
 
+
 class HomeView(View):
     def get(self, request):
         user=request.user.id if request.user.is_authenticated else None

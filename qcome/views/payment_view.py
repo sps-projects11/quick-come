@@ -6,10 +6,11 @@ from ..decorators import auth_required, role_required
 from ..constants import Role,PayType
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+# @role_required(Role.END_USER.value, page_type='enduser')
+
 class PaymentListView(View):
     """Retrieve all payments"""
-
+    @role_required(Role.END_USER.value, interface='garage', page_type='enduser')
     def get(self, request):
         user_id = request.user.id
         payments = payment_service.get_all_payments_created_by(user_id)  # Returns list of dicts
