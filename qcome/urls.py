@@ -27,8 +27,8 @@ urlpatterns = [
     # Admin-Profile Management
     path('admin/users/', views.ManageUsersListView.as_view(), name='manage_users'),
     path('admin/users/create', views.ManageUsersCreateView.as_view(), name='manage_user_create'),
-    path('admin/<int:user_id>/profile', views.ManageUserProfile.as_view(), name='manage_user_update'),
-    path('admin/<int:user_id>/profile/delete', views.ManageUserDelete.as_view(), name='manage_user_delete'),
+    path('admin/<int:user_id>/profile', views.ManageUserUpdateView.as_view(), name='manage_user_update'),
+    path('admin/<int:user_id>/profile/delete', views.ManageUserDeleteView.as_view(), name='manage_user_delete'),
 
     # Admin-Service Management
     path('admin/service/', views.ManageServiceList.as_view(), name='manage_service_list'),

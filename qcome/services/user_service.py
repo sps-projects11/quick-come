@@ -74,3 +74,16 @@ def updateFCMToken(user_id,fcm_token):
 
 def getFCMtoken(user_id):
     return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()
+
+
+def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path):
+    return User.objects.create(
+       first_name = first_name, 
+       middle_name = middle_name, 
+       last_name = last_name,
+       dob = dob,
+       email = email, 
+       phone = phone, 
+       gender = gender,
+       profile_photo_url = profile_photo_path
+    )

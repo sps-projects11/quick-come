@@ -1,0 +1,103 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Profile Create{% endblock %}
+
+{% block navbar_extra %}  
+        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+        Admin Users
+      </a> 
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2 class="text-center mb-4">Create User</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Profile Photo Section with Plus Icon at Bottom Right -->
+    <div class="mb-3 text-center">
+      <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+          <img src="{{ '/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
+      <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
+          <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+      </div>            
+      </div>
+      <!-- Hidden file input -->
+      <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
+    </div>
+
+    <!-- First Name -->
+    <div class="form-group">
+      <label for="id_first_name">First Name</label>
+      <input type="text" name="first_name" id="id_first_name" class="form-control" required>
+    </div>
+    <!-- Middle Name -->
+    <div class="form-group">
+      <label for="id_middle_name">Middle Name</label>
+      <input type="text" name="middle_name" id="id_middle_name" class="form-control">
+    </div>
+    <!-- Last Name -->
+    <div class="form-group">
+      <label for="id_last_name">Last Name</label>
+      <input type="text" name="last_name" id="id_last_name" class="form-control" required>
+    </div>
+    <!-- Date of Birth -->
+    <div class="form-group">
+      <label for="id_dob">Date of Birth</label>
+      <input type="date" name="dob" id="id_dob" class="form-control" required>
+    </div>
+    <!-- Email -->
+    <div class="form-group">
+      <label for="id_email">Email</label>
+      <input type="email" name="email" id="id_email" class="form-control" required>
+    </div>
+    <!-- Phone -->
+    <div class="form-group">
+      <label for="id_phone">Phone</label>
+      <input type="text" name="phone" id="id_phone" class="form-control">
+    </div>
+    <!-- Gender -->
+    <div class="form-group">
+      <label for="id_gender">Gender</label>
+      <select class="form-control" id="id_gender" name="gender">
+        <option value="">Select Gender</option>
+        <option value="1">Male</option>
+        <option value="2">Female</option>
+        <option value="3">Other</option>
+      </select>
+    </div>
+    <!-- Submit -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Create User</button>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const profileContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.getElementById('id_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+  
+    // Trigger file input when the container is clicked
+    profileContainer.addEventListener('click', function() {
+      fileInput.click();
+    });
+  
+    // Update the image preview after selecting a file
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+  </script>
+
+
+{% endblock %}
