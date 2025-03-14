@@ -11,10 +11,7 @@ def get_booking_list():
          # Add customer details
         booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
         booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
-         # Debugging Output
-        print(f"Booking {booking.id} | Name: {booking.customer_name} | Phone: {booking.customer_phone}")
-
-        
+       
         service_ids = booking.service  # List of service IDs
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
