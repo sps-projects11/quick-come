@@ -160,10 +160,9 @@
                 window.location.href = "/garage/1/create/"
 
             } else if (value === '2') {
-                const workerID = "{{ user.id }}";
+                const workerID = "{{ worker_id|default:user.id }}"; 
                 if (workerID) {
-                   // window.location.href = `/worker/${workerID}/create/`;
-                   window.location.href = "/worker/1/create/"
+                    window.location.href = `/worker/${workerID}/create/`;
                 } else {
                     console.log("Worker ID is not active");
                 }
