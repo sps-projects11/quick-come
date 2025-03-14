@@ -319,7 +319,7 @@
       </div>
       <!-- Payment with submenu -->
       <div class="sidebar-dropdown">
-        <a href="#" class="list-group-item parent-item">
+        <a href="{% url 'manage_payment_list' %}" class="list-group-item parent-item">
           <i class="bi bi-cash-stack sidebar-icon"></i>
           <span class="sidebar-text">Payment</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
@@ -327,8 +327,7 @@
         <div class="submenu">
           <div class="submenu-header">Payment</div>
           <hr class="submenu-divider">
-          <a href="#">List</a>
-          <a href="#">Create</a>
+          <a href="{% url 'manage_payment_list' %}">List</a>
         </div>
       </div>
     </div>

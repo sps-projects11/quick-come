@@ -36,6 +36,9 @@ urlpatterns = [
     path('admin/service/<int:service_id>/update', views.ManageServiceListUpdate.as_view(), name='manage_service_update'),
     path('admin/service/<int:service_id>/delete', views.ManageServiceListDelete.as_view(), name='manage_service_delete'),
 
+    # Admin-Payment Management
+    path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
+
     # Theme
     path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),
 
