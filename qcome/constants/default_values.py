@@ -21,9 +21,7 @@ class Status(Enum):
 class Vehicle_Type(Enum):
     CAR = 1
     BIKE = 2
-    TOTO = 3
-    AUTO_RIKSHA = 4
-    OTHER = 5
+
 
 
     
