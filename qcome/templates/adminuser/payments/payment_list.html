@@ -3,42 +3,45 @@
 {% block title %}Quick Come Admin-Payment{% endblock %}
 
 {% block navbar_extra %}  
-        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_payment_list' %}">
-        Payment
-      </a> 
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_payment_list' %}">
+    Payment
+  </a> 
 {% endblock %}
 
-
 {% block content %}
-  <h1>Payment List</h1>
+<div class="container my-4">
+  <h1 class="text-center mb-4">Payment List</h1>
   {% if payments_data %}
-    <table border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th>Payment ID</th>
-          <th>Booking ID</th>
-          <th>Payment Type</th>
-          <th>Amount</th>
-          <th>Payment By</th>
-          <th>Paid To</th>
-          <th>Payment Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for payment in payments_data %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover text-center">
+        <thead class="thead-dark">
           <tr>
-            <td>{{ payment.payment_id }}</td>
-            <td>{{ payment.booking_id }}</td>
-            <td>{{ payment.payment_type }}</td>
-            <td>{{ payment.amount }}</td>
-            <td>{{ payment.payment_by }}</td>
-            <td>{{ payment.paid_to }}</td>
-            <td>{{ payment.paid_at }}</td>
+            <th>Payment ID</th>
+            <th>Booking ID</th>
+            <th>Payment Type</th>
+            <th>Amount</th>
+            <th>Payment By</th>
+            <th>Paid To</th>
+            <th>Payment Time</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for payment in payments_data %}
+            <tr>
+              <td>{{ payment.payment_id }}</td>
+              <td>{{ payment.booking_id }}</td>
+              <td>{{ payment.payment_type }}</td>
+              <td>{{ payment.amount }}</td>
+              <td>{{ payment.payment_by }}</td>
+              <td>{{ payment.paid_to }}</td>
+              <td>{{ payment.paid_at }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% else %}
-    <p>No payments found.</p>
+    <p class="text-center">No payments found.</p>
   {% endif %}
+</div>
 {% endblock %}
