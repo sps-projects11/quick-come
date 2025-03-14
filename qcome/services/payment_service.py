@@ -20,6 +20,10 @@ def get_current_payment(booking_id):
 def create_payment(request, booking_id, user_id):
     """Create a new payment for a given booking and deactivate the booking"""
     try:
+        # Ensure it's a POST request
+        if request.method != "POST":
+            return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
+
         data = json.loads(request.body)
 
         # Get the booking
@@ -33,6 +37,11 @@ def create_payment(request, booking_id, user_id):
         except ObjectDoesNotExist:
             return JsonResponse({"error": "❌ User not found"}, status=400)
 
+        # Validate required fields
+        required_fields = ['type', 'amount', 'pay_status']
+        if not all(field in data for field in required_fields):
+            return JsonResponse({"error": "Missing required fields"}, status=400)
+
         # Create payment
         payment = Payment.objects.create(
             booking_id=booking,
@@ -43,11 +52,19 @@ def create_payment(request, booking_id, user_id):
             created_by=user,
         )
 
-        # **Deactivate the booking**
+        # Deactivate the booking
         booking.is_active = False
         booking.save(update_fields=["is_active"])
 
-        return JsonResponse({"message": "✅ Payment created successfully", "payment_id": payment.id})
+        response_data = {
+            "message": "✅ Payment created successfully",
+            "payment_id": payment.id
+        }
+
+        return JsonResponse(response_data)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON data"}, status=400)
     
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
