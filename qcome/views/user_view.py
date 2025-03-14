@@ -1,13 +1,12 @@
 from django.views import View
 from qcome.services import user_service
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from ..decorators import auth_required, role_required
 from ..constants import Role
-from ..services import get_user_details,update_user_details
+from ..services import get_user_details,update_user_details,get_workers_details
 import os
 import hashlib
 from django.conf import settings
-
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -83,3 +82,14 @@ class EnduserProfileDelete(View):
             user.delete()
             return redirect('user_profile')  
         return redirect('user_profile')
+
+
+class WorkerCreateView(View):
+    def get(self, request, worker_id):
+        worker_details = get_workers_details(worker_id)
+        context = {
+            'worker_details': worker_details,
+            'user': request.user,
+        }
+        return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
+

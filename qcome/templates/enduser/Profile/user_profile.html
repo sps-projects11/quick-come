@@ -1,18 +1,177 @@
-{% extends "enduser/base.html" %}
-{% block title %}Profile{% endblock %}
-{%load static %}
-{% block content %}
-    <link rel="stylesheet" href="/static/css/user_profile.css">
-    <script src="/static/js/profile.js"></script>
-        <div class="profile-container">
-            <div class="wrapper">
-                <img src={{user.photo}} alt="Profile Picture" class="profile-pic">
-                <h3 class="profile-name">{{user.fullname}}</h3>
-                <p class="profile-info"></p>
-                <a href="{% url 'profile_update' user_id=user.id %}" class="profile-btn">Edit Profile</a>
-                <a href="{% url 'profile_delete' user_id=user.id %}" class="profile-btn">Delete</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quick Come{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'all-Pictures/logo.jpg' %}"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .profile-card {
+            max-width: 600px; 
+        }
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <section id="header">
+        <div class="logo">
+            <a href="/"><img src="{% static 'all-Pictures/logo.jpg' %}" alt="logo"></a>
+        </div>
+        <div>
+            <ul id="navber">
+                <li><a class="active" href="/">Home</a></li>
+                <li><a href="/services/">Services</a></li>
+                <li><a href="/booking/">Booking Details</a></li>
+                <li><a href="/contact/">Contact</a></li>
+                <li><a href="/about/">About</a></li>
+                <form class="d-flex ms-3">
+                    <input class="form-control me-2" type="search" placeholder="Search">
+                </form>
+                <li id="lg-bag">
+                    <a id="profile-link" href="/sign-in/">
+                        <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+                    </a>
+                </li>
+                <!-- Dropdown Menu (Initially Hidden) -->
+                <div id="profile-dropdown">
+                    <a href="/profile" style="display: block; padding: 8px;">Profile</a>
+                    <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+                </div>
+                <a href="#" id="close"><i class="fas fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="#"><i class="fas fa-search"></i></a>
+            <a id="profile-link" href="/sign-in/">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <!-- Dropdown Menu (Initially Hidden) -->
+            <div id="profile-dropdown">
+                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
+                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+            </div>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+    <!-- Profile Container -->
+    <div class="profile-container" style="background-color:red;">
+        <div class="card shadow-lg p-4 profile-card" style=" width: 900px;background-color:green;">
+            <div class="d-flex justify-content-center mt-3">
+                <img src="{{ user.profile_photo_url }}" alt="Profile Picture" class="profile-pic rounded-circle">
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</h5>
+                <p class="card-text">
+                    <strong>Email:</strong> {{ user.email }}<br>
+                    <strong>Phone:</strong> {{ user.phone }}<br>
+                    <strong>Gender:</strong> <span id="gender"></span><br>
+                    <strong>Date of Birth:</strong> {{ user.dob }}
+                </p>
+                <select class="form-select mb-3" aria-label="Profile Options" onchange="redirect(this.value)">
+                    <option value="" selected>Be with us</option>
+                    <option value="1">Connect as a garage owner</option>
+                    <option value="2">Connect as a worker</option>
+                </select>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'profile_update' user_id=user.id %}" class="btn btn-primary">Edit Profile</a>
+                    <a href="{% url 'profile_delete' user_id=user.id %}" class="btn btn-danger">Delete</a>
+                </div>
             </div>
         </div>
-{% endblock %}
-
-
+    </div>
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="{% static 'all-Pictures/logo.jpg' %}" alt="logo">
+            <h4>Contact</h4>
+            <p><strong>Phone:</strong> (+91) 99079 950227 /(+91) 00000 82525</p>
+            <p><strong>Email:</strong> quickcome@gmail.com</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-x"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Booking Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">My Profile</a>
+            <a href="#">View Payment</a>
+            <a href="#">Track My Booking</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="col-install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="rowfooter">
+                <img src="{% static 'all-Pictures/apps/app-store-logo.png' %}" alt="" height="40">
+                <img src="{% static 'all-Pictures/apps/play-store-logo-nisi-filters-australia-11.png' %}" alt="" height="40">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img class="pay" src="{% static 'all-Pictures/apps/Mobile_Card_View@2x.png' %}" alt="">
+        </div>
+        <div class="copyright">
+            <p>© 2025. All rights reserved. - Quick Come</p>
+        </div>
+    </footer>
+    <script>
+        function setGender(gender) {
+            const genderText = {
+                '1': 'Male',
+                '2': 'Female',
+                '3': 'Other'
+            }[gender] || 'Not specified';
+            document.getElementById('gender').textContent = genderText;
+        }
+    
+        function redirect(value) {
+            if (value === '1') {
+                window.location.href = "/connect/garage-owner/";
+            } else if (value === '2') {
+                const workerID = "{{ user.id }}";
+                if (workerID) {
+                   // window.location.href = `/worker/${workerID}/create/`;
+                   window.location.href = "/worker/1/create/"
+                } else {
+                    console.log("Worker ID is not active");
+                }
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            setGender('{{ user.gender }}');
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
