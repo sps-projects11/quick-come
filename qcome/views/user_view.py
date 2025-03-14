@@ -89,7 +89,9 @@ class WorkerCreateView(View):
         worker_details = get_workers_details(worker_id)
         context = {
             'worker_details': worker_details,
+            'worker_id': worker_id,  
             'user': request.user,
         }
         return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
+
 
