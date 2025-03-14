@@ -1,22 +1,33 @@
 from django.shortcuts import render
 from django.views import View
+
+from qcome.services.garage_service import get_garage_details
 from ..services import get_garage_bookings
 
 
-
 class GarageCreateView(View):
-    def get(self, request):
-        user = request.user
-        bookings = get_garage_bookings(user)
-        print( "jshvjhsvdhj",bookings)
+    def get(self, request, garage_id):
+        garage_details = get_garage_details(garage_id)  # Fetch garage details
+        context = {
+            'garage_details': garage_details,
+            'user': request.user,
+        }
+        return render(request, 'enduser/Profile/garage/garage_profile_create.html', context)
 
-        if bookings is None:
-            return render(request, 'garage/bookings.html', {'error': 'No garage found for this user.'})
+# class GarageCreateView(View):
+#     def get(self, request):
+#         user = request.user
+#         bookings = get_garage_bookings(user)
+#         print( "jshvjhsvdhj",bookings)
 
-        return render(request, 'garage/bookings.html', {'bookings': bookings})
+#         if bookings is None:
+#             return render(request, 'garage/bookings.html', {'error': 'No garage found for this user.'})
 
-    def post(self, request):
-        return
+#         return render(request, 'garage/bookings.html', {'bookings': bookings})
+
+#     def post(self, request):
+#         return
+
 
 class GarageUpdateView(View):
     def get(self, request, garage_id):

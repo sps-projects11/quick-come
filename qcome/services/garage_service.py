@@ -16,6 +16,10 @@ def get_booking_details(booking_id):
     return Booking.objects.get(id=booking_id)
 
 
+def get_garage_details(garage_id):
+    return Garage.objects.filter(id=garage_id).first()
+
+
 
 
 
