@@ -17,6 +17,7 @@
         <th scope="col">Profile Photo</th>
         <th scope="col">Name</th>
         <th scope="col">Email</th>
+        <th scope="col">Gender</th>
         <th scope="col">Status</th>
         <th scope="col">Actions</th>
       </tr>
@@ -29,6 +30,7 @@
         </td>
         <td>{{ user.first_name }} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{ user.last_name }}</td>
         <td>{{ user.email }}</td>
+        <td>{{ user.gender }}</td>
         <td>
           <span class="switch-label toggle-label-deactivate {% if not user.is_active %}active-label{% endif %}">Deactivate</span>
           <label class="switch">

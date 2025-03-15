@@ -248,8 +248,8 @@
   <div id="sidebar">
     <!-- Profile Section -->
     <div class="profile-section">
-      <img src="{{ user.profile_photo_url | default:" /static/all-Pictures/admin-person.jpg"}}" alt="Profile" class="rounded-circle">
-      <div class="profile-text"> {{ user.first_name }} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{ user.last_name }} </div>
+      <img src="{{ admin.profile_photo_url | default:" /static/all-Pictures/admin-person.jpg"}}" alt="Profile" class="rounded-circle">
+      <div class="profile-text"> {{ admin.first_name }} {% if admin.middle_name %} {{admin.middle_name}} {% endif %} {{ admin.last_name }} </div>
     </div>
     <!-- Menu -->
     <div class="list-group">

@@ -48,7 +48,8 @@ class LoginOutAdminView(View):
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminHomeView(View):
     def get(self, request):
-        return render(request, 'adminuser/home/index.html')
+        user = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/home/index.html', {'admin':user})
 
     
 @auth_required(login_url='/login/admin/')

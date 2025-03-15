@@ -10,16 +10,25 @@ from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
 import datetime
+from qcome.constants.default_values import Gender
 
 class ManageUsersListView(View):
     def get(self, request):
         users = user_service.get_all_user()
-        return render(request, 'adminuser/user/user_list.html',{'users':users})
+        admin_data = user_service.get_user(request.user.id)
+        for user in users:
+            if user.gender:
+                user.gender = Gender(user.gender).name.capitalize()  # e.g., "Male"
+            else:
+                user.gender = "Not provided"
+                            
+        return render(request, 'adminuser/user/user_list.html',{'users':users, 'admin': admin_data})
     
 
 class ManageUsersCreateView(View):
     def get(self, request):
-        return render(request, 'adminuser/user/create_user.html')
+        admin_data = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/user/create_user.html', {'admin': admin_data})
     
     def post(self, request):
         print(request.POST)
@@ -65,7 +74,8 @@ class ManageUsersCreateView(View):
 class ManageUserUpdateView(View):
     def get(self , request, user_id):
         user = user_service.get_user(user_id)
-        return render(request, 'adminuser/user/update_user.html', {'user':user})
+        admin_data = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/user/update_user.html', {'user':user, 'admin': admin_data})
     
     def post(self, request, user_id):
             user = user_service.get_user(user_id)
