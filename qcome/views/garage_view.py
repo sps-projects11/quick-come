@@ -5,6 +5,8 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
+
+from qcome.models.garage_workers_model import Worker
 from ..models import Garage
 from ..constants import Vehicle_Type
 
@@ -67,6 +69,15 @@ class GarageProfileView(View):
             'garage_owner': owner_name,
         }
         return render(request, 'garage/garage_profile.html', context)
+
+
+class GarageWorkerListView(View):
+    def get(self, request):
+        workers = Worker.objects.all()
+        return render(request, 'garage/workers.html')
+
+    def post(self, request):
+        return None
 
 
 class GarageUpdateView(LoginRequiredMixin, View):
