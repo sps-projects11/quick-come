@@ -1,12 +1,29 @@
-from qcome.models import User
-from ..models import User,Worker
+from qcome.models import User, Worker, Garage
 from django.shortcuts import get_object_or_404
+from qcome.constants.default_values import Role
 
 def get_user(user_id):
     return User.objects.get(id=user_id)
 
+
 def get_all_user():
-    return User.objects.all()
+    # Get all active end users
+    users = User.objects.filter(roles=Role.END_USER.value)
+    
+    # Get IDs of users associated with active garages
+    garage_user_ids = Garage.objects.filter(is_active=True).values_list('garage_owner', flat=True)
+    # Get IDs of users associated with active workers
+    worker_user_ids = Worker.objects.filter(is_active=True).values_list('worker', flat=True)
+    
+    # Combine the IDs to exclude
+    exclude_ids = set(garage_user_ids).union(set(worker_user_ids))
+    
+    # Exclude users whose IDs are in the exclude_ids set
+    final_users = users.exclude(id__in=exclude_ids)
+    
+    return final_users
+
+
 
 
 def get_user_profile(user_id):

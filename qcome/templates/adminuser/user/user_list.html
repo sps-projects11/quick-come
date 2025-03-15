@@ -1,6 +1,6 @@
 {% extends "adminuser/base.html" %}
 {% load static %}
-{% block title %}Service Catalog List{% endblock %}
+{% block title %}User List{% endblock %}
 
 {% block navbar_extra %}
   <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_users' %}">
@@ -27,14 +27,15 @@
         <td>
           <img src="{{ user.profile_photo_url|default:'/static/all-Pictures/admin-person.jpg' }}" alt="Profile" class="rounded-circle" width="50" height="50">
         </td>
-        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.first_name }} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{ user.last_name }}</td>
         <td>{{ user.email }}</td>
         <td>
-          <!-- Toggle switch for active status -->
+          <span class="switch-label toggle-label-deactivate {% if not user.is_active %}active-label{% endif %}">Deactivate</span>
           <label class="switch">
             <input type="checkbox" class="user-toggle" data-user-id="{{ user.id }}" {% if user.is_active %}checked{% endif %}>
             <span class="slider round"></span>
           </label>
+          <span class="switch-label toggle-label-active {% if user.is_active %}active-label{% endif %}">Active</span>
         </td>
         <td>
           <a href="{% url 'manage_user_update' user.id %}" class="btn btn-sm btn-primary">Edit</a>
@@ -55,6 +56,18 @@
       var checkbox = $(this);
       var userId = checkbox.data('user-id');
       var isActive = checkbox.is(':checked');
+      var td = checkbox.closest('td');
+      var labelActive = td.find('.toggle-label-active');
+      var labelDeactivate = td.find('.toggle-label-deactivate');
+      
+      // Update label styling immediately
+      if(isActive){
+         labelActive.addClass('active-label');
+         labelDeactivate.removeClass('active-label');
+      } else {
+         labelDeactivate.addClass('active-label');
+         labelActive.removeClass('active-label');
+      }
 
       // Construct the URL using the user ID.
       var toggleUrl = '{% url "manage_user_toggle" 0 %}'.replace("0", userId);
@@ -67,20 +80,26 @@
           'csrfmiddlewaretoken': '{{ csrf_token }}'
         },
         success: function(response){
-          // Optionally update the UI or display a message
           console.log("User status toggled successfully");
         },
         error: function(xhr, status, error){
           alert("Error toggling user status");
           // Revert the checkbox state if there is an error
           checkbox.prop('checked', !isActive);
+          if(isActive){
+              labelDeactivate.addClass('active-label');
+              labelActive.removeClass('active-label');
+          } else {
+              labelActive.addClass('active-label');
+              labelDeactivate.removeClass('active-label');
+          }
         }
       });
     });
   });
 </script>
 
-<!-- Optional CSS for the switch (if not already included in your CSS) -->
+<!-- Optional CSS for the switch and label styling -->
 <style>
 .switch {
   position: relative;
@@ -129,6 +148,17 @@ input:not(:checked) + .slider {
 
 input:checked + .slider:before {
   transform: translateX(26px);
+}
+
+.switch-label {
+  margin: 0 10px;
+  font-weight: normal;
+  transition: font-weight 0.2s, color 0.2s;
+}
+
+.active-label {
+  font-weight: bold;
+  color: #000;
 }
 </style>
 {% endblock %}

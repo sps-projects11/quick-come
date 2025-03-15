@@ -92,7 +92,7 @@ class AdminProfileUpdateView(View):
 
         # Fetch form data and strip whitespace
         first_name = request.POST.get('first_name').strip() or user.first_name
-        middle_name = request.POST.get('middle_name').strip() or user.middle_name
+        middle_name = request.POST.get('middle_name').strip() or None
         last_name = request.POST.get('last_name').strip() or user.last_name
         email = request.POST.get('email').strip() or user.email
         phone = request.POST.get('phone').strip() or user.phone
