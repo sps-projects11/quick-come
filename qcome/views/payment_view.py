@@ -26,7 +26,7 @@ class PaymentListView(View):
                 'booking_id': payment['booking_id']
             }
             # Determine 'paid_to' field
-            if payment['type'] == PayType.CASHONDELIVERY.value:
+            if payment['type'] == PayType.CASH.value:
                 booking = booking_service.get_booking(payment['booking_id'])
                 if booking and booking.assigned_worker:
                     entry['paid_to'] = f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}".strip()
@@ -68,13 +68,13 @@ auth_required(login_url='/sign-in/')
 class PaymentReceipt(View):
     def get(self,request,payment_id):
         payment=payment_service.payment_details_by_payment_id(payment_id)
-        if payment['type'] == PayType.CASHONDELIVERY.value:
+        if payment['type'] == PayType.CASH.value:
             booking = booking_service.get_booking(payment['booking_id'])
             if booking and booking.assigned_worker:
                 paid_to = f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}".strip()
             else:
                 paid_to = "Unknown"
-            type="CASHONDELIVERY"
+            type="CASH"
         else:
             paid_to = "Quick-come Company"
             type="UPI"

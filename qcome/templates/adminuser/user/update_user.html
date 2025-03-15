@@ -1,7 +1,12 @@
-{% extends "base.html" %}
+{% extends "adminuser/base.html" %}
 {% load static %}
+{% block title %}Quick Come Admin-Profile Update{% endblock %}
 
-{% block title %}Update User{% endblock %}
+{% block navbar_extra %}  
+        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+        Admin Users
+      </a> 
+{% endblock %}
 
 {% block content %}
 <div class="container my-4">

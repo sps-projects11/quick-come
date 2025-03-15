@@ -104,14 +104,14 @@ def payment_details_by_payment_id(payment_id):
 
 
 def get_worker_payments(worker_user_id):
-    """Retrieve payments for a worker if they are of type CashOnDelivery."""
+    """Retrieve payments for a worker if they are of type CASH."""
     worker_id=Worker.objects.filter(worker=worker_user_id).first()
     all_bookings_by_worker = Booking.objects.filter(assigned_worker=worker_id.id)
     payments = []
     for booking in all_bookings_by_worker:
         payment = Payment.objects.filter(
             booking_id=booking.id, 
-            type=PayType.CASHONDELIVERY.value,  # Ensures only CashOnDelivery payments are considered
+            type=PayType.CASH.value,  # Ensures only CASH payments are considered
             is_active=True
         ).first()  # Fetch a single matching payment
 
@@ -128,3 +128,52 @@ def get_worker_payments(worker_user_id):
     return payments
 
 
+
+def get_all_payments():
+    """Retrieve and customize all active payments."""
+    # Use select_related to join Payment -> Booking -> assigned_worker -> worker (User)
+    payments = Payment.objects.filter(is_active=True)\
+        .select_related('booking_id__assigned_worker__worker')\
+        .values(
+            'id', 
+            'amount', 
+            'type', 
+            'paid_at', 
+            'created_by__first_name', 
+            'created_by__last_name',
+            'booking_id',
+            'booking_id__assigned_worker__worker__first_name',
+            'booking_id__assigned_worker__worker__last_name',
+        )
+    
+    payments_data = []
+    for payment in payments:
+        # Convert the numeric payment type to its enum name
+        payment_type = PayType(payment['type']).name if payment['type'] else "N/A"
+        # Format the paid_at field as a string
+        paid_at = payment['paid_at'].strftime('%Y-%m-%d %H:%M:%S') if payment['paid_at'] else "N/A"
+        # Combine the created_by first and last name
+        payment_by = f"{payment.get('created_by__first_name', '')} {payment.get('created_by__last_name', '')}".strip()
+        
+        # Determine 'paid_to' from the booking's assigned worker
+        assigned_worker_first_name = payment.get('booking_id__assigned_worker__worker__first_name')
+        assigned_worker_last_name = payment.get('booking_id__assigned_worker__worker__last_name')
+        
+        if assigned_worker_first_name:
+            paid_to = f"{assigned_worker_first_name} {assigned_worker_last_name}".strip()
+        else:
+            paid_to = "Unknown"
+        
+        # Build custom payment dictionary.
+        payment_data = {
+            'payment_id': payment['id'],
+            'amount': payment['amount'],
+            'payment_type': payment_type,
+            'paid_at': paid_at,
+            'payment_by': payment_by,
+            'booking_id': payment['booking_id'],
+            'paid_to': paid_to,
+        }
+        payments_data.append(payment_data)
+    
+    return payments_data

@@ -26,7 +26,7 @@ class Vehicle_Type(Enum):
 
     
 class PayType(Enum):
-    CASHONDELIVERY = 1
+    CASH = 1
     UPI = 2
 
 class PayStatus(Enum):
