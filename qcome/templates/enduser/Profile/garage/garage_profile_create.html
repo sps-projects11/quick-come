@@ -3,18 +3,23 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
-
 <div class="container">
     <div class="garage-form">
         <h2>Create Garage Profile</h2>
-        
-        <form method="POST" enctype="multipart/form-data">
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'garage_create' %}">
             {% csrf_token %}
+
+            <!-- Garage Owner (Read-Only) -->
+            <div class="input-group">
+                <label>Garage Owner</label>
+                <input type="text" placeholder="Enter Owner Name" value="{{ user.username }}">
+            </div>
 
             <!-- Garage Name -->
             <div class="input-group">
                 <label>Garage Name</label>
-                <input type="text" name="garage_name" required>
+                <input type="text" name="garage_name" value="{{ garage.garage_name|default_if_none:'' }}" placeholder="Enter Garage Name" required>
             </div>
 
             <!-- Garage Image Upload -->
@@ -24,25 +29,35 @@
                     <p>Click to upload image</p>
                     <input type="file" name="garage_image" id="garage_image" accept="image/*" hidden>
                 </div>
-                <img id="preview_image" class="hidden preview-img">
+
+                <!-- Image Preview: Shows selected image before upload -->
+                <img id="preview_image" class="hidden preview-img" style="width: 100px; height: auto;">
+
+                <!-- Persist the uploaded image -->
+                {% if garage.garage_image %}
+                    <img src="{{ garage.garage_image.url }}" id="uploaded_image" alt="Garage Image" style="width: 100px; height: auto;">
+                {% else %}
+                    <p>No image uploaded</p>
+                {% endif %}
             </div>
 
             <!-- Address -->
             <div class="input-group">
                 <label>Address</label>
-                <input type="text" name="address" required>
+                <input type="text" name="address" value="{{ garage.address|default_if_none:'' }}" placeholder="Enter Address" required>
             </div>
 
             <!-- Phone Number -->
             <div class="input-group">
                 <label>Phone</label>
-                <input type="text" name="phone" maxlength="10" required>
+                <input type="text" name="phone" value="{{ garage.phone|default_if_none:'' }}" placeholder="Enter Phone Number" maxlength="10" required>
             </div>
 
-            <!-- Vehicle Type -->
+            <!-- Vehicle Type Dropdown -->
             <div class="input-group">
                 <label>Vehicle Type</label>
                 <select name="vehicle_type" required>
+                    <option value="" selected disabled>Select Vehicle Type</option> <!-- Default empty option -->
                     {% for value, name in vehicle_types %}
                         <option value="{{ value }}">{{ name }}</option>
                     {% endfor %}
@@ -52,7 +67,7 @@
             <!-- Garage AC -->
             <div class="input-group">
                 <label>Garage AC</label>
-                <input type="text" name="garage_ac" required>
+                <input type="text" name="garage_ac" value="{{ garage.garage_ac|default_if_none:'' }}" placeholder="Enter Garage AC Info" required>
             </div>
 
             <!-- Submit Button -->
@@ -61,19 +76,29 @@
     </div>
 </div>
 
+
 <!-- JavaScript for Image Preview -->
 <script>
+    // When the upload box is clicked, trigger file input
     document.getElementById("image_upload_area").addEventListener("click", function () {
         document.getElementById("garage_image").click();
     });
 
+    // When a file is selected, preview it
     document.getElementById("garage_image").addEventListener("change", function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                document.getElementById("preview_image").src = e.target.result;
-                document.getElementById("preview_image").classList.remove("hidden");
+                let preview = document.getElementById("preview_image");
+                preview.src = e.target.result;
+                preview.classList.remove("hidden"); // Make sure the preview is visible
+
+                // Hide the previously uploaded image if a new one is selected
+                let uploadedImg = document.getElementById("uploaded_image");
+                if (uploadedImg) {
+                    uploadedImg.style.display = "none";
+                }
             };
             reader.readAsDataURL(file);
         }
