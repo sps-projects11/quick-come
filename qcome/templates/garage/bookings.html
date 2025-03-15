@@ -26,10 +26,16 @@
                 {% for booking in bookings %}
                 <tr>
                     <td>{{ booking.id }}</td>
-                    <td>{{ booking.customer.username }}</td>
-                    <td>{{ booking.get_vehicle_type_display }}</td>
-                    <td>{{ booking.current_location }}</td>
-                    <td>{{ booking.service_names }}</td>
+                    <td>{{ booking.customer.username|default:"No Customer" }}</td>
+                    <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
+                    <td>{{ booking.current_location|default:"No Location Provided" }}</td>
+                    <td>
+                        {% if booking.service_names %}
+                            {{ booking.service_names }}
+                        {% else %}
+                            No Service Selected
+                        {% endif %}
+                    </td>
                     <td>
                         {% if booking.assigned_worker %}
                             {{ booking.assigned_worker.name }}
@@ -37,7 +43,10 @@
                             Not Assigned
                         {% endif %}
                     </td>
-                    <td>{% if booking.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td>
+                        {% if booking.is_active %}Active{% else %}Inactive{% endif %}
+                    </td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
