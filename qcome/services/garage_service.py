@@ -1,8 +1,30 @@
 from ..models import Garage, Booking
 
+from ..models import Booking, ServiceCatalog
+
 def get_garage_bookings():
     """ Get all active bookings that are not assigned """
-    return Booking.objects.filter(is_active=True, assigned_worker=None).order_by('-created_at')
+    queryset = Booking.objects.filter(is_active=True, assigned_worker=None).order_by('-created_at')
+
+    # Convert queryset to a list to allow modification
+    bookings = list(queryset)
+
+    for booking in bookings:
+        # Add customer details
+        if booking.customer:
+            booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
+            booking.customer_phone = getattr(booking.customer, "phone", "No phone")
+        else:
+            booking.customer_name = "No Customer"
+            booking.customer_phone = "No phone"
+
+        # Fetch service names
+        service_ids = booking.service  # This is assumed to be a list of IDs
+        services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
+        booking.service_names = ", ".join(services) if services else "No service"
+
+    return bookings  # Return modified list
+
 
 def get_booking_details(booking_id):
     """ Get a single booking """

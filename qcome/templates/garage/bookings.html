@@ -15,9 +15,11 @@
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
+                    <th>Mobile No.</th>
                     <th>Vehicle Type</th>
                     <th>Location</th>
                     <th>Service</th>
+                    <th>Description</th>
                     <th>Worker</th>
                     <th>Status</th>
                 </tr>
@@ -26,7 +28,8 @@
                 {% for booking in bookings %}
                 <tr>
                     <td>{{ booking.id }}</td>
-                    <td>{{ booking.customer.username|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_name|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_phone|default:"No Customer" }}</td>
                     <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
                     <td>{{ booking.current_location|default:"No Location Provided" }}</td>
                     <td>
@@ -36,6 +39,7 @@
                             No Service Selected
                         {% endif %}
                     </td>
+                    <td>{{ booking.description|default:"No description" }}</td>
                     <td>
                         {% if booking.assigned_worker %}
                             {{ booking.assigned_worker.name }}
