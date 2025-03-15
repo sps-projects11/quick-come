@@ -1,13 +1,15 @@
 from django.http import JsonResponse
 from django.views import View
-from qcome.services import user_service
-from django.shortcuts import redirect,render
+from qcome.services import user_service, admin_service
+from django.shortcuts import redirect, render
 import os
 import hashlib
 from quickcome import settings
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
+from django.contrib import messages  # For user feedback
+import datetime
 
 class ManageUsersListView(View):
     def get(self, request):
@@ -62,14 +64,11 @@ class ManageUsersCreateView(View):
 
 class ManageUserUpdateView(View):
     def get(self , request, user_id):
-        return render(request, 'adminuser/user/update_user.html')
-
+        user = user_service.get_user(user_id)
+        return render(request, 'adminuser/user/update_user.html', {'user':user})
     
     def post(self, request, user_id):
-        def post(self, request):
-            auth_user = user_id
             user = user_service.get_user(user_id)
-
             # Fetch form data and strip whitespace
             first_name = request.POST.get('first_name').strip() or user.first_name
             middle_name = request.POST.get('middle_name').strip() or user.middle_name
@@ -95,7 +94,7 @@ class ManageUserUpdateView(View):
             profile_photo_path = user.profile_photo_url
 
             if profile_photo:
-                profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures')
+                profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
                 if not os.path.exists(profile_photo_img_dir):
                     os.makedirs(profile_photo_img_dir)
 
@@ -114,7 +113,7 @@ class ManageUserUpdateView(View):
                         for chunk in profile_photo.chunks():
                             destination.write(chunk)
 
-                profile_photo_path = f'/static/all-Pictures/{new_file_name}'
+                profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
 
             
             admin_service.admin_profile_update(
@@ -122,7 +121,7 @@ class ManageUserUpdateView(View):
             )
 
             messages.success(request, SuccessMessage.S00002.value)
-            return redirect('myadmin_profile')
+            return redirect('manage_users')
     
 
 class ManageUserToggleView(View):

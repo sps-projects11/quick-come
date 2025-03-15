@@ -115,7 +115,7 @@ class AdminProfileUpdateView(View):
         profile_photo_path = user.profile_photo_url
 
         if profile_photo:
-            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures')
+            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
             if not os.path.exists(profile_photo_img_dir):
                 os.makedirs(profile_photo_img_dir)
 
@@ -134,7 +134,7 @@ class AdminProfileUpdateView(View):
                     for chunk in profile_photo.chunks():
                         destination.write(chunk)
 
-            profile_photo_path = f'/static/all-Pictures/{new_file_name}'
+            profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
 
         
         admin_service.admin_profile_update(
