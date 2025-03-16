@@ -1,6 +1,4 @@
-from ..models import Garage, Booking
-
-from ..models import Booking, ServiceCatalog
+from ..models import Garage, Booking, ServiceCatalog
 
 def get_garage_bookings():
     """ Get all active bookings that are not assigned """
@@ -53,3 +51,8 @@ def delete_garage(garage_id):
 def is_user_a_garage_owner(user):
     """ Check if the user owns a garage """
     return Garage.objects.filter(garage_owner=user, is_active=True).exists()
+
+
+def get_garage(worker_garage):
+
+    return Garage.objects.get(id=worker_garage)
