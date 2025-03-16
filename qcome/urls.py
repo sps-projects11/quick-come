@@ -84,5 +84,7 @@ urlpatterns = [
     #Garage workers
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
     path("api/check-worker/", views.CheckWorkerStatus.as_view(), name="check_worker_status"),
+    path('services/', views.ServiceCatalogueView.as_view(), name='list_service'),
+
 ]
 

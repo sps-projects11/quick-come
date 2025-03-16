@@ -12,4 +12,10 @@ def service_create(user,service_name, service_image, spare_part, price):
         created_by = user,
     )
 
+def get_services_for_cart():
+    return ServiceCatalog.objects.filter(is_active=True).values("id", "service_name")
+
+def get_all_service_details():
+    return list(ServiceCatalog.objects.filter(is_active=True).values('id','service_name','service_image','price'))
+
  
