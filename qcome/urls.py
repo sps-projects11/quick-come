@@ -48,7 +48,8 @@ urlpatterns = [
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
 
     # Garage
-    path('garage/<int:garage_id>/create/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garage/create/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garage/<int:garage_id>/', views.GarageProfileView.as_view(), name='garage_profile'),
     path('garage/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 

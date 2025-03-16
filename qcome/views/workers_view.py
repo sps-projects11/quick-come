@@ -5,13 +5,7 @@ from ..models import Worker
 
 
 
-class GarageWorkerListView(View):
-    def get(self, request):
-        workers = Worker.objects.all()
-        return render(request, 'workers/worker_profile.html', {'workers': workers})
 
-    def post(self, request):
-        return None
     
 
     
