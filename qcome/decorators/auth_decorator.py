@@ -148,19 +148,20 @@ def role_required(*allowed_roles, interface=None, page_type='default'):
                 if interface == 'garage':
                     if not garage_service.is_user_a_garage_owner(request.user.id):
                         messages.error(request, ErrorMessage.E00011.value)
-                        logout(request)
-                        return redirect('/sign-in/')
+                        return redirect('/garage/create/')
+                    
                 elif interface == 'worker':
                     if not workers_service.is_user_a_garage_worker(request.user.id):
                         messages.error(request, ErrorMessage.E00011.value)
-                        logout(request)
-                        return redirect('/sign-in/')
+                        return redirect(f'/worker/{request.user.id}/create/')
+                    
                 elif interface == 'normal':
                     if (garage_service.is_user_a_garage_owner(request.user.id) or
                         workers_service.is_user_a_garage_worker(request.user.id)):
                         messages.error(request, ErrorMessage.E00011.value)
                         logout(request)
                         return redirect('/sign-in/')
+                    
             return func(*args, **kwargs)
         return _wrapped
 

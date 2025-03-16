@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render
-from ..decorators import auth_required, role_required
+from ..decorators import auth_required, role_required, worker_required, garage_required
 from ..constants import Role
 from ..services import booking_service
 from django.http import JsonResponse
@@ -8,7 +8,7 @@ import json
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@garage_required
 class BillingHomeView(View):
     def get(self, request):
         booking = booking_service.get_booking_by_id(request.user.id)  # Get the booking object
