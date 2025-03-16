@@ -1,6 +1,5 @@
 from qcome.models import User, Worker, Garage
-from django.shortcuts import get_object_or_404
-from qcome.constants.default_values import Role
+from qcome.constants.default_values import Role, Garage
 
 def get_user(user_id):
     return User.objects.get(id=user_id)
@@ -83,7 +82,6 @@ def update_user_details(user, data):
     user.save()
     return user
 
-
     
 def updateFCMToken(user_id,fcm_token):
     user = User.objects.get(id=user_id)
@@ -92,6 +90,10 @@ def updateFCMToken(user_id,fcm_token):
 
 def getFCMtoken(user_id):
     return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()
+
+
+def get_all_garages():
+    return Garage.objects.filter(is_active=True) 
 
 
 def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path):
