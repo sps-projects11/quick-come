@@ -1,5 +1,5 @@
 from qcome.models import User
-from ..models import User,Worker
+from ..models import User,Worker,Garage
 
 def get_user(user_id):
     return User.objects.get(id=user_id)
@@ -65,7 +65,6 @@ def update_user_details(user, data):
     user.save()
     return user
 
-
     
 def updateFCMToken(user_id,fcm_token):
     user = User.objects.get(id=user_id)
@@ -74,3 +73,7 @@ def updateFCMToken(user_id,fcm_token):
 
 def getFCMtoken(user_id):
     return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()
+
+
+def get_all_garages():
+    return Garage.objects.filter(is_active=True) 

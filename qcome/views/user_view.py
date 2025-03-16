@@ -1,9 +1,9 @@
 from django.views import View
 from qcome.services import user_service
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
-from ..services import get_user_details,update_user_details,get_workers_details
+from ..services import get_user_details,update_user_details,get_workers_details,get_all_garages
 import os
 import hashlib
 from django.conf import settings
@@ -85,12 +85,14 @@ class EnduserProfileDelete(View):
 
 
 class WorkerCreateView(View):
-    def get(self, request, worker_id):
+    def get(self, request,worker_id):
         worker_details = get_workers_details(worker_id)
+        garage_details = get_all_garages() 
         context = {
             'worker_details': worker_details,
             'worker_id': worker_id,  
             'user': request.user,
+            'garage_details':garage_details,
         }
         return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
 

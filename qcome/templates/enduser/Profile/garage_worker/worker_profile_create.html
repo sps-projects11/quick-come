@@ -1,49 +1,98 @@
 {% extends "enduser/base.html" %}
-{% block title %}Profile{% endblock %}
-{% load static %}
+{% block title %}Quick-Come Booking{% endblock %}
+{%load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
-<div class="profile-container">
-    <form method="POST" enctype="multipart/form-data" class="mt-4" action="">
-        {% csrf_token %} 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="worker" class="form-label"><i class="bi bi-person"></i> Worker</label>
-                <input type="text" class="form-control" id="worker" name="worker" value="{{ worker_details.worker }}">
+<!-- SwiperJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
+
+<section id="emergency-form" class="container">
+    <div class="form-container">
+        <h2>Become a Worker</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="customer_name" value="{{user.first_name}} {{user.middle_name}} {{user.last_name}}" placeholder="Your Name" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="garage" class="form-label"><i class="bi bi-person"></i> Garage</label>
-                <input type="text" class="form-control" id="garage" name="garage" value="{{ worker_details.garage }}">
+            <div class="form-group">
+                <input type="tel" name="customer_phone" value="{{ user.phone }}" placeholder="Phone Number" required>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="experience" class="form-label"><i class="bi bi-person"></i> Experience</label>
-                <input type="text" class="form-control" id="experience" name="experience" value="{{ worker_details.experience }}">
+            <div class="form-group">
+                <input type="text" id="experience" name="experience" placeholder="Your Experience" value="{{ worker_details.experience }}" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="expertise" class="form-label"><i class="bi bi-person"></i> Expertise</label>
-                <textarea class="form-control" id="expertise" name="expertise">{{ worker_details.expertise }}</textarea>
+            <div class="form-group">
+                <input type="text" id="expertise" name="expertise"  placeholder="Your Expertise" value="{{ worker_details.expertise }}" required>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="is_verified" class="form-label"><i class="bi bi-person"></i> Verified</label>
-                <input type="checkbox" class="form-check-input" id="is_verified" name="is_verified" {% if worker_details.is_verified %}checked{% endif %}>
+            <div class="form-group">
+                <select name="garage" required>
+                    <option value="">Select the Garage</option>
+                    {% for garage in garage_details %}
+                        <option value="{{ garage.id }}" {% if booking.garage.id == garage.id %}selected{% endif %}>
+                            {{ garage.garage_name }}
+                        </option>
+                    {% endfor %}
+                </select>                
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="is_active" class="form-label"><i class="bi bi-person"></i> Active</label>
-                <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if worker_details.is_active %}checked{% endif %}>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <button class="btn btn-primary" type="submit">Save</button>
-            </div>
-            <div class="col-md-6 mb-3">
-                <a href="javascript:history.back()" class="btn btn-danger">Cancel</a>
-            </div>
-        </div>
-    </form>
-</div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+</section>
+    
+<style>
+    /* Emergency Form */
+.form-container {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+/* Buttons */
+.cta-button, .submit-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover, .submit-button:hover {
+    background-color: var(--secondary-color);
+}
+
+</style>
+
 {% endblock %}
+
+
+
