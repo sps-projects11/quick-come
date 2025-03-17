@@ -1,0 +1,109 @@
+/* Wrapper */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    height: 100%;
+    width: 50%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Billing Title */
+.billing-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Bill Card */
+.bill-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Bill Info */
+.bill-info {
+    text-align: left;
+    padding: 10px;
+}
+
+.bill-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.bill-date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+}
+
+/* Total Amount */
+.total {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d9534f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    .bill-card {
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .bill-row {
+        flex-direction: column;
+        font-size: 14px;
+        gap: 5px;
+    }
+
+    .bill-date {
+        flex-direction: column;
+        font-size: 13px;
+        gap: 5px;
+    }
+}
+
+/* Smooth Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
