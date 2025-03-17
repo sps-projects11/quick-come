@@ -83,3 +83,33 @@ h2 {
     color: #999;
     padding: 20px;
 }
+.payment-paid-to{
+    font-weight: 600;
+    color: #51a780;
+    display: flex;
+}
+.payment-type{
+    font-style: italic;
+    color: grey;
+    font-size: 12px;
+}
+/* Responsive */
+@media (max-width: 480px) {
+    .wrapper{
+        width: 100%;
+    }
+    .container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .payment-item {
+        padding: 12px;
+    }
+
+    .payment-amount {
+        font-size: 18px;
+    }
+}
+
+

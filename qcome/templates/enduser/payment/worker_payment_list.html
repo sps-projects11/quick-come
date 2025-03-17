@@ -1,0 +1,32 @@
+{% extends "enduser/base.html" %}
+{% load static %}
+{% block title %}Worker Payments{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/payment_list.css' %}"> 
+<div class="wrapper">
+    <div class="container">
+        <h3> Worker's Payment History</h3>
+        <div class="payment-list">
+            {% if payments %}
+                {% for payment in payments %}
+                <div class="payment-item" onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
+                        <div class="payment-details">
+                            <div class="payment-name">{{ payment.customer }}</div>
+                            <div class="payment-time">{{ payment.paid_at }}</div>
+                            <div class="payment-type">{{ payment.type }}</div>
+                            <div class="payment-paid-to">Paid By: {{ payment.created_by }}</div>
+                        </div>
+                        <div class="payment-amount {% if payment.amount > 0 %}negative{% else %}positive{% endif %}">
+                            ₹{{ payment.amount }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-data">No payments found.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

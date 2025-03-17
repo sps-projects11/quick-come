@@ -3,9 +3,9 @@
 {% block title %}Quick Come Admin-Profile{% endblock %}
 
 {% block navbar_extra %}  
-        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
-        Admin Profile
-      </a> 
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'myadmin_profile' %}">
+    Admin Profile
+  </a> 
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,9 @@
     <!-- Left column: Profile Picture & Basic Info -->
     <div class="profile-col-left">
       <img id="profile-picture" src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="User Avatar">
-      <h3 class="profile-title">{{ user.get_full_name }}</h3>
+      <h3 class="profile-title">
+        {{ user.first_name }}{% if user.middle_name %} {{ user.middle_name }}{% endif %} {{ user.last_name }}
+      </h3>
     </div>
 
     <!-- Right column: Profile Details -->
@@ -36,7 +38,7 @@
           <div><strong>DOB:</strong> {{ user.dob|date:"F j, Y" }}</div>
           <div><strong>Gender:</strong>
             {% if user.gender %}
-              {{gender}}
+              {{ gender }}
             {% else %}
               No Gender Yet
             {% endif %}
@@ -64,7 +66,7 @@ body {
 /* Container for the entire profile page */
 #profile-container {
   width: 100%;
-  max-width: 900px;  /* Reduced max width for a narrower body */
+  max-width: 900px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #fff;
@@ -106,11 +108,12 @@ body {
   object-fit: cover;
 }
 
-/* Profile title styling */
+/* Profile title styling adjusted to display the full name */
 .profile-title {
   margin-top: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
+  white-space: normal; /* Allow text to wrap if needed */
 }
 
 /* Card container for profile details */

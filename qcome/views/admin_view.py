@@ -48,7 +48,8 @@ class LoginOutAdminView(View):
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminHomeView(View):
     def get(self, request):
-        return render(request, 'adminuser/home/index.html')
+        user = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/home/index.html', {'admin':user})
 
     
 @auth_required(login_url='/login/admin/')
@@ -92,7 +93,7 @@ class AdminProfileUpdateView(View):
 
         # Fetch form data and strip whitespace
         first_name = request.POST.get('first_name').strip() or user.first_name
-        middle_name = request.POST.get('middle_name').strip() or user.middle_name
+        middle_name = request.POST.get('middle_name').strip() or None
         last_name = request.POST.get('last_name').strip() or user.last_name
         email = request.POST.get('email').strip() or user.email
         phone = request.POST.get('phone').strip() or user.phone
@@ -115,7 +116,7 @@ class AdminProfileUpdateView(View):
         profile_photo_path = user.profile_photo_url
 
         if profile_photo:
-            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures')
+            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
             if not os.path.exists(profile_photo_img_dir):
                 os.makedirs(profile_photo_img_dir)
 
@@ -134,7 +135,7 @@ class AdminProfileUpdateView(View):
                     for chunk in profile_photo.chunks():
                         destination.write(chunk)
 
-            profile_photo_path = f'/static/all-Pictures/{new_file_name}'
+            profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
 
         
         admin_service.admin_profile_update(

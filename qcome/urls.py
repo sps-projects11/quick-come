@@ -26,14 +26,18 @@ urlpatterns = [
 
     # Admin-Profile Management
     path('admin/users/', views.ManageUsersListView.as_view(), name='manage_users'),
-    path('admin/<int:user_id>/profile', views.ManageUserProfile.as_view(), name='manage_user'),
-    path('admin/<int:user_id>/profile/delete', views.ManageUserDelete.as_view(), name='manage_user_delete'),
+    path('admin/users/create', views.ManageUsersCreateView.as_view(), name='manage_user_create'),
+    path('admin/<int:user_id>/profile', views.ManageUserUpdateView.as_view(), name='manage_user_update'),
+    path('admin/<int:user_id>/profile/delete', views.ManageUserToggleView.as_view(), name='manage_user_toggle'),
 
     # Admin-Service Management
     path('admin/service/', views.ManageServiceList.as_view(), name='manage_service_list'),
     path('admin/service/create', views.ManageServiceListCreate.as_view(), name='manage_service_create'),
     path('admin/service/<int:service_id>/update', views.ManageServiceListUpdate.as_view(), name='manage_service_update'),
     path('admin/service/<int:service_id>/delete', views.ManageServiceListDelete.as_view(), name='manage_service_delete'),
+
+    # Admin-Payment Management
+    path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
 
     # Theme
     path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),
@@ -45,6 +49,7 @@ urlpatterns = [
 
     # Garage
     path('garage/create/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garage/<int:garage_id>/', views.GarageProfileView.as_view(), name='garage_profile'),
     path('garage/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 
@@ -72,11 +77,12 @@ urlpatterns = [
     path('worker/<int:worker_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
     path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
     path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
-
+    #worker
+    path('worker/payments/', views.WorkerPaymentListView.as_view(), name='worker_payments'),
     path('services/list/', views.ServiceListView.as_view(), name='list_service'),
 
     #Garage workers
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
-
+    path("api/check-worker/", views.CheckWorkerStatus.as_view(), name="check_worker_status"),
 ]
 

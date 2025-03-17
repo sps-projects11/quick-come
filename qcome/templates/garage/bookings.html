@@ -1,0 +1,109 @@
+{% extends "garage/index.html" %}
+{% block title %}Garage Bookings{% endblock %}
+{% load static %}
+{% block content %}
+
+
+<section id="booking_details">
+    <h2>Your Bookings</h2>
+
+    {% if error %}
+        <p class="alert alert-warning">{{ error }}</p>
+    {% elif bookings %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Mobile No.</th>
+                    <th>Vehicle Type</th>
+                    <th>Location</th>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Worker</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.id }}</td>
+                    <td>{{ booking.customer_name|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_phone|default:"No Customer" }}</td>
+                    <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
+                    <td>{{ booking.current_location|default:"No Location Provided" }}</td>
+                    <td>
+                        {% if booking.service_names %}
+                            {{ booking.service_names }}
+                        {% else %}
+                            No Service Selected
+                        {% endif %}
+                    </td>
+                    <td>{{ booking.description|default:"No description" }}</td>
+                    <td>
+                        {% if booking.assigned_worker %}
+                            {{ booking.assigned_worker.name }}
+                        {% else %}
+                            Not Assigned
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if booking.is_active %}Active{% else %}Inactive{% endif %}
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</section>
+
+<style>
+    #booking_details {
+        height: 100vh;
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    tr:hover {
+        background-color: #e9ecef;
+        transition: background-color 0.3s;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+</style>
+
+{% endblock %}

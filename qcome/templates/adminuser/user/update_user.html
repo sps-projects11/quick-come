@@ -1,0 +1,155 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Profile Update{% endblock %}
+
+{% block navbar_extra %}  
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_users' %}">
+    Admin Users
+  </a> 
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Limit the card width to 600px and center it -->
+  <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white text-center">
+      <h2>Update User Profile</h2>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Profile Photo Section with Plus Icon -->
+        <div class="text-center mb-4">
+          <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+            <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" 
+                 alt="Profile Photo" id="profilePreview" 
+                 class="rounded-circle" 
+                 style="width:150px; height:150px; object-fit:cover; border: 3px solid #007bff;">
+            <div class="profile-plus-icon position-absolute" style="bottom: 5px; right: 5px;  border-radius: 50%; padding: 5px;">
+              <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem;"></i>
+            </div>            
+          </div>
+          <!-- Hidden file input -->
+          <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
+        </div>
+
+        <!-- User Name Fields in One Row -->
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-3">
+            <label for="id_first_name" class="fw-bold">First Name</label>
+            <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name }}" required>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-3">
+            <label for="id_middle_name" class="fw-bold">Middle Name</label>
+            <input type="text" name="middle_name" id="id_middle_name" class="form-control" value="{{ user.middle_name }}">
+          </div>
+          <div class="col-md-4 col-sm-12 mb-3">
+            <label for="id_last_name" class="fw-bold">Last Name</label>
+            <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name }}" required>
+          </div>
+        </div>
+
+        <!-- Date of Birth and Gender -->
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-3">
+            <label for="id_dob" class="fw-bold">Date of Birth</label>
+            <input type="date" name="dob" id="id_dob" class="form-control" value="{{ user.dob|date:'Y-m-d' }}" required>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-3">
+            <label for="id_gender" class="fw-bold">Gender</label>
+            <select name="gender" id="id_gender" class="form-control">
+              <option value="">Select Gender</option>
+              <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
+              <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
+              <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Email and Phone -->
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-3">
+            <label for="id_email" class="fw-bold">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" value="{{ user.email }}" required>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-3">
+            <label for="id_phone" class="fw-bold">Phone</label>
+            <input type="text" name="phone" id="id_phone" class="form-control" value="{{ user.phone }}">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4">Update User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const profileContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.getElementById('id_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+  
+    // Trigger file input when container is clicked
+    profileContainer.addEventListener('click', function() {
+      fileInput.click();
+    });
+  
+    // Update preview after selecting a file
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Page background and typography */
+  body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Card styling */
+  .card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 1rem;
+  }
+  .card-body {
+    padding: 2rem;
+  }
+
+  /* Form input enhancements */
+  .form-control {
+    border-radius: 4px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  /* Hover effect for profile picture plus icon */
+  .profile-picture-container:hover .profile-plus-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s;
+  }
+  .profile-plus-icon {
+    transition: transform 0.3s;
+  }
+</style>
+{% endblock %}

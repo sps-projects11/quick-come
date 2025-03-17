@@ -18,8 +18,7 @@
                 <select id="paymentMethod" required>
                     <option value="" disabled selected>Select</option>
                     <option value="UPI">UPI</option>
-                    <option value="NetBanking">Net Banking</option>
-                    <option value="CashOnDelivery">Cash On Delivery</option>
+                    <option value="CASH">Cash On Delivery</option>
                 </select>
 
                 <label>Amount:</label>
@@ -29,16 +28,6 @@
                 <div id="upiSection" style="display: none;">
                     <label>UPI ID:</label>
                     <input type="text" id="upiId">
-                </div>
-
-                <!-- Net Banking Section -->
-                <div id="netBankingSection" style="display:none;">
-                    <label>Bank Name:</label>
-                    <input type="text" id="bankName">
-                    <label>Account Number:</label>
-                    <input type="text" id="accountNumber">
-                    <label>IFSC Code:</label>
-                    <input type="text" id="ifscCode">
                 </div>
                 <script>
                     let userId = "{{ request.user.id }}";  // Ensure it's enclosed in quotes

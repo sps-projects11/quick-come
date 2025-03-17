@@ -156,7 +156,9 @@
     
         function redirect(value) {
             if (value === '1') {
-                window.location.href = "/connect/garage-owner/";
+                // window.location.href = `/garage/${garageID}/create/`;
+                window.location.href = "/garage/create/"
+
             } else if (value === '2') {
                 const workerID = "{{ worker_id|default:user.id }}"; 
                 if (workerID) {

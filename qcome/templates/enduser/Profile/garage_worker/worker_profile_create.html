@@ -12,10 +12,11 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input type="text" name="customer_name" value="{{user.first_name}} {{user.middle_name}} {{user.last_name}}" placeholder="Your Name" required>
+                <input type="hidden" name="worker_id" value="{{ user.id }}">
+                <input type="text" name="worker_name" value="{{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}" placeholder="Your Name" required>
             </div>
             <div class="form-group">
-                <input type="tel" name="customer_phone" value="{{ user.phone }}" placeholder="Phone Number" required>
+                <input type="tel" name="worker_phone" value="{% if user.phone %} {{ user.phone }} {% endif %}" placeholder="Phone Number" required>
             </div>
             <div class="form-group">
                 <input type="text" id="experience" name="experience" placeholder="Your Experience" value="{{ worker_details.experience }}" required>
@@ -27,7 +28,11 @@
                 <select name="garage" required>
                     <option value="">Select the Garage</option>
                     {% for garage in garage_details %}
+<<<<<<< HEAD
                         <option value="{{ garage.id }}" {% if booking.garage.id == garage.id %}selected{% endif %}>
+=======
+                        <option value="{{ garage.id }}">
+>>>>>>> e84ef996ad50869415c70ce69df74c817912006e
                             {{ garage.garage_name }}
                         </option>
                     {% endfor %}

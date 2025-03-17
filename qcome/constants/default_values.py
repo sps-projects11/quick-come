@@ -21,16 +21,13 @@ class Status(Enum):
 class Vehicle_Type(Enum):
     CAR = 1
     BIKE = 2
-    TOTO = 3
-    AUTO_RIKSHA = 4
-    OTHER = 5
+
 
 
     
 class PayType(Enum):
-    CASHONDELIVERY = 1
-    NETBANKING = 2
-    UPI = 3
+    CASH = 1
+    UPI = 2
 
 class PayStatus(Enum):
     PENDING = 1

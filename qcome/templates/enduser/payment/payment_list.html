@@ -6,22 +6,26 @@
 <link rel="stylesheet" href="{% static 'css/payment_list.css' %}"> 
 <div class="wrapper">
     <div class="container">
-        <h2>Payment History</h2>
+        <h3>Payment History</h3>
         <div class="payment-list">
             {% if payment_data %}
                 {% for payment in payment_data %}
                 <div class="payment-item" onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
-                        <div class="payment-avatar">
-                            <img src="{% static 'images/user_avatar.png' %}" alt="User">
-                        </div>
-                        <div class="payment-details">
-                            <div class="payment-name">{{ payment.payment_by }}</div>
-                            <div class="payment-time">{{ payment.time }}</div>
-                        </div>
-                        <div class="payment-amount {% if payment.amount > 0 %}positive{% else %}negative{% endif %}">
-                            ₹{{ payment.amount }}
+                    <div class="payment-avatar">
+                        <img src="{% static 'images/user_avatar.png' %}" alt="User">
+                    </div>
+                    <div class="payment-details">
+                        <div class="payment-name">{{ payment.payment_by }}</div>
+                        <div class="payment-time">{{ payment.time }}</div>
+                        <div class="payment-type">{{payment.type}}</div>
+                        <div class="payment-paid-to ">
+                            <div>Paid To:</div> <div>{{ payment.paid_to }}</div>
                         </div>
                     </div>
+                    <div class="payment-amount {% if payment.amount > 0 %}negative{% else %}negativepositive{% endif %}">
+                        ₹{{ payment.amount }}
+                    </div>
+                </div>
                 {% endfor %}
             {% else %}
                 <div class="no-data">No payments found.</div>
@@ -29,6 +33,5 @@
         </div>
     </div>
 </div>
-
 
 {% endblock %}
