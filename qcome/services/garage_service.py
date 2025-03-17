@@ -69,3 +69,20 @@ def toggle_garage_status(garage):
 
     return garage
 
+
+def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path):
+    try:
+        garage = Garage.objects.get(id=garage_id)
+    except Garage.DoesNotExist:
+        return None
+    
+    garage.garage_name = garage_name
+    garage.garage_image = garage_profile_photo_path
+    garage.address = address
+    garage.phone = phone
+    garage.vehicle_type = garage_vehicle_type
+    garage.garage_ac = garage_ac
+    garage.updated_by = user
+
+    garage.save()
+    return garage

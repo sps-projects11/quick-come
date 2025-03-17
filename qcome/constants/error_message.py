@@ -15,7 +15,7 @@ class ErrorMessage(Enum):
     E00011 = "Unauthorized Access! Please try again."
     E00012 = "Error updating user status. Please try again."
     E00013 = "Error updating garage status. Please try again."
-    E00014 = ""
+    E00014 = "Error updating garage! Please try again."
     E00015 = ""
     E00016 = ""
     E00017 = ""
