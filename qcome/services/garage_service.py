@@ -56,3 +56,16 @@ def is_user_a_garage_owner(user):
 def get_garage(worker_garage):
 
     return Garage.objects.get(id=worker_garage)
+
+
+def toggle_garage_status(garage):
+    try:
+        garage = Garage.objects.get(id=garage)
+    except Garage.DoesNotExist:
+        return None
+    
+    garage.is_active = not garage.is_active
+    garage.save()
+
+    return garage
+

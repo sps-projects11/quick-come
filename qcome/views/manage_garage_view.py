@@ -1,6 +1,10 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from qcome.services import garage_service, user_service
+from ..constants.error_message import ErrorMessage
+from ..constants.success_message import SuccessMessage
+from ..package.response import success_response,error_response
+from django.http import JsonResponse
 
 class ManageGarageListView(View):
     def get(self, request):
@@ -26,4 +30,9 @@ class ManageGarageUpdateView(View):
 
 class ManageGarageToggleView(View):
     def post(self, request, garage_id):
-        return
+        garage = garage_service.toggle_garage_status(garage_id)
+
+        if garage is None:
+            return JsonResponse(error_response(ErrorMessage.E00013.value))
+        
+        return JsonResponse(success_response(SuccessMessage.S00006.value))

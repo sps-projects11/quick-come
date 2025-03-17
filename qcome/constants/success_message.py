@@ -7,7 +7,7 @@ class SuccessMessage(Enum):
     S00003 = "OTP sent to your email."
     S00004 =  "OTP verified."
     S00005 = "User status updated successfully."
-    S00006 = ""
+    S00006 = "Garage status updated successfully."
     S00007 = ""
     S00008 = ""
     S00009 = ""
