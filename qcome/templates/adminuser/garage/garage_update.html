@@ -1,0 +1,134 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Garage Update{% endblock %}
+
+{% block navbar_extra %}  
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_garages_list' %}">
+    Garages
+  </a> 
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2 class="text-center mb-4">Update Garage Profile</h2>
+  <form method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 600px;">
+    {% csrf_token %}
+
+    <!-- Profile Photo Section with Plus Icon -->
+    <div class="text-center mb-4">
+      <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+        <img src="{{ garage.garage_image|default:'/static/all-Pictures/Feature boxes/location.jpg' }}" 
+             alt="Profile Photo" id="profilePreview" 
+             class="rounded-circle" 
+             style="width:150px; height:150px; object-fit:cover; border: 3px solid #007bff;">
+        <div class="profile-plus-icon position-absolute" style="bottom: 5px; right: 5px; border-radius: 50%; padding: 5px; background: rgba(0,0,0,0.6);">
+          <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem;"></i>
+        </div>            
+      </div>
+      <!-- Hidden file input -->
+      <input type="file" class="d-none" id="id_garage_profile_photo" name="garage_profile_photo" accept="image/*">
+    </div>
+
+    <!-- Responsive Form Fields -->
+    <div class="mb-3 row align-items-center">
+      <label for="id_garage_first_name" class="col-12 col-md-4 col-form-label fw-bold">Garage Name</label>
+      <div class="col-12 col-md-8">
+        <input type="text" name="garage_name" id="id_garage_name" class="form-control" value="{{ garage.garage_name }}" placeholder="Enter garage name" required>
+      </div>
+    </div>
+    <div class="mb-3 row align-items-center">
+      <label for="id_middle_name" class="col-12 col-md-4 col-form-label fw-bold">Address</label>
+      <div class="col-12 col-md-8">
+        <input type="text" name="address" id="id_garage_address" class="form-control" value="{{ garage.address }}" placeholder="Enter address" required>
+      </div>
+    </div>
+    <div class="mb-3 row align-items-center">
+      <label for="id_last_name" class="col-12 col-md-4 col-form-label fw-bold">Phone</label>
+      <div class="col-12 col-md-8">
+        <input type="text" name="phone" id="id_garage_phone" class="form-control" value="{{ garage.phone }}" placeholder="Enter phone number" required>
+      </div>
+    </div>
+    <div class="mb-3 row align-items-center">
+      <label for="id_last_name_account" class="col-12 col-md-4 col-form-label fw-bold">Account</label>
+      <div class="col-12 col-md-8">
+        <input type="text" name="garage_ac" id="id_garage_account" class="form-control" value="{{ garage.garage_ac }}" placeholder="Enter account info" required>
+      </div>
+    </div>
+    <div class="mb-3 row align-items-center">
+      <label for="id_gender" class="col-12 col-md-4 col-form-label fw-bold">Vehicle</label>
+      <div class="col-12 col-md-8">
+        <select name="garage_vehicle_type" id="id_vehicle_type" class="form-select" required>
+          <option value="">Select Vehicle</option>
+          <option value="1" {% if garage.vehicle_type == 1 %}selected{% endif %}>Car</option>
+          <option value="2" {% if garage.vehicle_type == 2 %}selected{% endif %}>Bike</option>
+          <option value="3" {% if garage.vehicle_type == 3 %}selected{% endif %}>Both</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success px-4">Update Garage</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const profileContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.getElementById('id_garage_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+  
+    // Trigger file input when container is clicked
+    profileContainer.addEventListener('click', function() {
+      fileInput.click();
+    });
+  
+    // Update preview after selecting a file
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Page background and typography */
+  body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Form enhancements */
+  .form-control, .form-select {
+    border-radius: 4px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+  }
+  
+  /* Profile picture hover effect */
+  .profile-picture-container:hover .profile-plus-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s;
+  }
+  .profile-plus-icon {
+    transition: transform 0.3s;
+  }
+  
+  /* Responsive spacing for form rows */
+  @media (max-width: 576px) {
+    .row.align-items-center {
+      text-align: left;
+    }
+  }
+</style>
+{% endblock %}

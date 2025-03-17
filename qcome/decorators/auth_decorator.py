@@ -148,19 +148,20 @@ def role_required(*allowed_roles, interface=None, page_type='default'):
                 if interface == 'garage':
                     if not garage_service.is_user_a_garage_owner(request.user.id):
                         messages.error(request, ErrorMessage.E00011.value)
-                        logout(request)
-                        return redirect('/sign-in/')
+                        return redirect('/garage/create/')
+                    
                 elif interface == 'worker':
                     if not workers_service.is_user_a_garage_worker(request.user.id):
                         messages.error(request, ErrorMessage.E00011.value)
-                        logout(request)
-                        return redirect('/sign-in/')
+                        return redirect(f'/worker/{request.user.id}/create/')
+                    
                 elif interface == 'normal':
                     if (garage_service.is_user_a_garage_owner(request.user.id) or
                         workers_service.is_user_a_garage_worker(request.user.id)):
                         messages.error(request, ErrorMessage.E00011.value)
                         logout(request)
                         return redirect('/sign-in/')
+                    
             return func(*args, **kwargs)
         return _wrapped
 
@@ -183,6 +184,12 @@ def garage_required(view_or_func=None, *, login_url='/sign-in/'):
 
 def worker_required(view_or_func=None, *, login_url='/sign-in/'):
     decorator = role_required(Role.END_USER.value, interface='worker', page_type='enduser')
+    if view_or_func:
+        return auth_required(login_url=login_url)(decorator(view_or_func))
+    return lambda view: auth_required(login_url=login_url)(decorator(view))
+
+def enduser_required(view_or_func=None, *, login_url='/sign-in/'):
+    decorator = role_required(Role.END_USER.value, interface='normal', page_type='enduser')
     if view_or_func:
         return auth_required(login_url=login_url)(decorator(view_or_func))
     return lambda view: auth_required(login_url=login_url)(decorator(view))

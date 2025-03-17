@@ -1,8 +1,9 @@
 {% extends "garage/index.html" %}
 {% block title %}Garage Bookings{% endblock %}
 {% load static %}
-
 {% block content %}
+
+
 <section id="booking_details">
     <h2>Your Bookings</h2>
 
@@ -14,9 +15,11 @@
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
+                    <th>Mobile No.</th>
                     <th>Vehicle Type</th>
                     <th>Location</th>
                     <th>Service</th>
+                    <th>Description</th>
                     <th>Worker</th>
                     <th>Status</th>
                 </tr>
@@ -25,10 +28,18 @@
                 {% for booking in bookings %}
                 <tr>
                     <td>{{ booking.id }}</td>
-                    <td>{{ booking.customer.username }}</td>
-                    <td>{{ booking.get_vehicle_type_display }}</td>
-                    <td>{{ booking.current_location }}</td>
-                    <td>{{ booking.service_names }}</td>
+                    <td>{{ booking.customer_name|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_phone|default:"No Customer" }}</td>
+                    <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
+                    <td>{{ booking.current_location|default:"No Location Provided" }}</td>
+                    <td>
+                        {% if booking.service_names %}
+                            {{ booking.service_names }}
+                        {% else %}
+                            No Service Selected
+                        {% endif %}
+                    </td>
+                    <td>{{ booking.description|default:"No description" }}</td>
                     <td>
                         {% if booking.assigned_worker %}
                             {{ booking.assigned_worker.name }}
@@ -36,7 +47,10 @@
                             Not Assigned
                         {% endif %}
                     </td>
-                    <td>{% if booking.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td>
+                        {% if booking.is_active %}Active{% else %}Inactive{% endif %}
+                    </td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>

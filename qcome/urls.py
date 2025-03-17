@@ -24,20 +24,26 @@ urlpatterns = [
     path('admin/password/update', views.AdminPasswordUpdateView.as_view(), name='myadmin_password_update'),
     path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
 
-    # Admin-Profile Management
+    # Admin-User Management
     path('admin/users/', views.ManageUsersListView.as_view(), name='manage_users'),
     path('admin/users/create', views.ManageUsersCreateView.as_view(), name='manage_user_create'),
     path('admin/<int:user_id>/profile', views.ManageUserUpdateView.as_view(), name='manage_user_update'),
-    path('admin/<int:user_id>/profile/delete', views.ManageUserToggleView.as_view(), name='manage_user_toggle'),
+    path('admin/<int:user_id>/profile/toggle', views.ManageUserToggleView.as_view(), name='manage_user_toggle'),
 
     # Admin-Service Management
     path('admin/service/', views.ManageServiceList.as_view(), name='manage_service_list'),
     path('admin/service/create', views.ManageServiceListCreate.as_view(), name='manage_service_create'),
     path('admin/service/<int:service_id>/update', views.ManageServiceListUpdate.as_view(), name='manage_service_update'),
-    path('admin/service/<int:service_id>/delete', views.ManageServiceListDelete.as_view(), name='manage_service_delete'),
+    path('admin/service/<int:service_id>/toggle', views.ManageServiceListDelete.as_view(), name='manage_service_delete'),
 
     # Admin-Payment Management
     path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
+
+    # Admin-Garage Management
+    path('admin/garage/', views.ManageGarageListView.as_view(), name='manage_garages_list'),
+    path('admin/garage/create', views.ManageGarageCreateView.as_view(), name='manage_garage_create'),
+    path('admin/garage/<int:garage_id>/update', views.ManageGarageUpdateView.as_view(), name='manage_garage_update'),
+    path('admin/<int:garage_id>/garage/toggle', views.ManageGarageToggleView.as_view(), name='manage_garage_toggle'),
 
     # Theme
     path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),
@@ -48,7 +54,8 @@ urlpatterns = [
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
 
     # Garage
-    path('garage/<int:garage_id>/create/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garage/create/', views.GarageCreateView.as_view(), name='garage_create'),
+    path('garage/<int:garage_id>/', views.GarageProfileView.as_view(), name='garage_profile'),
     path('garage/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 
@@ -83,5 +90,7 @@ urlpatterns = [
     #Garage workers
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
     path("api/check-worker/", views.CheckWorkerStatus.as_view(), name="check_worker_status"),
+    path('services/', views.ServiceCatalogueView.as_view(), name='list_service'),
+
 ]
 

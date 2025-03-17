@@ -1,20 +1,25 @@
-{% extends "enduser/base.html" %}
-{% block title %}Profile{% endblock %}
+{% extends "garage/index.html" %}
+{% block title %}Garage Profile Create{% endblock %}
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
-
 <div class="container">
     <div class="garage-form">
-        <h2>Create Garage Profile</h2>
-        
-        <form method="POST" enctype="multipart/form-data">
+        <h2>{% if garage %}Update Garage Profile{% else %}Create Garage Profile{% endif %}</h2>
+
+        <form method="POST" enctype="multipart/form-data" action="{% if garage %}{% url 'garage_update' garage.id %}{% else %}{% url 'garage_create' %}{% endif %}">
             {% csrf_token %}
+
+            <!-- Garage Owner -->
+            <div class="input-group">
+                <label>Garage Owner</label>
+                <input type="text" placeholder="Enter Owner Name" value="{{ user.get_full_name|default:user.email }}" required>
+            </div>
 
             <!-- Garage Name -->
             <div class="input-group">
                 <label>Garage Name</label>
-                <input type="text" name="garage_name" required>
+                <input type="text" name="garage_name" value="{{ garage.garage_name|default_if_none:'' }}" placeholder="Enter Garage Name" required>
             </div>
 
             <!-- Garage Image Upload -->
@@ -24,27 +29,37 @@
                     <p>Click to upload image</p>
                     <input type="file" name="garage_image" id="garage_image" accept="image/*" hidden>
                 </div>
-                <img id="preview_image" class="hidden preview-img">
+
+                <!-- Image Preview -->
+                <img id="preview_image" class="hidden preview-img" style="width: 100px; height: auto;">
+
+                <!-- Show previously uploaded image -->
+                {% if garage.garage_image %}
+                    <img src="{{ garage.garage_image.url }}" id="uploaded_image" alt="Garage Image" style="width: 100px; height: auto;">
+                {% else %}
+                    <p>No image uploaded</p>
+                {% endif %}
             </div>
 
             <!-- Address -->
             <div class="input-group">
                 <label>Address</label>
-                <input type="text" name="address" required>
+                <input type="text" name="address" value="{{ garage.address|default_if_none:'' }}" placeholder="Enter Address" required>
             </div>
 
             <!-- Phone Number -->
             <div class="input-group">
                 <label>Phone</label>
-                <input type="text" name="phone" maxlength="10" required>
+                <input type="text" name="phone" value="{{ garage.phone|default_if_none:'' }}" placeholder="Enter Phone Number" maxlength="10" required>
             </div>
 
-            <!-- Vehicle Type -->
+            <!-- Vehicle Type Dropdown -->
             <div class="input-group">
                 <label>Vehicle Type</label>
                 <select name="vehicle_type" required>
+                    <option value="" selected disabled>Select Vehicle Type</option>
                     {% for value, name in vehicle_types %}
-                        <option value="{{ value }}">{{ name }}</option>
+                        <option value="{{ value }}" {% if garage.vehicle_type == value %}selected{% endif %}>{{ name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -52,14 +67,15 @@
             <!-- Garage AC -->
             <div class="input-group">
                 <label>Garage AC</label>
-                <input type="text" name="garage_ac" required>
+                <input type="text" name="garage_ac" value="{{ garage.garage_ac|default_if_none:'' }}" placeholder="Enter Garage AC Info" required>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="submit-btn">Create Garage</button>
+            <button type="submit" class="submit-btn">{% if garage %}Update Garage{% else %}Create Garage{% endif %}</button>
         </form>
     </div>
 </div>
+
 
 <!-- JavaScript for Image Preview -->
 <script>
@@ -72,13 +88,20 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                document.getElementById("preview_image").src = e.target.result;
-                document.getElementById("preview_image").classList.remove("hidden");
+                let preview = document.getElementById("preview_image");
+                preview.src = e.target.result;
+                preview.classList.remove("hidden");
+
+                let uploadedImg = document.getElementById("uploaded_image");
+                if (uploadedImg) {
+                    uploadedImg.style.display = "none";
+                }
             };
             reader.readAsDataURL(file);
         }
     });
 </script>
+
 <style>
     /* Container */
 .container {

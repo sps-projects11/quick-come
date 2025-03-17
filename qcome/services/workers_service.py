@@ -1,5 +1,14 @@
 from ..models import Worker
 
+def worker_create(user, expertise, experience, worker_garage):
+    return Worker.objects.create(
+        worker = user,
+        garage = worker_garage,
+        experience = experience,
+        expertise = expertise
+    )
+
+
 def get_worker_details(worker_id):
     try:
         return Worker.objects.get(id=worker_id) 

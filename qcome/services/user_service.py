@@ -1,5 +1,4 @@
 from qcome.models import User, Worker, Garage
-from django.shortcuts import get_object_or_404
 from qcome.constants.default_values import Role
 
 def get_user(user_id):
@@ -38,6 +37,7 @@ def get_user_profile(user_id):
     
     return {"logged_in": False, "profile_photo_url": None}  # Handle case where user does not exist
 
+
 def get_workers_details(worker_id):
     try:
         worker = Worker.objects.get(id=worker_id)
@@ -54,6 +54,7 @@ def get_workers_details(worker_id):
         }
     except Worker.DoesNotExist:
         return None
+    
 
 def get_user_details(user_id):
     try:
@@ -83,7 +84,6 @@ def update_user_details(user, data):
     user.save()
     return user
 
-
     
 def updateFCMToken(user_id,fcm_token):
     user = User.objects.get(id=user_id)
@@ -93,6 +93,10 @@ def updateFCMToken(user_id,fcm_token):
 def getFCMtoken(user_id):
     return User.objects.filter(id=user_id).values_list('fcm_token', flat=True).first()
 
+
+def get_all_garages():
+    return Garage.objects.filter(is_active=True) 
+    
 
 def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path):
     return User.objects.create(
@@ -119,3 +123,7 @@ def toggle_user_status(user_id):
     user.save()
     return user
    
+
+def user_phone_create(user, worker_phone):
+    user.phone=worker_phone
+    user.save()
