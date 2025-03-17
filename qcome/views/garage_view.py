@@ -3,15 +3,17 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
 
+from qcome.constants.default_values import Role
+from qcome.decorators.auth_decorator import auth_required, role_required
 from qcome.models.garage_workers_model import Worker
 from ..models import Garage
 from ..constants import Vehicle_Type
 
-
-class GarageCreateView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageCreateView(View):
     def get(self, request):
         """ Show the create garage form, or redirect to update if an active garage already exists """
         existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
@@ -60,6 +62,8 @@ class GarageCreateView(LoginRequiredMixin, View):
 
 
 
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class GarageProfileView(View):
     def get(self, request):
         """ Display the garage profile for the logged-in user """
@@ -85,7 +89,8 @@ class GarageProfileView(View):
 
 
 
-
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class GarageWorkerListView(View):
     def get(self, request):
         workers = Worker.objects.all()
@@ -94,8 +99,9 @@ class GarageWorkerListView(View):
     def post(self, request):
         return None
 
-
-class GarageUpdateView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageUpdateView(View):
     def get(self, request, garage_id):
         """ Load the same create page but pre-fill it for update """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
@@ -126,7 +132,9 @@ class GarageUpdateView(LoginRequiredMixin, View):
         return redirect('garage_profile')
 
 
-class GarageDeleteView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageDeleteView(View):
     def post(self, request, garage_id):
         """ Delete garage and redirect to home page """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
