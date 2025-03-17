@@ -14,6 +14,7 @@
   <table class="table table-striped text-center">
     <thead>
       <tr>
+        <th scope="col">Garage ID</th>
         <th scope="col">Garage Image</th>
         <th scope="col">Garage Name</th>
         <th scope="col">Owner</th>
@@ -28,14 +29,15 @@
     <tbody>
       {% for garage in garages %}
       <tr id="garage-row-{{ garage.id }}">
+        <td>{{ garage.id }}</td>
         <td>
           <img src="{{ garage.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" alt="Garage Image" class="rounded" width="50" height="50">
         </td>
         <td>{{ garage.garage_name }}</td>
-        <td>{{ garage.garage_owner.get_full_name }}</td>
+        <td>{{ garage.garage_owner_name }}</td>
         <td>{{ garage.address }}</td>
         <td>{{ garage.phone }}</td>
-        <td>{{ garage.get_vehicle_type_display }}</td>
+        <td>{{ garage.vehicle }}</td>
         <td>{{ garage.garage_ac }}</td>
         <td>
           <span class="switch-label toggle-label-deactivate {% if not garage.is_active %}active-label{% endif %}">Deactivate</span>
