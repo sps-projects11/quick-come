@@ -3,6 +3,7 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+<section style="height: 100vh;">
 <div class="container">
     <div class="garage-form">
         <h2>{% if garage %}Update Garage Profile{% else %}Create Garage Profile{% endif %}</h2>
@@ -75,7 +76,7 @@
         </form>
     </div>
 </div>
-
+</section>
 
 <!-- JavaScript for Image Preview -->
 <script>
@@ -104,26 +105,31 @@
 
 <style>
     /* Container */
+/* Centered Form Container */
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120vh;
+    min-height: calc(100vh - 100px); /* Adjust to fit footer */
+    padding: 20px;
+
 }
 
-/* Form Card */
+/* Form Card - Prevents Overflow */
 .garage-form {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
+    max-height: 80vh; /* Prevents footer overlap */
+    overflow-y: auto; /* Scroll only if needed */
 }
 
 /* Title */
 .garage-form h2 {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
@@ -171,8 +177,8 @@
 
 /* Preview Image */
 .preview-img {
-    width: 100%;
-    height: 150px;
+    width: 100px;
+    height: auto;
     object-fit: cover;
     border-radius: 8px;
     margin-top: 10px;
@@ -195,10 +201,22 @@
     background: #0056b3;
 }
 
-/* Hidden Class */
-.hidden {
-    display: none;
+/* Footer Stays at Bottom */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+
+
+/* Prevent Extra Scroll on Small Screens */
+@media (max-width: 768px) {
+    .garage-form {
+        max-height: 90vh; 
+    }
+}
+
 
 </style>
 {% endblock %}

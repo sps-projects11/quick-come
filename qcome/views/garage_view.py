@@ -13,17 +13,17 @@ from ..constants import Vehicle_Type
 
 class GarageCreateView(LoginRequiredMixin, View):
     def get(self, request):
-        """ Show the create garage form, or redirect to update if the garage already exists """
-        existing_garage = Garage.objects.filter(garage_owner=request.user).first()
+        """ Show the create garage form, or redirect to update if an active garage already exists """
+        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
         if existing_garage:
-            return redirect('garage_update', garage_id=existing_garage.id)
+            return redirect('garage_update', garage_id=existing_garage.id)  # Only redirect if it's active
 
         vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', {'vehicle_types': vehicle_types})
 
     def post(self, request):
         """ Create a garage for the logged-in user (Only one allowed) """
-        existing_garage = Garage.objects.filter(garage_owner=request.user).first()
+        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
         if existing_garage:
             messages.error(request, "You can only create one garage.")
             return redirect('garage_profile', garage_id=existing_garage.id)
@@ -50,6 +50,7 @@ class GarageCreateView(LoginRequiredMixin, View):
             phone=phone,
             vehicle_type=vehicle_type,
             garage_ac=garage_ac,
+            is_active=True,  # Make sure new garages are active
             created_by=request.user,
             updated_by=request.user,
         )
@@ -58,13 +59,22 @@ class GarageCreateView(LoginRequiredMixin, View):
         return redirect('garage_profile')
 
 
+
 class GarageProfileView(View):
     def get(self, request):
         """ Display the garage profile for the logged-in user """
         if not request.user.is_authenticated:
             return redirect('login')  # Redirect if not logged in
 
-        garage = get_object_or_404(Garage, garage_owner=request.user)  # Fetch garage based on user
+        # Fetch only active garages for the user
+        garages = Garage.objects.filter(garage_owner=request.user, is_active=True)
+
+        if not garages.exists():
+            messages.error(request, "No active garage found.")
+            return redirect('garage_create')  # Redirect to create a new garage
+
+        # If multiple active garages exist, pick the first one
+        garage = garages.first()
         owner_name = garage.garage_owner.get_full_name() or garage.garage_owner.email
 
         context = {
@@ -72,6 +82,7 @@ class GarageProfileView(View):
             'garage_owner': owner_name,
         }
         return render(request, 'garage/garage_profile.html', context)
+
 
 
 
