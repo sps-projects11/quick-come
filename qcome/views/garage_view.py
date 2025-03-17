@@ -124,7 +124,7 @@ class GarageDeleteView(LoginRequiredMixin, View):
 class GarageBillsListView(View):
     def get(self,request):
         bills_data=booking_service.get_bills_garage(request.user.id)
-        return render(request,'enduser/Profile/garage/garage_bills.html',{'bills_data':bills_data})
+        return render(request,'garage/garage_bills.html',{'bills_data':bills_data})
     
 class GarageBillReceipeView(View):
     def get(self, request, booking_id):
@@ -134,4 +134,4 @@ class GarageBillReceipeView(View):
         bill["total"] = str(bill["total"])
         for service in bill["services"]:
             service["price"] = str(service["price"])  # Convert each service price to string
-        return render(request, 'enduser/Profile/garage/garage_bill_receipe.html', {'bill': bill})
+        return render(request, 'garage/garage_bill_receipe.html', {'bill': bill})
