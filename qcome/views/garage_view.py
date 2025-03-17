@@ -55,13 +55,16 @@ class GarageCreateView(LoginRequiredMixin, View):
         )
 
         messages.success(request, "Garage created successfully!")
-        return redirect('garage_profile', garage_id=garage.id)
+        return redirect('garage_profile')
 
 
 class GarageProfileView(View):
-    def get(self, request, garage_id):
-        """ Display the garage profile """
-        garage = get_object_or_404(Garage, id=garage_id)
+    def get(self, request):
+        """ Display the garage profile for the logged-in user """
+        if not request.user.is_authenticated:
+            return redirect('login')  # Redirect if not logged in
+
+        garage = get_object_or_404(Garage, garage_owner=request.user)  # Fetch garage based on user
         owner_name = garage.garage_owner.get_full_name() or garage.garage_owner.email
 
         context = {
@@ -69,6 +72,7 @@ class GarageProfileView(View):
             'garage_owner': owner_name,
         }
         return render(request, 'garage/garage_profile.html', context)
+
 
 
 class GarageWorkerListView(View):
@@ -108,13 +112,14 @@ class GarageUpdateView(LoginRequiredMixin, View):
         garage.save()
 
         messages.success(request, "Garage updated successfully!")
-        return redirect('garage_profile', garage_id=garage.id)
+        return redirect('garage_profile')
 
 
 class GarageDeleteView(LoginRequiredMixin, View):
     def post(self, request, garage_id):
         """ Delete garage and redirect to home page """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
-        garage.delete()
+        garage.is_active = False  # ✅ Mark as inactive
+        garage.save()
         messages.success(request, "Garage deleted successfully!")
         return redirect('garage_create')
