@@ -40,7 +40,7 @@ urlpatterns = [
     path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
 
     # Admin-Garage Management
-    path('admin/garage/', views.ManageGarageListView.as_view(), name='manage_garage_list'),
+    path('admin/garage/', views.ManageGarageListView.as_view(), name='manage_garages_list'),
     path('admin/garage/create', views.ManageGarageCreateView.as_view(), name='manage_garage_create'),
     path('admin/garage/<int:garage_id>/update', views.ManageGarageUpdateView.as_view(), name='manage_garage_update'),
     path('admin/<int:garage_id>/garage/toggle', views.ManageGarageToggleView.as_view(), name='manage_garage_toggle'),
