@@ -23,10 +23,19 @@ class BookingCreateView(View):
     def get(self, request):
         user = request.user
         services = ServiceCatalog.objects.filter(is_active=True)  # Fetch active services
+        
+        # Get service_id from the URL
+        service_id = request.GET.get('service_id')
+        selected_service = None
+        
+        if service_id:
+            selected_service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
+
         return render(request, 'enduser/Booking/booking.html', {
             'user_name': f"{user.first_name} {user.last_name}",
             'user_phone': user.phone if user.phone else "",  # Default text
-            'services': services  # Pass services to template
+            'services': services,  # Pass services to template
+            'selected_service': selected_service  # Pass selected service to prefill
         })
     
     def post(self, request):

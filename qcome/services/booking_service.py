@@ -87,7 +87,7 @@ def get_booking_worker(worker_id):
     return list(Work.objects.filter(work_by=worker_id))
 
 def get_booking_by_id(user_id):
-    return Booking.objects.filter(customer=user_id,is_active=True).first() 
+    return Booking.objects.filter(assigned_worker__worker_id=user_id,is_active=True).first() 
 
 def get_services_by_id(booking_id):
     try:

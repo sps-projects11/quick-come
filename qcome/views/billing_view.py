@@ -1,14 +1,13 @@
 from django.views import View
 from django.shortcuts import render
-from ..decorators import auth_required, role_required, worker_required, garage_required
-from ..constants import Role
+from ..decorators import auth_required, worker_required
 from ..services import booking_service
 from django.http import JsonResponse
 import json
 
 
 @auth_required(login_url='/sign-in/')
-@garage_required
+@worker_required
 class BillingHomeView(View):
     def get(self, request):
         booking = booking_service.get_booking_by_id(request.user.id)  # Get the booking object
@@ -24,7 +23,8 @@ class BillingHomeView(View):
             'total_price': total_price  
         })
 
-
+@auth_required(login_url='/sign-in/')
+@worker_required
 class BillingUpdate(View):
     def post(self, request, booking_id):
         """Handles adding a service to an existing booking."""
@@ -44,7 +44,9 @@ class BillingUpdate(View):
             return JsonResponse({"success": False, "error": "Invalid JSON data"}, status=400)
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
-
+        
+@auth_required(login_url='/sign-in/')
+@worker_required
 class BillingDelete(View):
     def delete(self, request, booking_id):
         try:
