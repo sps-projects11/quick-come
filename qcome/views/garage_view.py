@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-
 from qcome.constants.default_values import Role
 from qcome.decorators.auth_decorator import auth_required, role_required
 from qcome.models.garage_workers_model import Worker
