@@ -56,3 +56,6 @@ def is_user_a_garage_owner(user):
 def get_garage(worker_garage):
 
     return Garage.objects.get(id=worker_garage)
+
+def get_garage_id(user_id):
+    return Garage.objects.get(garage_owner=user_id)
