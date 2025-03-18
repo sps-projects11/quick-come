@@ -98,7 +98,7 @@ def get_all_garages():
     return Garage.objects.filter(is_active=True) 
     
 
-def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path):
+def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path, user_password):
     return User.objects.create(
        first_name = first_name, 
        middle_name = middle_name, 
@@ -107,7 +107,8 @@ def user_create(first_name, middle_name, last_name, dob, email, phone, gender, p
        email = email, 
        phone = phone, 
        gender = gender,
-       profile_photo_url = profile_photo_path
+       profile_photo_url = profile_photo_path,
+       password = user_password
     )
 
 

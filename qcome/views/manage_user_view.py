@@ -11,6 +11,7 @@ from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
 import datetime
 from qcome.constants.default_values import Gender
+from django.contrib.auth.hashers import make_password
 
 class ManageUsersListView(View):
     def get(self, request):
@@ -38,7 +39,10 @@ class ManageUsersCreateView(View):
         dob = request.POST.get('dob')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
+        password = request.POST.get('password')
         gender = request.POST.get('gender') or None
+
+        user_password = make_password(password)
         
         # Profile photo handling
         profile_photo = request.FILES.get('profile_photo')
@@ -66,7 +70,7 @@ class ManageUsersCreateView(View):
 
             profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
         
-        user_service.user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path)
+        user_service.user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path, user_password)
 
         return redirect('manage_users')
 
