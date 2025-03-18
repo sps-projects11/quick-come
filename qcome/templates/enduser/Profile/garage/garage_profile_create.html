@@ -59,9 +59,12 @@
                 <label>Vehicle Type</label>
                 <select name="vehicle_type" required>
                     <option value="" selected disabled>Select Vehicle Type</option>
-                    {% for value, name in vehicle_types %}
+                    <option value="1" {% if booking.vehicle_type == "1" %}selected{% endif %}>Car</option>
+                    <option value="2" {% if booking.vehicle_type == "2" %}selected{% endif %}>Bike</option>
+                    <option value="3" {% if booking.vehicle_type == "3" %}selected{% endif %}>Bike & Car</option>
+                    <!-- {% for value, name in vehicle_types %}
                         <option value="{{ value }}" {% if garage.vehicle_type == value %}selected{% endif %}>{{ name }}</option>
-                    {% endfor %}
+                    {% endfor %} -->
                 </select>
             </div>
 

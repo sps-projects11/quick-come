@@ -80,9 +80,21 @@ class GarageProfileView(View):
         garage = garages.first()
         owner_name = garage.garage_owner.get_full_name() or garage.garage_owner.email
 
+        # Mapping vehicle type integer values to readable names
+        vehicle_type_mapping = {
+            Vehicle_Type.CAR.value: "Car",
+            Vehicle_Type.BIKE.value: "Bike",
+            Vehicle_Type.BOTH.value: "Car & Bike",
+        }
+
+        # Ensure the correct name is fetched
+        vehicle_type_name = vehicle_type_mapping.get(int(garage.vehicle_type), "Unknown")
+
+
         context = {
             'garage': garage,
             'garage_owner': owner_name,
+            'vehicle_type_name': vehicle_type_name,  # Send the mapped name
         }
         return render(request, 'garage/garage_profile.html', context)
 
