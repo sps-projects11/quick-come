@@ -421,15 +421,41 @@ footer .copyright {
 } 
 
 #profile-dropdown{
-    top: 10%;
-    right: 5%;
-    display: block;
-    position: fixed;
     display: none;
+    position: fixed;
+    top: 64px;
+    right: 38px;
     background: white;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 160px;
+    z-index: 1000;
+
+}
+
+.p-menu{
+    font-size: 20px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s ease;
+    height: 100%;
+}
+.p-menu a{
+    color: #000;
+    text-decoration: none;
     padding: 10px;
 }
+.p-menu a:hover {
+    color: #ff0000;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+
 
   

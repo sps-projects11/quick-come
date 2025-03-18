@@ -54,18 +54,24 @@
                 <input class="form-control me-2" type="search" placeholder="Search">
             </form>
         
-            <li id="lg-bag">
-                <a id="profile-link" href="/sign-in/">
-                    <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+                <a id="profile-link" href="/sign-in/" style="text-decoration: none;color: black;">
+                    <li id="lg-bag">
+                    <i class="fas fa-user-circle" style="font-size: 30px;"></i>
+                
+                    </li>
                 </a>
-            </li>
     
         
             <!-- Dropdown Menu (Initially Hidden) -->
-            <div id="profile-dropdown" >
-                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+            <div id="profile-dropdown">
+                <div class="p-menu">
+                <a href="/profile"><i class="fas fa-user" style="margin-right: 10px;"></i>Profile</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
+                 </div>
             </div>
+
+
+
             <a href="#" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>
@@ -75,10 +81,13 @@
             <i class="fas fa-user-circle"></i>
         </a>
         <!-- Dropdown Menu (Initially Hidden) -->
-        <div id="profile-dropdown">
-            <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-            <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+        <div id="profile-dropdown" >
+            <a href="/profile" style="display: block; padding: 8px;"><i class="fas fa-user"></i>Profile</a>
+            <a href="/logout" style="display: block; padding: 8px; color: red;"><i class="fas fa-sign-out-alt"></i>Logout</a>
         </div>
+
+
+
         <i id="bar" class="fas fa-outdent"></i>
     </div>
 </section>
