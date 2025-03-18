@@ -16,7 +16,7 @@ class ErrorMessage(Enum):
     E00012 = "Error updating user status. Please try again."
     E00013 = "Error updating garage status. Please try again."
     E00014 = "Error updating garage! Please try again."
-    E00015 = ""
+    E00015 = "You can only create one garage."
     E00016 = ""
     E00017 = ""
     E00018 = ""
