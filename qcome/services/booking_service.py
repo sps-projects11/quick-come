@@ -8,10 +8,10 @@ def get_booking_list():
     bookings = Booking.objects.filter(is_active=True)
 
     for booking in bookings:
-         # Add customer details
+        # Add customer details
         booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
         booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
-       
+
         service_ids = booking.service  # List of service IDs
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
@@ -45,8 +45,6 @@ def create_booking(user, current_location, vehicle_type, service_id, description
         return "error"
 
 
-
-
 def update_booking(user, booking_id, current_location, vehicle_type, service_id, description):
     """Allow user to update their booking correctly."""
     try:
@@ -70,12 +68,12 @@ def update_booking(user, booking_id, current_location, vehicle_type, service_id,
         return "error"
 
 
-
 def delete_booking(user, booking_id):
     """Soft delete a booking (only if the user owns it)."""
     try:
         booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
-        booking.delete()  # Hard delete instead of soft delete
+        booking.is_active = False  # Soft delete by setting is_active to False
+        booking.save(update_fields=["is_active"])  # Save the updated field
         return "deleted"
     except Booking.DoesNotExist:
         return "not_found"
@@ -86,8 +84,10 @@ def delete_booking(user, booking_id):
 def get_booking_worker(worker_id):
     return list(Work.objects.filter(work_by=worker_id))
 
+
 def get_booking_by_id(user_id):
-    return Booking.objects.filter(customer=user_id,is_active=True).first() 
+    return Booking.objects.filter(customer=user_id, is_active=True).first()
+
 
 def get_services_by_id(booking_id):
     try:
@@ -106,28 +106,20 @@ def get_services_by_id(booking_id):
 
 
 def remove_service_from_booking(booking_id, service_name):
-    """
-    Removes a service from a booking's service list if the service exists.
-    """
+    """Removes a service from a booking's service list if the service exists."""
     try:
-        # Get the active service
         service = ServiceCatalog.objects.filter(service_name=service_name, is_active=True).first()
         if not service:
             return {"success": False, "error": "Service not found"}
 
-        # Get the active booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         if not booking:
             return {"success": False, "error": "Booking not found"}
 
-        # Ensure the service ID exists in the ArrayField
         if service.id not in booking.service:
             return {"success": False, "error": "Service not linked to this booking"}
 
-        # Remove the service ID from the list
         booking.service.remove(service.id)
-        
-        # Update the booking record
         booking.save(update_fields=["service"])
 
         return {"success": True}
@@ -135,38 +127,29 @@ def remove_service_from_booking(booking_id, service_name):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-    
 
 def add_service_to_booking(booking_id, service_id):
-    """
-    Adds a service to a booking without removing existing services.
-    """
+    """Adds a service to a booking without removing existing services."""
     try:
-        # Get the service
         service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
         if not service:
             return {"success": False, "error": "Service not found"}
 
-        # Get the active booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         if not booking:
             return {"success": False, "error": "Booking not found"}
 
-        # Ensure the service ID is not already in the booking's service list
         if service.id in booking.service:
             return {"success": False, "error": "Service already added to booking"}
 
-        # Append the new service ID to the list
         booking.service.append(service.id)
-        
-        # Save the updated booking
         booking.save(update_fields=["service"])
 
         return {"success": True, "message": "Service added successfully"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
-    
+
 
 def total_price(services):
     return sum(service["price"] for service in services)
