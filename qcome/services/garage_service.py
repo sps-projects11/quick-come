@@ -57,32 +57,5 @@ def get_garage(worker_garage):
 
     return Garage.objects.get(id=worker_garage)
 
-
-def toggle_garage_status(garage):
-    try:
-        garage = Garage.objects.get(id=garage)
-    except Garage.DoesNotExist:
-        return None
-    
-    garage.is_active = not garage.is_active
-    garage.save()
-
-    return garage
-
-
-def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path):
-    try:
-        garage = Garage.objects.get(id=garage_id)
-    except Garage.DoesNotExist:
-        return None
-    
-    garage.garage_name = garage_name
-    garage.garage_image = garage_profile_photo_path
-    garage.address = address
-    garage.phone = phone
-    garage.vehicle_type = garage_vehicle_type
-    garage.garage_ac = garage_ac
-    garage.updated_by = user
-
-    garage.save()
-    return garage
+def get_garage_id(user_id):
+    return Garage.objects.get(garage_owner=user_id)

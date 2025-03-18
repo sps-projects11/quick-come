@@ -29,7 +29,7 @@
                 <tr>
                     <td>{{ booking.id }}</td>
                     <td>{{ booking.customer_name|default:"No Customer" }}</td>
-                    <td>{{ booking.customer_phone|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_phone|default:"No Phone no." }}</td>
                     <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
                     <td>{{ booking.current_location|default:"No Location Provided" }}</td>
                     <td>
@@ -62,6 +62,7 @@
 
 <style>
     #booking_details {
+        background: #c8d6e2;
         height: 100vh;
         padding: 20px;
     }
