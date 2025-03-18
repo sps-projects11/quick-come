@@ -94,18 +94,15 @@ urlpatterns = [
     path('services/', views.ServiceCatalogueView.as_view(), name='list_service'),
     path('worker/asigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
 
-
     #Garage bills
     path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
-    path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe')
-
+    path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe'),
 
     #Contact
     path('contact/',views.ContactView.as_view(), name='contact'),
 
     #About
     path('about/',views.AboutView.as_view(), name='about'),
-
 
 
 ]
