@@ -44,7 +44,13 @@
                         {% if booking.assigned_worker %}
                             {{ booking.assigned_worker.name }}
                         {% else %}
-                            Not Assigned
+                        <select>
+                            
+                            <option>Select a worker</option>
+                            {% for worker in workers %}
+                            <option onclick="create_assign_worker({{worker.id}})">{{worker.name}}</option>
+                            {% endfor %}
+                        </select>
                         {% endif %}
                     </td>
                     <td>

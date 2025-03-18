@@ -88,18 +88,6 @@ class CheckWorkerStatus(View):
 
 class AssignedWorkerCreateView(View):
     def get(self, request):
-        garage = garage_service.get_garage_id(request.user.id)
         
-        if not garage:
-            return JsonResponse({"error": "No garage found"}, status=404)
-
-        workers = workers_service.get_worker_of_garage(garage.id)
-
-        if not workers:
-            return JsonResponse({"workers": []})  # Empty list if no workers
-
-        # Convert worker objects to a JSON-serializable format
-        workers_list = [{"id": worker.id, "name": f"{worker.worker.first_name} {worker.worker.last_name}"} for worker in workers]
-
-        return JsonResponse({"workers": workers_list})
+        return render(request)
     
