@@ -77,7 +77,6 @@ def update_payment(request, booking_id):
         payment = get_object_or_404(Payment, booking_id=booking_id)
 
         payment.type = data.get('type', payment.type)
-        payment.bank_ac = data.get('bank_ac', payment.bank_ac)
         payment.amount = data.get('amount', payment.amount)
         payment.pay_status = data.get('pay_status', payment.pay_status)
         payment.save()

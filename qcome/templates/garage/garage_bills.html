@@ -1,0 +1,33 @@
+{% extends "garage/index.html" %}
+{% load static %}
+{% block title %}Bills List{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/garage_bills.css' %}"> 
+
+<div class="wrapper">
+    <div class="container">
+        <h2 class="billing-title">Billing Details</h2>
+
+        {% for bill in bills_data %}
+        <div class="bill-card" onclick="openBill({{ bill.booking_id }})">
+            <div class="bill-info">
+                <div class="bill-row">
+                    <span class="customer"><strong>Booking ID:</strong> {{ bill.booking_id }}</span>
+                    <span class="vehicle"><strong>Car Type:</strong> {{ bill.vehicle_type }}</span>
+                </div>
+                <div class="bill-date">
+                    <span><strong>Date:</strong> {{ bill.created_at|date:"d M Y, h:i A" }}</span>
+                    <span class="total"><strong>Total:</strong> ₹{{ bill.total }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>    
+</div>
+<script>
+    function openBill(bookingId) {
+        window.location.href = `/garage/bills/${bookingId}/`;
+    }
+    </script>
+{% endblock %}

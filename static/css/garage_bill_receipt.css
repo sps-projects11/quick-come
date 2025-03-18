@@ -1,0 +1,171 @@
+/* Wrapper Styling */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #c8d6e2;
+    padding: 20px;
+}
+
+/* Receipt Container */
+.receipt-container {
+    background: #fff;
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Header Styling */
+.receipt-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.receipt-header h3 {
+    font-size: 24px;
+    color: #333;
+}
+
+.back-btn {
+    position: absolute;
+    left: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #333;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    color: #007bff;
+}
+
+/* Receipt Content */
+.receipt-content {
+    text-align: left;
+    padding: 10px 0;
+}
+
+.item {
+    font-size: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Services Section */
+.services h4 {
+    font-size: 18px;
+    margin: 15px 0;
+    color: #007bff;
+}
+
+.services ul {
+    list-style: none;
+    padding: 0;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.service-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.service-name {
+    flex: 1;
+    font-size: 16px;
+    color: #444;
+}
+
+.service-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Total Amount */
+.total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 0;
+    text-align: right;
+}
+
+/* Button */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .receipt-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .receipt-header h3 {
+        font-size: 22px;
+    }
+
+    .item {
+        font-size: 14px;
+    }
+
+    .service-name,
+    .service-price {
+        font-size: 14px;
+    }
+
+    .total-amount {
+        font-size: 16px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

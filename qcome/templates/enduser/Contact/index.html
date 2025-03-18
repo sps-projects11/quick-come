@@ -1,0 +1,313 @@
+{% extends "enduser/base.html" %}
+{% block title %}Quick Come Home{% endblock %}
+{%load static %}
+{% block content %}
+
+
+<section id="page-header" class="about-header">
+    <h2><span style="color: #0f00ff; font-size: 80px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);">#Get in Touch</span> </h2>
+    <p><span style="color: white;background: #0000002b;padding: 10px;border-radius: 10px;">Have questions or need assistance? We're here to help! Reach out to us anytime, and our team will be happy to assist you. Your satisfaction is our priority!" 😊</span></p>
+</section>
+<section id="contact-details" class="section-p1">
+    <div class="details">
+        <span>Get In Touch</span>
+        <h2>Visit one of our agency locations or contact us today</h2>
+        <h3>Head Office</h3>
+        <div class="contact-address">
+            <li><i class="fas fa-map"></i><p> 6HR+DQ4, Abcd Road, Xyz, West Bengal, 000000</p></li>
+            <li><i class="fas fa-envelope"></i><p> quickcome@gmail.com</p></li>
+            <li><i class="fas fa-phone"></i><p> (+91) 99079 00000 /(+91) 00000 82525</p></li>
+            <li><i class="fas fa-clock"></i><p> Monday to Saturday: 9.00am to 22pm</p></li>
+        </div>
+    </div>
+    <div class="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3722102.103758271!2d85.20953015557023!3d24.351183145366303!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fa16ff1397e887%3A0x71543a3dc3e7a20a!2sWest%20Bengal!5e0!3m2!1sen!2sin!4v1730261867562!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</section>
+<section id="form-details">
+    <form action="">
+        <span>LEAVE A MESSAGE</span>
+        <h2>We love to hear from you</h2>
+        <input type="text" placeholder="Your Name">
+        <input type="text" placeholder="E-mail">
+        <input type="text" placeholder="Subject">
+        <textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
+        <button class="normal">Submit</button>
+    </form>
+    <div class="people">
+        <div>
+            <img src="\static\all-Pictures\banners\contact-avater.avif" alt="">
+            <p><span>Rustom Pandey </span> Senior Marketing Manager<br>Phone: +91 70748 99472 <br>Email: chuperustom@gmail.com </p>
+        </div>
+        <div>
+            <img src="\static\all-Pictures\banners\contact-avater.avif" alt="">
+            <p><span>Rustom Pandey </span> Senior Marketing Manager<br>Phone: +91 70748 99472 <br>Email: chuperustom@gmail.com </p>
+        </div>
+        <div>
+            <img src="\static\all-Pictures\banners\contact-avater.avif" alt="">
+            <p><span>Rustom Pandey </span> Senior Marketing Manager<br>Phone: +91 70748 99472 <br>Email: chuperustom@gmail.com </p>
+        </div>
+    </div>
+</section>
+  
+<section id="newsletter" class="section-p1 section-m1">
+    <div class="newsnext">
+        <h4>Sign Up For Newsletters</h4>
+        <p>Get E-mail update about our latest service and <span>special offer.</span></p>
+    </div>
+    <div class="form">
+        <input type="text" placeholder="Your email address">
+        <button class="normal">Sign Up</button>
+    </div>
+</section>
+
+<style>
+
+    /* contact page */
+
+    #page-header{
+    background-image: url("/static/all-Pictures/banners/con7.gif");
+    width: 100%;
+    height: 90vh;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    position: relative;
+}
+
+#contact-details{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#contact-details .details{
+    background-image: url("/static/all-Pictures/banners/con8.gif");
+    background-size: cover;
+    border-bottom: 4px solid #0f00ff;
+    width: 40%;
+    padding: 40px;
+    border-radius: 12px;
+}
+#contact-details .details span,
+#form-details form span{
+    font-size: 14px;
+    
+}
+#contact-details .details h2,
+#form-details form h2{
+    font-size: 26px;
+    line-height: 35px;
+    padding: 20px 0;
+}
+#contact-details .details h3{
+    font-size: 16px;
+    padding-bottom: 15px;
+}
+#contact-details .details li{
+    list-style: none;
+    display: flex;
+    padding: 10px 0;
+}
+#contact-details .details li i{
+    font-size: 14px;
+    padding-right: 22px;
+
+}
+#contact-details .details li p{
+    margin: 0;
+    font-size: 14px;
+}
+
+#contact-details .map{
+    border: 4px solid #ffca20;
+    width: 45%;
+    height: 400px;
+    padding: 4px;
+    border-radius: 12px;
+}
+#contact-details .map iframe{
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+
+}
+#form-details{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #00ffff;
+    display: flex;
+    justify-content: space-between;
+    margin: 30px;
+    padding: 80px;
+    border: 1px solid #fff;
+}
+
+#form-details form{
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#form-details form input,
+#form-details form textarea{
+    border-top: 4px solid #000000;
+    border-radius: 8px;
+    background: #00ffff;
+    width: 100%;
+    padding: 12px 15px;
+    outline: none;
+    margin-bottom: 20px;
+}
+#form-details form button{
+    background-color: #088178;
+    color: #fff;
+}
+#form-details .people div{
+    padding-bottom: 25px;
+    display: flex;
+    align-items: flex-start;
+}
+#form-details .people div img{
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 50%;
+}
+#form-details .people div p{
+    margin: 0;
+    font-style: 13px;
+    line-height: 25px;
+}
+#form-details .people div p span{
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+
+.contact-address{
+    border-radius: 10px;
+    padding: 10px;
+    background: #0000002b;
+    color: #fff;
+    font-weight: bold;
+}
+
+@media (max-width:799px){
+
+    /* contact page  */
+    #contact-details .details {
+        width: 43%;
+        padding: 25px;
+    }
+    #contact-details .map {
+        width: 50%;
+        height: 400px;
+    }
+    #form-details {
+        padding: 40px;
+    }
+    #form-details form {
+        width: 45%;
+    }
+
+    #newsletter .form {
+        width: 70%;
+    }
+
+}
+
+@media (max-width: 477px){
+        /* contact page  */
+        #contact-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #contact-details .details {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    #contact-details .map{
+        width: 100%;
+    }
+    #form-details{
+        margin: 10px;
+        padding: 30px 10px;
+        flex-wrap: wrap;
+    }
+    #form-details form{
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    #newsletter{
+        padding: 40px 20px;
+    }
+    #newsletter .form{
+        width: 100%;
+    }
+}
+
+
+
+
+
+#newsletter{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    /* background-image: url("images/banner/"); */
+    background-repeat: no-repeat;
+    background-position: 20% 30%;
+    background-color: #041e42;
+}
+
+#newsletter h4{
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+#newsletter p{
+    font-size: 14px;
+    font-weight: 600;
+    color: #818ea0;
+}
+
+#newsletter p span{
+    color: #ffbd27;
+}
+
+#newsletter .form{
+    display: flex;
+    width: 40%;
+}
+
+#newsletter input{
+    height: 3.125rem;
+    padding: 0 1.25rem;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    outline: none;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#newsletter button{
+    background-color: #088178;
+    color: #fff;
+    white-space: nowrap;
+}
+
+
+
+</style>
+
+{% endblock %}

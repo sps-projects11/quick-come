@@ -29,7 +29,7 @@
                 <tr>
                     <td>{{ booking.id }}</td>
                     <td>{{ booking.customer_name|default:"No Customer" }}</td>
-                    <td>{{ booking.customer_phone|default:"No Customer" }}</td>
+                    <td>{{ booking.customer_phone|default:"No Phone no." }}</td>
                     <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
                     <td>{{ booking.current_location|default:"No Location Provided" }}</td>
                     <td>
@@ -44,7 +44,12 @@
                         {% if booking.assigned_worker %}
                             {{ booking.assigned_worker.name }}
                         {% else %}
-                            Not Assigned
+                        <select id="workerDropdown_{{ booking.id }}" onchange="create_assign_worker(this, '{{ booking.id }}')">
+                            <option value="">Select a worker</option>
+                            {% for worker in workers %}
+                                <option value="{{ worker.id }}">{{ worker.name }}</option>
+                            {% endfor %}
+                        </select>
                         {% endif %}
                     </td>
                     <td>
@@ -59,9 +64,62 @@
         <p>No bookings found.</p>
     {% endif %}
 </section>
-
+<script>
+    function create_assign_worker(selectElement, bookingId) {
+        let selectedWorkerId = selectElement.value;
+    
+        if (!selectedWorkerId) return; // Prevent assigning if no worker is selected
+    
+        fetch('/worker/asigned/', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') 
+            },
+            body: JSON.stringify({
+                worker_id: selectedWorkerId,
+                booking_id: bookingId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Server Response:", data); // Debugging output
+    
+            if (data.status === 'success') {
+                console.log("Redirecting in 1 second..."); // Debug log before redirection
+    
+                setTimeout(() => {
+                    console.log("Now Redirecting...");
+                    window.location.href = '/contact/';
+                }, 1000);
+            } else {
+                console.log("Error in Response:", data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error assigning worker:", error);
+        });
+    }
+    
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
 <style>
     #booking_details {
+        background: #c8d6e2;
         height: 100vh;
         padding: 20px;
     }

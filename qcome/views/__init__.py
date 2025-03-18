@@ -13,4 +13,6 @@ from .workers_view import *
 from .firebase_view import *
 from .service_view import *
 from .manage_payment_view import *
+from .contact_view import *
+from .about_view import *
 from .manage_garage_view import *
