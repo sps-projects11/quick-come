@@ -40,12 +40,14 @@ class ManageGarageCreateView(View):
         user = user_service.get_user(request.user.id)      
 
         garage_name = request.POST.get('garage_name')
-        garage_owner = request.POST.get('garage_owner')
+        garage_owner_id = request.POST.get('garage_owner')
         address = request.POST.get('garage_address')
         phone = request.POST.get('garage_phone')
         garage_ac = request.POST.get('garage_ac')        
         garage_vehicle_type = request.POST.get('vehicle_type')
         garage_profile_photo = request.FILES.get('garage_profile_photo')
+
+        garage_owner = user_service.get_user(garage_owner_id)
 
         garage_profile_photo_path = ''
 
@@ -73,10 +75,10 @@ class ManageGarageCreateView(View):
 
         garage = garage_service.garage_create( garage_owner, garage_name, garage_profile_photo_path, address, phone, garage_vehicle_type, garage_ac, user)
         if garage is None:
-            messages.error(request, ErrorMessage.E00014.value)
+            messages.error(request, ErrorMessage.E00016.value)
             return redirect('manage_garages_list')
         
-        messages.success(request, SuccessMessage.S00007.value)
+        messages.success(request, SuccessMessage.S00008.value)
         return redirect('manage_garages_list')
 
 
