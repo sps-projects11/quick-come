@@ -291,7 +291,7 @@
       </div>
       <!-- Garage with submenu -->
       <div class="sidebar-dropdown">
-        <a href="#" class="list-group-item parent-item">
+        <a href="{% url 'manage_garages_list' %}" class="list-group-item parent-item">
           <i class="bi bi-car-front sidebar-icon"></i>
           <span class="sidebar-text">Garage</span>
           <i class="bi bi-chevron-down sidebar-caret"></i>
@@ -299,8 +299,8 @@
         <div class="submenu">
           <div class="submenu-header">Garage</div>
           <hr class="submenu-divider">
-          <a href="#">List</a>
-          <a href="#">Create</a>
+          <a href="{% url 'manage_garages_list' %}">List</a>
+          <a href="{% url 'manage_garage_create' %}">Create</a>
         </div>
       </div>
       <!-- Service with submenu -->

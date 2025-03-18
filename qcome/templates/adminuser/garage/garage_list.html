@@ -1,0 +1,180 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Garage List{% endblock %}
+
+{% block navbar_extra %}
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_garages_list' %}">
+      Garages
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Garage List</h1>
+  <table class="table table-striped text-center">
+    <thead>
+      <tr>
+        <th scope="col">Garage ID</th>
+        <th scope="col">Garage Image</th>
+        <th scope="col">Garage Name</th>
+        <th scope="col">Owner</th>
+        <th scope="col">Address</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Vehicle Type</th>
+        <th scope="col">AC</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for garage in garages %}
+      <tr id="garage-row-{{ garage.id }}">
+        <td>{{ garage.id }}</td>
+        <td>
+          <img src="{{ garage.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" alt="Garage Image" class="rounded" width="50" height="50">
+        </td>
+        <td>{{ garage.garage_name }}</td>
+        <td>{{ garage.garage_owner_name }}</td>
+        <td>{{ garage.address }}</td>
+        <td>{{ garage.phone }}</td>
+        <td>{{ garage.vehicle }}</td>
+        <td>{{ garage.garage_ac }}</td>
+        <td>
+          <span class="switch-label toggle-label-deactivate {% if not garage.is_active %}active-label{% endif %}">Deactivate</span>
+          <label class="switch">
+            <input type="checkbox" class="garage-toggle" data-garage-id="{{ garage.id }}" {% if garage.is_active %}checked{% endif %}>
+            <span class="slider round"></span>
+          </label>
+          <span class="switch-label toggle-label-active {% if garage.is_active %}active-label{% endif %}">Active</span>
+        </td>
+        <td>
+          <a href="{% url 'manage_garage_update' garage.id %}" class="btn btn-sm btn-primary">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="9" class="text-center">No garages found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  $(document).ready(function(){
+    $('.garage-toggle').change(function(){
+      var checkbox = $(this);
+      var garageId = checkbox.data('garage-id');
+      var isActive = checkbox.is(':checked');
+      var td = checkbox.closest('td');
+      var labelActive = td.find('.toggle-label-active');
+      var labelDeactivate = td.find('.toggle-label-deactivate');
+      
+      // Update label styling immediately
+      if(isActive){
+         labelActive.addClass('active-label');
+         labelDeactivate.removeClass('active-label');
+      } else {
+         labelDeactivate.addClass('active-label');
+         labelActive.removeClass('active-label');
+      }
+
+      // Construct the URL using the garage ID.
+      var toggleUrl = '{% url "manage_garage_toggle" 0 %}'.replace("0", garageId);
+
+      $.ajax({
+        url: toggleUrl,
+        type: 'POST',
+        data: {
+          'is_active': isActive,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response){
+          console.log("Garage status toggled successfully");
+        },
+        error: function(xhr, status, error){
+          alert("Error toggling garage status");
+          // Revert the checkbox state if there is an error
+          checkbox.prop('checked', !isActive);
+          if(isActive){
+              labelDeactivate.addClass('active-label');
+              labelActive.removeClass('active-label');
+          } else {
+              labelActive.addClass('active-label');
+              labelDeactivate.removeClass('active-label');
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Center align table headers and cells */
+  .table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  /* Toggle switch styling */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background-color: #28a745;  /* Green when active */
+  }
+
+  input:not(:checked) + .slider {
+    background-color: #dc3545;  /* Red when inactive */
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  .switch-label {
+    margin: 0 10px;
+    font-weight: normal;
+    transition: font-weight 0.2s, color 0.2s;
+  }
+
+  .active-label {
+    font-weight: bold;
+    color: #000;
+  }
+</style>
+{% endblock %}
