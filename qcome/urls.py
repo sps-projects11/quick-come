@@ -89,8 +89,11 @@ urlpatterns = [
 
     #Garage workers
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
-    path("api/check-worker/", views.CheckWorkerStatus.as_view(), name="check_worker_status"),
+    path("api/check-worker/", views.CheckWorkerStatus.as_view(), name='check_worker_status'),
     path('services/', views.ServiceCatalogueView.as_view(), name='list_service'),
 
+    #Garage bills
+    path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
+    path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe')
 ]
 

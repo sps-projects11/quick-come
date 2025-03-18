@@ -1,6 +1,7 @@
 from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
+from qcome.constants.default_values import Vehicle_Type
 
 
 def get_booking_list():
@@ -174,3 +175,39 @@ def total_price(services):
 
 def get_booking(booking_id):
     return Booking.objects.filter(id=booking_id).select_related('assigned_worker').first()
+
+def get_bills_garage(user_id):
+    bookings = Booking.objects.filter(assigned_worker__garage__garage_owner=user_id)
+    bills_data = []
+    
+    if bookings.exists():
+        bills_data = [
+            {   "booking_id":booking.id,
+                "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
+                "created_at":booking.created_at,
+                "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),
+            }
+            for booking in bookings
+        ]
+    
+    return bills_data
+
+def get_bill_details_by_booking_id(booking_id):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+    except Booking.DoesNotExist:
+        return None  
+
+    bill_data = [{
+        "booking_id": booking.id,
+        "customer_name": f"{booking.customer.first_name} {booking.customer.last_name}",
+        "assigned_worker": f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if booking.assigned_worker else "Unassigned",
+        "services": list(ServiceCatalog.objects.filter(id__in=booking.service).values(
+            'service_name', 'service_image', 'price'
+        )), 
+        "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
+        "created_at": booking.created_at.strftime("%d %b %Y, %I:%M %p"),
+        "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),  
+    }]
+
+    return bill_data 

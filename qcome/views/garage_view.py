@@ -9,6 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from qcome.models.garage_workers_model import Worker
 from ..models import Garage
 from ..constants import Vehicle_Type
+from qcome.services import booking_service
 
 
 class GarageCreateView(LoginRequiredMixin, View):
@@ -118,3 +119,19 @@ class GarageDeleteView(LoginRequiredMixin, View):
         garage.delete()
         messages.success(request, "Garage deleted successfully!")
         return redirect('garage_create')
+    
+
+class GarageBillsListView(View):
+    def get(self,request):
+        bills_data=booking_service.get_bills_garage(request.user.id)
+        return render(request,'garage/garage_bills.html',{'bills_data':bills_data})
+    
+class GarageBillReceipeView(View):
+    def get(self, request, booking_id):
+        bill_data = booking_service.get_bill_details_by_booking_id(booking_id)
+        # Ensure Decimal values are converted to string for safe rendering
+        bill = bill_data[0]
+        bill["total"] = str(bill["total"])
+        for service in bill["services"]:
+            service["price"] = str(service["price"])  # Convert each service price to string
+        return render(request, 'garage/garage_bill_receipe.html', {'bill': bill})
