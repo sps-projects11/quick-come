@@ -193,3 +193,6 @@ def get_bill_details_by_booking_id(booking_id):
     }]
 
     return bill_data 
+
+def get_booking_object(booking_id):
+    return Booking.objects.get(id=booking_id)

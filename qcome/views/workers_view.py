@@ -1,6 +1,7 @@
+import json
 from django.views import View
 from django.shortcuts import render,redirect
-from ..services import user_service, garage_service, workers_service, payment_service
+from ..services import user_service, garage_service, workers_service, payment_service,booking_service
 from ..models import Worker
 from django.http import JsonResponse
 
@@ -87,7 +88,25 @@ class CheckWorkerStatus(View):
     
 
 class AssignedWorkerCreateView(View):
-    def get(self, request):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            worker_id = data.get('worker_id')
+            booking_id = data.get('booking_id')
+
+            if not worker_id or not booking_id:
+                return JsonResponse({'message': 'Invalid data provided', 'status': 'error'}, status=400)
+
+            booking = booking_service.get_booking_object(booking_id)
+            worker = workers_service.get_worker_object(worker_id)
+
+            if not booking or not worker:
+                return JsonResponse({'message': 'Invalid worker or booking', 'status': 'error'}, status=404)
+
+            booking.assigned_worker = worker
+            booking.save()
+
+            return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
         
-        return render(request)
-    
+        except Exception as e:
+            return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
