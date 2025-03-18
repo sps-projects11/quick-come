@@ -187,3 +187,9 @@ def worker_required(view_or_func=None, *, login_url='/sign-in/'):
     if view_or_func:
         return auth_required(login_url=login_url)(decorator(view_or_func))
     return lambda view: auth_required(login_url=login_url)(decorator(view))
+
+def enduser_required(view_or_func=None, *, login_url='/sign-in/'):
+    decorator = role_required(Role.END_USER.value, interface='normal', page_type='enduser')
+    if view_or_func:
+        return auth_required(login_url=login_url)(decorator(view_or_func))
+    return lambda view: auth_required(login_url=login_url)(decorator(view))

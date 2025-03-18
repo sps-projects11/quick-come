@@ -14,6 +14,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th scope="col">ID</th>
         <th scope="col">Profile Photo</th>
         <th scope="col">Name</th>
         <th scope="col">Email</th>
@@ -25,6 +26,7 @@
     <tbody>
       {% for user in users %}
       <tr id="user-row-{{ user.id }}">
+        <td>{{ user.id }}</td>
         <td>
           <img src="{{ user.profile_photo_url|default:'/static/all-Pictures/admin-person.jpg' }}" alt="Profile" class="rounded-circle" width="50" height="50">
         </td>
