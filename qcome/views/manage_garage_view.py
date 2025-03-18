@@ -32,12 +32,17 @@ class ManageGarageListView(View):
     
 class ManageGarageCreateView(View):
     def get(self, request):
-        # is_not_garage = user_service.get_all_user_who_are_not_garage_owner()
+        available_users = user_service.get_non_garage_and_non_worker_users()
+        print(available_users)
+        return render(request, 'adminuser/garage/garage_create.html', {'users':available_users})
 
-        # return render(request, '')
+    def post(self, request):
+        # Your post logic here
         return
-    def post(self, requset):
-        return
+
+
+
+
     
 
 class ManageGarageUpdateView(View):
