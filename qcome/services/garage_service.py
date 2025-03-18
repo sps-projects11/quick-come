@@ -71,7 +71,7 @@ def toggle_garage_status(garage):
 
     return garage
 
-def garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac):
+def garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, created_by):
     return Garage.objects.create(
         garage_owner=user,
         garage_name=garage_name,
@@ -81,7 +81,7 @@ def garage_create(user, garage_name, garage_profile_photo_path, address, phone, 
         vehicle_type=vehicle_type,
         garage_ac=garage_ac,
         is_active=True,  # Make sure new garages are active
-        created_by=user
+        created_by=created_by
     )
 
 

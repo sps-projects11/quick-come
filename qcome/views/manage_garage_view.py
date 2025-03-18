@@ -71,7 +71,7 @@ class ManageGarageCreateView(View):
 
             garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'        
 
-        garage = garage_service.garage_update( user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path)
+        garage = garage_service.garage_create( garage_owner, garage_name, garage_profile_photo_path, address, phone, garage_vehicle_type, garage_ac, user)
         if garage is None:
             messages.error(request, ErrorMessage.E00014.value)
             return redirect('manage_garages_list')

@@ -98,7 +98,7 @@ class GarageCreateView(View):
 
             garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'   
 
-        garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac)
+        garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, user)
 
         messages.success(request, SuccessMessage.S00008.value)
         return redirect('garage_profile')
