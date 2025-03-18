@@ -1,0 +1,94 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Garage Create{% endblock %}
+
+{% block navbar_extra %}  
+        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_garages_list' %}">
+        Garages
+      </a> 
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h2 class="text-center mb-4">Create Garage</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Profile Photo Section with Plus Icon at Bottom Right -->
+    <div class="mb-3 text-center">
+      <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+          <img src="{{ '/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
+      <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
+          <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+      </div>            
+      </div>
+      <!-- Hidden file input -->
+      <input type="file" class="d-none" id="id_garage_profile_photo" name="garage_profile_photo" accept="image/*">
+    </div>
+
+    <div class="form-group">
+
+      <label for="id_first_name">Garage Name</label>
+      <input type="text" name="garage_name" id="id_garage_name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="id_gender">Garage Owner</label>
+        <select class="form-control" id="id_garage_owner" name="gender">
+          <option value="">Select Ownre</option>
+          {% for user in users %}          
+          <option value="{{ user.id }}"> {{ user.first_name }} {% if user.middle_name%} {{user.middle_name}} {% endif %} {{ user.last_name}} </option>
+          {%  endfor  %}
+        </select>
+      </div>
+
+    <div class="form-group">
+      <label for="id_middle_name">Garage Address</label>
+      <input type="text" name="garage_adddress" id="id_garage_address" class="form-control">
+    </div>
+    <!-- Last Name -->
+    <div class="form-group">
+      <label for="id_last_name">Garage Account</label>
+      <input type="text" name="garage_ac" id="id_garage_ac" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="id_phone">Garage Phone</label>
+      <input type="text" name="garage_phone" id="id_garage_phone" class="form-control">
+    </div>    
+
+    <!-- Submit -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Create Garage</button>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const profileContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.getElementById('id_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+  
+    // Trigger file input when the container is clicked
+    profileContainer.addEventListener('click', function() {
+      fileInput.click();
+    });
+  
+    // Update the image preview after selecting a file
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profilePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+  </script>
+
+
+{% endblock %}

@@ -127,3 +127,15 @@ def toggle_user_status(user_id):
 def user_phone_create(user, worker_phone):
     user.phone=worker_phone
     user.save()
+
+
+def get_non_garage_and_non_worker_users():
+    active_users = User.objects.filter(is_active=True)
+    
+    # Get IDs of active garage owners and workers
+    garage_owner_ids = Garage.objects.filter(is_active=True).values_list('garage_owner', flat=True)
+    worker_user_ids = Worker.objects.filter(is_active=True).values_list('worker', flat=True)
+    
+    # Exclude users who are garage owners or workers
+    return active_users.exclude(id__in=garage_owner_ids).exclude(id__in=worker_user_ids)
+
