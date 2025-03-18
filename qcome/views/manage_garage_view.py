@@ -78,9 +78,7 @@ class ManageGarageUpdateView(View):
                     for chunk in garage_profile_photo.chunks():
                         destination.write(chunk)
 
-            garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'
-
-        print(garage_profile_photo_path)
+            garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'        
 
         garage = garage_service.garage_update(garage_id, user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path)
         if garage is None:
