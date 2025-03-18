@@ -1,7 +1,6 @@
 from django.views import View
 from django.shortcuts import render,redirect
 from ..services import user_service, garage_service, workers_service, payment_service
-from ..models import Worker
 from django.http import JsonResponse
 
 
@@ -36,7 +35,7 @@ class WorkerUpdateView(View):
     def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
         context = {'worker_details': worker_details}
-        return render(request, 'workers/worker_profile_update.html', context)
+        return render(request, 'worker/worker_profile_update.html', context)
 
     def post(self, request, worker_id):
         worker = workers_service.get_worker_details(worker_id)
@@ -54,7 +53,7 @@ class WorkerDeleteView(View):
     def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
         context = {'worker_details': worker_details}
-        return render(request, 'workers/worker_profile_delete.html', context)
+        return render(request, 'worker/worker_profile_delete.html', context)
 
     def post(self, request, worker_id):
         worker = workers_service.get_worker_details(worker_id)

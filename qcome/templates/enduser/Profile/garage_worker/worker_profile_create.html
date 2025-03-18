@@ -28,11 +28,7 @@
                 <select name="garage" required>
                     <option value="">Select the Garage</option>
                     {% for garage in garage_details %}
-<<<<<<< HEAD
                         <option value="{{ garage.id }}" {% if booking.garage.id == garage.id %}selected{% endif %}>
-=======
-                        <option value="{{ garage.id }}">
->>>>>>> e84ef996ad50869415c70ce69df74c817912006e
                             {{ garage.garage_name }}
                         </option>
                     {% endfor %}
