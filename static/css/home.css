@@ -309,4 +309,50 @@
 }
 
 
+/* the company page */
+.containerrr {
+    text-align: center;
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.headinggg {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    /* flex-wrap: wrap; */
+}
+
+.stat-box {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    text-align: center;
+}
+
+.stat-box img {
+    width: 60px;
+    height: 60px;
+}
+
+.stat-box h3 {
+    font-size: 24px;
+    margin: 15px 0 5px;
+    font-weight: bold;
+}
+
+.stat-box p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #555;
+}
+
 

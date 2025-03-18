@@ -5,45 +5,54 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <style>
+    body {
+        background: #f8f9fa;
+    }
     .profile-container {
-        max-width: 600px;
-        margin: 40px auto;
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        padding: 30px;
+        max-width: 650px;
+        margin: 50px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 0.3s ease-in-out;
     }
     .profile-container:hover {
         transform: translateY(-5px);
     }
     .profile-img {
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
         object-fit: cover;
         border-radius: 50%;
         margin-bottom: 15px;
-        border: 4px solid #007bff;
+        border: 5px solid #007bff;
     }
     h2 {
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
+        font-weight: 700;
+        color: #343a40;
     }
     .profile-details p {
-        font-size: 16px;
-        color: #555;
-        margin: 5px 0;
+        font-size: 17px;
+        color: #6c757d;
+        margin: 6px 0;
     }
     .btn-group {
-        margin-top: 20px;
+        margin-top: 25px;
     }
     .btn-group a, .btn-group button {
-        width: 48%;
+        width: 45%;
         font-weight: bold;
-        padding: 10px;
-        border-radius: 8px;
+        padding: 12px;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
     }
 </style>
 
@@ -55,31 +64,31 @@
         {% if garage.garage_image %}
             <img src="{{ garage.garage_image }}" class="profile-img" alt="Garage Image">
         {% else %}
-            <img src="https://via.placeholder.com/120" class="profile-img" alt="No Image">
+            <img src="https://via.placeholder.com/130" class="profile-img" alt="No Image">
         {% endif %}
 
         <!-- Garage Details -->
         <div class="profile-details">
-            <p><strong>Owner:</strong> {{ garage_owner }}</p>
-            <p><strong>Address:</strong> {{ garage.address }}</p>
-            <p><strong>Phone:</strong> {{ garage.phone }}</p>
-            <p><strong>Vehicle Type:</strong> {{ garage.get_vehicle_type_display }}</p>
-            <p><strong>Garage AC:</strong> {{ garage.garage_ac }}</p>
+            <p><i class="fas fa-user-tie"></i> <strong>Owner:</strong> {{ garage_owner }}</p>
+            <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> {{ garage.address }}</p>
+            <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {{ garage.phone }}</p>
+            <p><i class="fas fa-car"></i> <strong>Vehicle Type:</strong> {{ vehicle_type_name }}</p>
+            <p><i class="fas fa-snowflake"></i> <strong>Garage AC:</strong> {{ garage.garage_ac }}</p>
         </div>
 
         <!-- Action Buttons -->
         <div class="btn-group d-flex justify-content-between">
-            <!-- Edit Button (Redirects to Create Page for Updating) -->
-            <a href="{% url 'garage_update' garage.id %}" class="btn btn-primary">✏️ Edit</a>
+            <!-- Edit Button -->
+            <a href="{% url 'garage_update' garage.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</a>
 
-            <!-- Delete Button (Redirects to Home After Deletion) -->
+            <!-- Delete Button -->
             <form method="POST" action="{% url 'garage_delete' garage.id %}" onsubmit="return confirm('Are you sure you want to delete this garage?');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
             </form>
         </div>
     </div>
 </div>
 
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}
-

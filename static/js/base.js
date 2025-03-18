@@ -30,3 +30,24 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error checking login status:', error));
 });
 
+
+
+// Highlight the active navbar link based on the current URL path
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the current URL path
+    let currentPath = window.location.pathname;
+
+    // Select all navbar links
+    let navLinks = document.querySelectorAll("#navber li a");
+
+    // Loop through each link
+    navLinks.forEach(link => {
+        // Check if the link's href matches the current path
+        if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active"); // Add active class
+        } else {
+            link.classList.remove("active"); // Remove from others
+        }
+    });
+});

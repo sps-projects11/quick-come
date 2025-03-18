@@ -1,5 +1,5 @@
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
 from django.contrib import messages
@@ -7,14 +7,21 @@ from ..models import Booking,ServiceCatalog
 from ..services import booking_service 
 
 
+# ✅ View to Show Booking History (List of Bookings)
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingListView(View):
-    def get(self,request):
-        bookings = booking_service.get_booking_list()
-        return render(request, 'enduser/Booking/booking_list.html', {'bookings': bookings})
-    
+    def get(self, request):
+        bookings = booking_service.get_booking_list()  # Fetch all bookings
+        return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
+# ✅ View to Show Booking Details (Specific Booking)
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class BookingDetailView(View):
+    def get(self, request, booking_id):
+        booking = booking_service.get_booking_list()  # Fetch a specific booking
+        return render(request, 'enduser/Booking/booking_list.html', {'bookings': booking})
 
 
 @auth_required(login_url='/sign-in/')
