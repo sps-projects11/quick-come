@@ -46,7 +46,7 @@
         <ul id="navber">
             <li><a class="active" href="/">Home</a></li>
             <li><a href="/services/">Services</a></li>
-            <li><a href="/booking/">Booking Details</a></li>
+            <li><a href="/booking/">Your Bookings</a></li>
             <li><a href="/contact/">Contact</a></li>
             <li><a href="/about/">About</a></li>
         
@@ -54,18 +54,24 @@
                 <input class="form-control me-2" type="search" placeholder="Search">
             </form>
         
-            <li id="lg-bag">
-                <a id="profile-link" href="/sign-in/">
-                    <i class="fas fa-user-circle" style="font-size: 18px;"></i>
+                <a id="profile-link" href="/sign-in/" style="text-decoration: none;color: black;">
+                    <li id="lg-bag">
+                    <i class="fas fa-user-circle" style="font-size: 30px;"></i>
+                
+                    </li>
                 </a>
-            </li>
     
         
             <!-- Dropdown Menu (Initially Hidden) -->
-            <div id="profile-dropdown" >
-                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
+            <div id="profile-dropdown">
+                <div class="p-menu">
+                <a href="/profile"><i class="fas fa-user" style="margin-right: 10px;"></i>Profile</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
+                 </div>
             </div>
+
+
+
             <a href="#" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>
@@ -74,15 +80,23 @@
         <a id="profile-link" href="/sign-in/">
             <i class="fas fa-user-circle"></i>
         </a>
-        <!-- Dropdown Menu (Initially Hidden) -->
-        <div id="profile-dropdown">
-            <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-            <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
-        </div>
+            <!-- Dropdown Menu (Initially Hidden) -->
+            <div id="profile-dropdown">
+                <div class="p-menu">
+                <a href="/profile"><i class="fas fa-user" style="margin-right: 10px;"></i>Profile</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
+                 </div>
+            </div>
+
+
+
         <i id="bar" class="fas fa-outdent"></i>
     </div>
 </section>
 <!-- Navbar End -->
+
+
+
 
 {% block content %}
 
@@ -91,7 +105,7 @@
 <!-- Footer Start -->
 <footer class="section-p1">
     <div class="col">
-        <img class="logo" src="static\all-Pictures\logo.jpg" alt="logo">
+        <img class="logo" src="\static\all-Pictures\logo.jpg" alt="logo">
         <h4>Contact</h4>
         <p><strong>Phone:</strong> (+91) 99079 950227 /(+91) 00000 82525</p>
         <p><strong>Email:</strong> quickcome@gmail.com</p>
@@ -128,11 +142,11 @@
         <h4>Install App</h4>
         <p>From App Store or Google Play</p>
         <div class="rowfooter">
-            <img src="static/all-Pictures/apps/app-store-logo.png" alt="" height="40">
-            <img src="static/all-Pictures/apps/play-store-logo-nisi-filters-australia-11.png" alt="" height="40">
+            <img src="/static/all-Pictures/apps/app-store-logo.png" alt="" height="40">
+            <img src="/static/all-Pictures/apps/play-store-logo-nisi-filters-australia-11.png" alt="" height="40">
         </div>
         <p>Secured Payment Gateways</p>
-        <img class="pay" src="static/all-Pictures/apps/Mobile_Card_View@2x.png" alt="">
+        <img class="pay" src="/static/all-Pictures/apps/Mobile_Card_View@2x.png" alt="">
     </div>
 
     <div class="copyright">

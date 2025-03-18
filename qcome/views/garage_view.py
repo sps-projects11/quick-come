@@ -3,28 +3,29 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
-
+from qcome.constants.default_values import Role
+from qcome.decorators.auth_decorator import auth_required, role_required
 from qcome.models.garage_workers_model import Worker
 from ..models import Garage
 from ..constants import Vehicle_Type
 from qcome.services import booking_service
 
-
-class GarageCreateView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageCreateView(View):
     def get(self, request):
-        """ Show the create garage form, or redirect to update if the garage already exists """
-        existing_garage = Garage.objects.filter(garage_owner=request.user).first()
+        """ Show the create garage form, or redirect to update if an active garage already exists """
+        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
         if existing_garage:
-            return redirect('garage_update', garage_id=existing_garage.id)
+            return redirect('garage_update', garage_id=existing_garage.id)  # Only redirect if it's active
 
         vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', {'vehicle_types': vehicle_types})
 
     def post(self, request):
         """ Create a garage for the logged-in user (Only one allowed) """
-        existing_garage = Garage.objects.filter(garage_owner=request.user).first()
+        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
         if existing_garage:
             messages.error(request, "You can only create one garage.")
             return redirect('garage_profile', garage_id=existing_garage.id)
@@ -51,27 +52,57 @@ class GarageCreateView(LoginRequiredMixin, View):
             phone=phone,
             vehicle_type=vehicle_type,
             garage_ac=garage_ac,
+            is_active=True,  # Make sure new garages are active
             created_by=request.user,
             updated_by=request.user,
         )
 
         messages.success(request, "Garage created successfully!")
-        return redirect('garage_profile', garage_id=garage.id)
+        return redirect('garage_profile')
 
 
+
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class GarageProfileView(View):
-    def get(self, request, garage_id):
-        """ Display the garage profile """
-        garage = get_object_or_404(Garage, id=garage_id)
+    def get(self, request):
+        """ Display the garage profile for the logged-in user """
+        if not request.user.is_authenticated:
+            return redirect('login')  # Redirect if not logged in
+
+        # Fetch only active garages for the user
+        garages = Garage.objects.filter(garage_owner=request.user, is_active=True)
+
+        if not garages.exists():
+            messages.error(request, "No active garage found.")
+            return redirect('garage_create')  # Redirect to create a new garage
+
+        # If multiple active garages exist, pick the first one
+        garage = garages.first()
         owner_name = garage.garage_owner.get_full_name() or garage.garage_owner.email
+
+        # Mapping vehicle type integer values to readable names
+        vehicle_type_mapping = {
+            Vehicle_Type.CAR.value: "Car",
+            Vehicle_Type.BIKE.value: "Bike",
+            Vehicle_Type.BOTH.value: "Car & Bike",
+        }
+
+        # Ensure the correct name is fetched
+        vehicle_type_name = vehicle_type_mapping.get(int(garage.vehicle_type), "Unknown")
+
 
         context = {
             'garage': garage,
             'garage_owner': owner_name,
+            'vehicle_type_name': vehicle_type_name,  # Send the mapped name
         }
         return render(request, 'garage/garage_profile.html', context)
 
 
+
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class GarageWorkerListView(View):
     def get(self, request):
         workers = Worker.objects.all()
@@ -80,8 +111,9 @@ class GarageWorkerListView(View):
     def post(self, request):
         return None
 
-
-class GarageUpdateView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageUpdateView(View):
     def get(self, request, garage_id):
         """ Load the same create page but pre-fill it for update """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
@@ -109,14 +141,17 @@ class GarageUpdateView(LoginRequiredMixin, View):
         garage.save()
 
         messages.success(request, "Garage updated successfully!")
-        return redirect('garage_profile', garage_id=garage.id)
+        return redirect('garage_profile')
 
 
-class GarageDeleteView(LoginRequiredMixin, View):
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
+class GarageDeleteView(View):
     def post(self, request, garage_id):
         """ Delete garage and redirect to home page """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
-        garage.delete()
+        garage.is_active = False  # ✅ Mark as inactive
+        garage.save()
         messages.success(request, "Garage deleted successfully!")
         return redirect('garage_create')
     

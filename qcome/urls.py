@@ -49,12 +49,13 @@ urlpatterns = [
 
     # Garage
     path('garage/create/', views.GarageCreateView.as_view(), name='garage_create'),
-    path('garage/<int:garage_id>/', views.GarageProfileView.as_view(), name='garage_profile'),
+    path('garage/profile/', views.GarageProfileView.as_view(), name='garage_profile'),
     path('garage/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
 
     #Booking
     path('booking/',views.BookingListView.as_view(), name='booking_list'),
+    path('booking/<int:booking_id>/',views.BookingDetailView.as_view(), name='booking_details'),
     path('booking/create/',views.BookingCreateView.as_view(), name='booking_create'),
     path('booking/update/<int:booking_id>/',views.BookingUpdateView.as_view(), name='booking_update'),
     path('booking/delete/<int:booking_id>/',views.BookingDeleteView.as_view(), name='booking_delete'),
@@ -91,6 +92,15 @@ urlpatterns = [
     #Garage bills
     path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
     path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe')
+
+
+    #Contact
+    path('contact/',views.ContactView.as_view(), name='contact'),
+
+    #About
+    path('about/',views.AboutView.as_view(), name='about'),
+
+
 
 ]
 
