@@ -34,11 +34,50 @@ class ManageGarageCreateView(View):
     def get(self, request):
         available_users = user_service.get_non_garage_and_non_worker_users()
         print(available_users)
-        return render(request, 'adminuser/garage/garage_create.html', {'users':available_users})
+        return render(request, 'adminuser/garage/garage_create.html', {'available_garage':available_users})
 
-    def post(self, request):
-        # Your post logic here
-        return
+    def post(self, request):        
+        user = user_service.get_user(request.user.id)      
+
+        garage_name = request.POST.get('garage_name')
+        garage_owner = request.POST.get('garage_owner')
+        address = request.POST.get('garage_address')
+        phone = request.POST.get('garage_phone')
+        garage_ac = request.POST.get('garage_ac')        
+        garage_vehicle_type = request.POST.get('vehicle_type')
+        garage_profile_photo = request.FILES.get('garage_profile_photo')
+
+        garage_profile_photo_path = ''
+
+        if garage_profile_photo:
+            garage_profile_photo_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'garage-profile-photo')
+            if not os.path.exists(garage_profile_photo_dir):
+                os.makedirs(garage_profile_photo_dir)
+
+            md5_hash = hashlib.md5()
+            for chunk in garage_profile_photo.chunks():
+                md5_hash.update(chunk)
+            file_hash = md5_hash.hexdigest()
+
+            _, ext = os.path.splitext(garage_profile_photo.name)
+            new_file_name = f"{file_hash}{ext}"
+            file_path = os.path.join(garage_profile_photo_dir, new_file_name)
+
+            if not os.path.exists(file_path):
+                garage_profile_photo.seek(0)
+                with open(file_path, 'wb+') as destination:
+                    for chunk in garage_profile_photo.chunks():
+                        destination.write(chunk)
+
+            garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'        
+
+        garage = garage_service.garage_update( user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path)
+        if garage is None:
+            messages.error(request, ErrorMessage.E00014.value)
+            return redirect('manage_garages_list')
+        
+        messages.success(request, SuccessMessage.S00007.value)
+        return redirect('manage_garages_list')
 
 
 

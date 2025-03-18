@@ -3,92 +3,180 @@
 {% block title %}Quick Come Admin-Garage Create{% endblock %}
 
 {% block navbar_extra %}  
-        <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_garages_list' %}">
-        Garages
-      </a> 
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_garages_list' %}">
+    Garages
+  </a> 
 {% endblock %}
 
 {% block content %}
-<div class="container my-4">
-  <h2 class="text-center mb-4">Create Garage</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="container my-4" style="min-height: 80vh;">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Create Garage</h2>
+          <form method="post" enctype="multipart/form-data" id="garageForm" novalidate>
+            {% csrf_token %}
 
-    <!-- Profile Photo Section with Plus Icon at Bottom Right -->
-    <div class="mb-3 text-center">
-      <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-          <img src="{{ '/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
-      <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
-          <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
-      </div>            
+            <!-- Profile Photo Section with Plus Icon and Remove Option -->
+            <div class="mb-3 text-center">
+              <div class="profile-picture-container position-relative d-inline-block" style="cursor: default;">
+                <img src="{{ '/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover; transition: all 0.3s ease;">
+                <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10; cursor: pointer;">
+                  <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+                </div>
+                <!-- Remove icon: shown only when the container has "has-image" class -->
+                <div id="removePhotoIcon" class="remove-photo-icon">
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
+              <!-- Hidden file input -->
+              <input type="file" class="d-none" id="id_garage_profile_photo" name="garage_profile_photo" accept="image/*">
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="id_garage_name">Garage Name</label>
+              <input type="text" name="garage_name" id="id_garage_name" class="form-control" placeholder="Enter garage name" required>
+              <div class="invalid-feedback">Please enter the garage name.</div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="id_garage_owner">Garage Owner</label>
+              <select class="form-control" id="id_garage_owner" name="garage_owner" required>
+                <option value="">Select Owner</option>
+                {% for garage in available_garage %}          
+                  <option value="{{ garage.id }}"> {{ garage.first_name }} {% if garage.middle_name %}{{ garage.middle_name }}{% endif %} {{ garage.last_name }} </option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">Please select a garage owner.</div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="id_garage_address">Garage Address</label>
+              <input type="text" name="garage_address" id="id_garage_address" class="form-control" placeholder="Enter garage address" required>
+              <div class="invalid-feedback">Please enter the garage address.</div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="id_garage_ac">Garage Account</label>
+              <input type="text" name="garage_ac" id="id_garage_ac" class="form-control" placeholder="Enter garage account" required>
+              <div class="invalid-feedback">Please enter the garage account.</div>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="id_garage_phone">Garage Phone</label>
+              <input type="text" name="garage_phone" id="id_garage_phone" class="form-control" placeholder="Enter 10-digit phone number" required pattern="\d{10}">
+              <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+            </div>
+            
+            <!-- Vehicle Type Field -->
+            <div class="form-group mb-3">
+              <label for="id_vehicle_type">Vehicle Type</label>
+              <select class="form-control" id="id_vehicle_type" name="vehicle_type" required>
+                <option value="">Select Vehicle Type</option>
+                <option value="1">Car</option>
+                <option value="2">Bike</option>
+                <option value="3">Car & Bike</option>
+              </select>
+              <div class="invalid-feedback">Please select a vehicle type.</div>
+            </div>
+
+            <!-- Submit Button with Spinner -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="submitBtnText">Create Garage</span>
+                <span id="submitBtnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <!-- Hidden file input -->
-      <input type="file" class="d-none" id="id_garage_profile_photo" name="garage_profile_photo" accept="image/*">
     </div>
-
-    <div class="form-group">
-
-      <label for="id_first_name">Garage Name</label>
-      <input type="text" name="garage_name" id="id_garage_name" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="id_gender">Garage Owner</label>
-        <select class="form-control" id="id_garage_owner" name="gender">
-          <option value="">Select Ownre</option>
-          {% for user in users %}          
-          <option value="{{ user.id }}"> {{ user.first_name }} {% if user.middle_name%} {{user.middle_name}} {% endif %} {{ user.last_name}} </option>
-          {%  endfor  %}
-        </select>
-      </div>
-
-    <div class="form-group">
-      <label for="id_middle_name">Garage Address</label>
-      <input type="text" name="garage_adddress" id="id_garage_address" class="form-control">
-    </div>
-    <!-- Last Name -->
-    <div class="form-group">
-      <label for="id_last_name">Garage Account</label>
-      <input type="text" name="garage_ac" id="id_garage_ac" class="form-control" required>
-    </div>
-    
-    <div class="form-group">
-      <label for="id_phone">Garage Phone</label>
-      <input type="text" name="garage_phone" id="id_garage_phone" class="form-control">
-    </div>    
-
-    <!-- Submit -->
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-primary">Create Garage</button>
-    </div>
-  </form>
+  </div>
 </div>
 
+<!-- Custom CSS for Remove Icon -->
+<style>
+  .remove-photo-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    padding: 3px;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+  }
+  /* Show the remove icon on hover only if the container has "has-image" */
+  .profile-picture-container.has-image:hover .remove-photo-icon {
+    display: block;
+  }
+  .remove-photo-icon i {
+    color: #fff;
+    font-size: 0.8rem;
+  }
+</style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", () => {
     const profileContainer = document.querySelector('.profile-picture-container');
-    const fileInput = document.getElementById('id_profile_photo');
+    const fileInput = document.getElementById('id_garage_profile_photo');
     const profilePreview = document.getElementById('profilePreview');
-  
-    // Trigger file input when the container is clicked
-    profileContainer.addEventListener('click', function() {
+    const removePhotoIcon = document.getElementById('removePhotoIcon');
+    const plusIcon = document.querySelector('.profile-plus-icon');
+    const defaultImage = "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}";
+
+    // Clicking the plus icon opens the file dialog
+    plusIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
       fileInput.click();
     });
-  
-    // Update the image preview after selecting a file
-    fileInput.addEventListener('change', function() {
-      const file = this.files[0];
+
+    // When file is selected, update preview and add "has-image" class
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = (e) => {
           profilePreview.src = e.target.result;
-        }
+          profileContainer.classList.add('has-image');
+        };
         reader.readAsDataURL(file);
       }
     });
+
+    // Clicking the remove icon clears the file and removes the image
+    removePhotoIcon.addEventListener('click', (event) => {
+      event.stopPropagation();
+      fileInput.value = "";
+      profilePreview.src = defaultImage;
+      profileContainer.classList.remove('has-image');
+    });
+
+    // Bootstrap form validation and interactive submit button
+    const form = document.getElementById('garageForm');
+    form.addEventListener('submit', (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        form.classList.add('was-validated');
+      } else {
+        const submitBtn = document.getElementById('submitBtn');
+        const submitBtnText = document.getElementById('submitBtnText');
+        const submitBtnSpinner = document.getElementById('submitBtnSpinner');
+        submitBtnSpinner.classList.remove('d-none');
+        submitBtnText.textContent = "Processing...";
+        submitBtn.disabled = true;
+      }
+    });
+
+    // Initialize Bootstrap tooltips if needed.
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach((tooltipTriggerEl) => {
+      new bootstrap.Tooltip(tooltipTriggerEl);
+    });
   });
-  </script>
-
-
+</script>
 {% endblock %}
