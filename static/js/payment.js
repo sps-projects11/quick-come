@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const paymentMethod = document.getElementById("paymentMethod");
     const upiSection = document.getElementById("upiSection");
-    const netBankingSection = document.getElementById("netBankingSection");
     const paymentForm = document.getElementById("paymentForm");
 
     if (!paymentForm) {
@@ -15,13 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     paymentMethod.addEventListener("change", function () {
         if (this.value === "UPI") {
             upiSection.style.display = "block";
-            netBankingSection.style.display = "none";
-        } else if (this.value === "NetBanking") {
-            upiSection.style.display = "none";
-            netBankingSection.style.display = "block";
         } else {
             upiSection.style.display = "none";
-            netBankingSection.style.display = "none";
         }
     });
 
@@ -33,12 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedMethod = paymentMethod.value;
         const csrfToken = document.getElementById("csrfToken").value;
         const amount = document.getElementById("amount").value;
-        if (!amount || amount <= 0) {
-            alert("❌ Invalid payment amount.");
-            return;
-        }
-
-
         if (!selectedMethod) {
             alert("❌ Please select a valid payment method.");
             return;
@@ -51,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         let data = {
             amount: parseFloat(amount),
-            type: selectedMethod === "UPI" ? 3 : selectedMethod === "NetBanking" ? 2 : 1, // Enum Mapping
+            type: selectedMethod === "UPI" ? 2 : 1, // Enum Mapping
             pay_status: 1, // Pending status
             created_by: parseInt(userId), // Ensure it's sent as an integer
         };

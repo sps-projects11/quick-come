@@ -14,8 +14,7 @@
                         <div class="payment-details">
                             <div class="payment-name">{{ payment.customer }}</div>
                             <div class="payment-time">{{ payment.paid_at }}</div>
-                            <div class="payment-type">{{ payment.type }}</div>
-                            <div class="payment-paid-to">Paid By: {{ payment.created_by }}</div>
+                            <div class="payment-type">{{ payment.pay_type }}</div>
                         </div>
                         <div class="payment-amount {% if payment.amount > 0 %}negative{% else %}positive{% endif %}">
                             ₹{{ payment.amount }}

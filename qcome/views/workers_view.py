@@ -76,7 +76,7 @@ class WorkerPaymentListView(View):
 
         print("Payments Data:", payments)  # Debugging
 
-        return render(request, "enduser/payment/worker_payment_list.html", {"payments": payments})
+        return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
     
 class CheckWorkerStatus(View):
