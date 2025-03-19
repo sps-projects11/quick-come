@@ -30,7 +30,6 @@ class ManageUsersCreateView(View):
         return render(request, 'adminuser/user/create_user.html', {'admin': admin_data})
     
     def post(self, request):
-        print(request.POST)
         first_name = request.POST.get('first_name')
         middle_name = request.POST.get('middle_name')
         last_name = request.POST.get('last_name')

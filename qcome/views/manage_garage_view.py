@@ -31,7 +31,6 @@ class ManageGarageListView(View):
 class ManageGarageCreateView(View):
     def get(self, request):
         available_users = user_service.get_non_garage_and_non_worker_users()
-        print(available_users)
         return render(request, 'adminuser/garage/garage_create.html', {'available_garage':available_users})
 
     def post(self, request):        
