@@ -1,0 +1,93 @@
+{% extends "garage/index.html" %}
+{% block title %}Worker Profile{% endblock %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    .profile-container {
+        max-width: 650px;
+        margin: 50px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+    .profile-container:hover {
+        transform: translateY(-5px);
+    }
+    .profile-img {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        border: 5px solid #007bff;
+    }
+    h2 {
+        font-weight: 700;
+        color: #343a40;
+    }
+    .profile-details p {
+        font-size: 17px;
+        color: #6c757d;
+        margin: 6px 0;
+    }
+    .btn-group {
+        margin-top: 25px;
+    }
+    .btn-group a, .btn-group button {
+        width: 45%;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container">
+    <div class="profile-container">
+        <h2>Worker Profile</h2>
+
+        <!-- Worker Details -->
+        <div class="profile-details">
+            <p><i class="fas fa-user"></i> <strong>Name:</strong> {{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}</p>
+            <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
+            <p><i class="fas fa-tools"></i> <strong>Experience:</strong> {{ worker_details.experience }}</p>
+            <p><i class="fas fa-clipboard-check"></i> <strong>Expertise:</strong> {{ worker_details.expertise }}</p>
+            <p><i class="fas fa-warehouse"></i> <strong>Garage:</strong> 
+                {% for garage in garage_details %}
+                    {% if booking.garage.id == garage.id %}
+                        {{ garage.garage_name }}
+                    {% endif %}
+                {% endfor %}
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group d-flex justify-content-between">
+            <!-- Edit Button -->
+            <a href="{% url 'worker_update' user.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Update</a>
+
+            <!-- Delete Button -->
+            <form method="POST" action="{% url 'worker_delete' user.id %}" onsubmit="return confirm('Are you sure you want to delete this worker?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

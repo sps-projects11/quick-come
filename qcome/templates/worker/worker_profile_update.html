@@ -1,3 +1,102 @@
+{% comment %} {% extends "enduser/base.html" %}
+{% block title %}Quick-Come Booking{% endblock %}
+{%load static %}
+{% block content %}
+<!-- SwiperJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
+
+<section id="emergency-form" class="container">
+    <div class="form-container">
+        <h2>Become a Worker</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="worker_id" value="{{ user.id }}">
+                <input type="text" name="worker_name" value="{{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" name="worker_phone" value="{% if user.phone %} {{ user.phone }} {% endif %}" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="experience" name="experience" placeholder="Your Experience" value="{{ worker_details.experience }}" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="expertise" name="expertise"  placeholder="Your Expertise" value="{{ worker_details.expertise }}" required>
+            </div>
+            <div class="form-group">
+                <select name="garage" required>
+                    <option value="">Select the Garage</option>
+                    {% for garage in garage_details %}
+                        <option value="{{ garage.id }}" {% if booking.garage.id == garage.id %}selected{% endif %}>
+                            {{ garage.garage_name }}
+                        </option>
+                    {% endfor %}
+                </select>                
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+</section>
+    
+<style>
+    /* Emergency Form */
+.form-container {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+/* Buttons */
+.cta-button, .submit-button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover, .submit-button:hover {
+    background-color: var(--secondary-color);
+}
+
+</style>
+
+{% endblock %}
+
+
+
 
 
 
@@ -233,4 +332,4 @@ body {
 
 </style>
 
-{% endblock %} {% endcomment %}
+{% endblock %} {% endcomment %} 

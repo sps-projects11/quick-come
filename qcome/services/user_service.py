@@ -37,25 +37,6 @@ def get_user_profile(user_id):
     
     return {"logged_in": False, "profile_photo_url": None}  # Handle case where user does not exist
 
-
-def get_workers_details(worker_id):
-    try:
-        worker = Worker.objects.get(id=worker_id)
-        return {
-            'id': worker.id,
-            'worker': worker.worker,
-            'garage': worker.garage,
-            'experience': worker.experience,
-            'expertise': worker.expertise,
-            'is_verified': worker.is_verified,
-            'is_active': worker.is_active,
-            'created_at': worker.created_at,
-            'updated_at': worker.updated_at,
-        }
-    except Worker.DoesNotExist:
-        return None
-    
-
 def get_user_details(user_id):
     try:
         return User.objects.get(id=user_id)
