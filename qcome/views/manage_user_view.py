@@ -2,9 +2,6 @@ from django.http import JsonResponse
 from django.views import View
 from qcome.services import user_service, admin_service
 from django.shortcuts import redirect, render
-import os
-import hashlib
-from quickcome import settings
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
@@ -12,6 +9,7 @@ from django.contrib import messages  # For user feedback
 import datetime
 from qcome.constants.default_values import Gender
 from django.contrib.auth.hashers import make_password
+from qcome.package.file_management import save_uploaded_file
 
 class ManageUsersListView(View):
     def get(self, request):
@@ -46,29 +44,7 @@ class ManageUsersCreateView(View):
         
         # Profile photo handling
         profile_photo = request.FILES.get('profile_photo')
-        profile_photo_path = ''
-
-        if profile_photo:
-            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
-            if not os.path.exists(profile_photo_img_dir):
-                os.makedirs(profile_photo_img_dir)
-
-            md5_hash = hashlib.md5()
-            for chunk in profile_photo.chunks():
-                md5_hash.update(chunk)
-            file_hash = md5_hash.hexdigest()
-
-            _, ext = os.path.splitext(profile_photo.name)
-            new_file_name = f"{file_hash}{ext}"
-            file_path = os.path.join(profile_photo_img_dir, new_file_name)
-
-            if not os.path.exists(file_path):
-                profile_photo.seek(0)
-                with open(file_path, 'wb+') as destination:
-                    for chunk in profile_photo.chunks():
-                        destination.write(chunk)
-
-            profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
+        profile_photo_path = save_uploaded_file(profile_photo, 'profile-images')
         
         user_service.user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path, user_password)
 
@@ -82,60 +58,40 @@ class ManageUserUpdateView(View):
         return render(request, 'adminuser/user/update_user.html', {'user':user, 'admin': admin_data})
     
     def post(self, request, user_id):
-            user = user_service.get_user(user_id)
-            # Fetch form data and strip whitespace
-            first_name = request.POST.get('first_name').strip() or user.first_name
-            middle_name = request.POST.get('middle_name').strip() or user.middle_name
-            last_name = request.POST.get('last_name').strip() or user.last_name
-            email = request.POST.get('email').strip() or user.email
-            phone = request.POST.get('phone').strip() or user.phone
-            gender_str = request.POST.get('gender')
-            dob_str = request.POST.get('dob') or user.dob
+        user = user_service.get_user(user_id)
+        # Fetch form data and strip whitespace
+        first_name = request.POST.get('first_name').strip() or user.first_name
+        middle_name = request.POST.get('middle_name').strip() or user.middle_name
+        last_name = request.POST.get('last_name').strip() or user.last_name
+        email = request.POST.get('email').strip() or user.email
+        phone = request.POST.get('phone').strip() or user.phone
+        gender_str = request.POST.get('gender')
+        dob_str = request.POST.get('dob') or user.dob
 
-            gender = user.gender
-            if gender_str:
-                gender = int(gender_str)
-                    
-            if dob_str:
-                try:
-                    dob = datetime.datetime.strptime(dob_str, '%Y-%m-%d').date()
-                except ValueError:
-                    messages.error(request, ErrorMessage.E00002.value)
-                    return redirect('myadmin_profile')
+        gender = user.gender
+        if gender_str:
+            gender = int(gender_str)
+                
+        if dob_str:
+            try:
+                dob = datetime.datetime.strptime(dob_str, '%Y-%m-%d').date()
+            except ValueError:
+                messages.error(request, ErrorMessage.E00002.value)
+                return redirect('myadmin_profile')
 
-            # Profile photo handling
-            profile_photo = request.FILES.get('profile_photo')
-            profile_photo_path = user.profile_photo_url
+        # Profile photo handling
+        profile_photo = request.FILES.get('profile_photo')
+        profile_photo_path = user.profile_photo_url
 
-            if profile_photo:
-                profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
-                if not os.path.exists(profile_photo_img_dir):
-                    os.makedirs(profile_photo_img_dir)
+        if profile_photo:
+            profile_photo_path = save_uploaded_file(profile_photo, 'profile-images')
+        
+        admin_service.admin_profile_update(
+            user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
+        )
 
-                md5_hash = hashlib.md5()
-                for chunk in profile_photo.chunks():
-                    md5_hash.update(chunk)
-                file_hash = md5_hash.hexdigest()
-
-                _, ext = os.path.splitext(profile_photo.name)
-                new_file_name = f"{file_hash}{ext}"
-                file_path = os.path.join(profile_photo_img_dir, new_file_name)
-
-                if not os.path.exists(file_path):
-                    profile_photo.seek(0)
-                    with open(file_path, 'wb+') as destination:
-                        for chunk in profile_photo.chunks():
-                            destination.write(chunk)
-
-                profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
-
-            
-            admin_service.admin_profile_update(
-                user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
-            )
-
-            messages.success(request, SuccessMessage.S00002.value)
-            return redirect('manage_users')
+        messages.success(request, SuccessMessage.S00002.value)
+        return redirect('manage_users')
     
 
 class ManageUserToggleView(View):

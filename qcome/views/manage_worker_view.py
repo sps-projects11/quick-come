@@ -6,9 +6,7 @@ from django.contrib import messages
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
-import os
-import hashlib
-from quickcome import settings
+from qcome.package.file_management import save_uploaded_file
 
 
 class ManageWorkerListView(View):
@@ -42,29 +40,7 @@ class ManageWorkerCreateView(View):
         expertise = request.POST.get('expertise')
         worker_profile_photo = request.FILES.get('worker_profile_photo')
 
-        worker_profile_photo_path = ''
-
-        if worker_profile_photo:
-            garage_profile_photo_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'worker-profile-photo')
-            if not os.path.exists(garage_profile_photo_dir):
-                os.makedirs(garage_profile_photo_dir)
-
-            md5_hash = hashlib.md5()
-            for chunk in worker_profile_photo.chunks():
-                md5_hash.update(chunk)
-            file_hash = md5_hash.hexdigest()
-
-            _, ext = os.path.splitext(worker_profile_photo.name)
-            new_file_name = f"{file_hash}{ext}"
-            file_path = os.path.join(garage_profile_photo_dir, new_file_name)
-
-            if not os.path.exists(file_path):
-                worker_profile_photo.seek(0)
-                with open(file_path, 'wb+') as destination:
-                    for chunk in worker_profile_photo.chunks():
-                        destination.write(chunk)
-
-            worker_profile_photo_path = f'/static/all-Pictures/worker-profile-photo/{new_file_name}'        
+        worker_profile_photo_path = save_uploaded_file(worker_profile_photo, 'worker-profile-photo') 
 
 
         worker = user_service.get_user(worker_user)
