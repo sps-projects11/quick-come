@@ -7,6 +7,7 @@ from qcome.constants.default_values import Role, Vehicle_Type
 from qcome.decorators import auth_required, role_required
 from qcome.services import booking_service, garage_service,workers_service
 import hashlib
+from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 
