@@ -12,7 +12,7 @@ from ..services import booking_service
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingListView(View):
     def get(self, request):
-        bookings = booking_service.get_booking_list()  # Fetch all bookings
+        bookings = booking_service.get_booking_list(request.user)  # Fetch all bookings
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
@@ -20,7 +20,7 @@ class BookingListView(View):
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingDetailView(View):
     def get(self, request, booking_id):
-        booking = booking_service.get_booking_list()  # Fetch a specific booking
+        booking = booking_service.get_booking_list(self.request.user)  # Fetch a specific booking
         return render(request, 'enduser/Booking/booking_list.html', {'bookings': booking})
 
 
@@ -135,4 +135,4 @@ class BookingDeleteView(View):
         else:
             messages.success(request, "Booking deleted successfully!")
 
-        return redirect('booking_list')
+        return redirect('home')
