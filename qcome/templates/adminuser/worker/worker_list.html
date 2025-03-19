@@ -31,15 +31,15 @@
       <tr id="worker-row-{{ worker.id }}">
         <td>{{ worker.id }}</td>
         <td>
-          <img src="{{ worker.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" 
+          <img src="{{ worker.worker_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" 
                alt="Garage Image" class="rounded" width="50" height="50">
         </td>
+        <td>{{ worker.worker_name }}</td>
         <td>{{ worker.garage_name }}</td>
-        <td>{{ worker.garage_owner_name }}</td>
-        <td>{{ worker.address }}</td>
         <td>{{ worker.phone }}</td>
-        <td>{{ worker.vehicle }}</td>
-        <td>{{ worker.garage_ac }}</td>
+        <td>{{ worker.experience }}</td>
+        <td>{{ worker.expertise }}</td>
+        <td>{{ worker.is_verified }}</td>
         <td>
           <span class="switch-label toggle-label-deactivate {% if not worker.is_active %}active-label{% endif %}">Deactivate</span>
           <label class="switch">

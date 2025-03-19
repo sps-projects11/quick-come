@@ -101,3 +101,6 @@ def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garag
 
     garage.save()
     return garage
+
+def get_all_garages():
+    return Garage.objects.all()

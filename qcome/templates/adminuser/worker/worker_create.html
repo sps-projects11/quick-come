@@ -67,11 +67,11 @@
             <!-- Select Garage -->
             <div class="form-group mb-3">
               <label for="id_garage">Garage</label>
-              <select class="form-control" id="id_garage" name="garage_id" required>
+              <select class="form-control" id="id_garage" name="worker_garage" required>
                 <option value="">Select Garage</option>
-                {% for garage in available_garage %}
+                {% for garage in all_garage %}
                   <option value="{{ garage.id }}">
-                    {{ garage.name }}
+                    {{ garage.garage_name }}
                   </option>
                 {% endfor %}
               </select>

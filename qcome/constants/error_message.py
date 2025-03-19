@@ -18,7 +18,7 @@ class ErrorMessage(Enum):
     E00014 = "Error updating garage! Please try again."
     E00015 = "You can only create one garage."
     E00016 = "Error Creating Garage"
-    E00017 = ""
+    E00017 = "Error Creating Worker"
     E00018 = ""
     E00019 = ""
     E00020 = ""

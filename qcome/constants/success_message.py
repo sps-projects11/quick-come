@@ -10,7 +10,7 @@ class SuccessMessage(Enum):
     S00006 = "Garage status updated successfully."
     S00007 = "Garage details updated successfully."
     S00008 = "Garage created successfully!"
-    S00009 = ""
+    S00009 = "Worker created successfully!"
     S00010 = ""
     S00011 = ""
     S00012 = ""
