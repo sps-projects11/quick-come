@@ -24,3 +24,6 @@ def get_worker_of_garage(garage_id):
 
 def get_worker_object(worker_id):
     return Worker.objects.get(id=worker_id)
+
+def get_all_workers():
+    return Worker.objects.all()

@@ -1,0 +1,181 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Worker List{% endblock %}
+
+{% block navbar_extra %}
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_worker_list' %}">
+      Worker
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Worker List</h1>
+  <table class="table table-striped text-center">
+    <thead>
+      <tr>
+        <th scope="col">Worker ID</th>
+        <th scope="col">Worker Image</th>
+        <th scope="col">Worker Name</th>
+        <th scope="col">Worker's Garage</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Experience</th>
+        <th scope="col">Expertise</th>
+        <th scope="col">Verified</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for worker in workers %}
+      <tr id="worker-row-{{ worker.id }}">
+        <td>{{ worker.id }}</td>
+        <td>
+          <img src="{{ worker.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" 
+               alt="Garage Image" class="rounded" width="50" height="50">
+        </td>
+        <td>{{ worker.garage_name }}</td>
+        <td>{{ worker.garage_owner_name }}</td>
+        <td>{{ worker.address }}</td>
+        <td>{{ worker.phone }}</td>
+        <td>{{ worker.vehicle }}</td>
+        <td>{{ worker.garage_ac }}</td>
+        <td>
+          <span class="switch-label toggle-label-deactivate {% if not worker.is_active %}active-label{% endif %}">Deactivate</span>
+          <label class="switch">
+            <input type="checkbox" class="worker-toggle" data-worker-id="{{ worker.id }}" {% if worker.is_active %}checked{% endif %}>
+            <span class="slider round"></span>
+          </label>
+          <span class="switch-label toggle-label-active {% if worker.is_active %}active-label{% endif %}">Active</span>
+        </td>
+        <td>
+          <a href="{% url 'manage_worker_update' worker.id %}" class="btn btn-sm btn-primary">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="10" class="text-center">No workers found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.worker-toggle').change(function(){
+      const checkbox = $(this);
+      const garageId = checkbox.data('worker-id');
+      const isActive = checkbox.is(':checked');
+      const td = checkbox.closest('td');
+      const labelActive = td.find('.toggle-label-active');
+      const labelDeactivate = td.find('.toggle-label-deactivate');
+      
+      // Update label styling immediately
+      if(isActive){
+        labelActive.addClass('active-label');
+        labelDeactivate.removeClass('active-label');
+      } else {
+        labelDeactivate.addClass('active-label');
+        labelActive.removeClass('active-label');
+      }
+
+      // Construct the URL using the worker ID.
+      const toggleUrl = '{% url "manage_worker_toggle" 0 %}'.replace("0", garageId);
+
+      $.ajax({
+        url: toggleUrl,
+        type: 'POST',
+        data: {
+          'is_active': isActive,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response){
+          console.log("Garage status toggled successfully");
+        },
+        error: function(xhr, status, error){
+          alert("Error toggling worker status");
+          // Revert the checkbox state if there is an error
+          checkbox.prop('checked', !isActive);
+          if(isActive){
+            labelDeactivate.addClass('active-label');
+            labelActive.removeClass('active-label');
+          } else {
+            labelActive.addClass('active-label');
+            labelDeactivate.removeClass('active-label');
+          }
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Center align table headers and cells */
+  .table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  /* Toggle switch styling */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background-color: #28a745;  /* Green when active */
+  }
+
+  input:not(:checked) + .slider {
+    background-color: #dc3545;  /* Red when inactive */
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  .switch-label {
+    margin: 0 10px;
+    font-weight: normal;
+    transition: font-weight 0.2s, color 0.2s;
+  }
+
+  .active-label {
+    font-weight: bold;
+    color: #000;
+  }
+</style>
+{% endblock %}
