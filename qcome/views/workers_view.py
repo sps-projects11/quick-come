@@ -1,6 +1,8 @@
+import json
 from django.views import View
 from django.shortcuts import render,redirect
-from ..services import user_service, garage_service, workers_service, payment_service
+from ..services import user_service, garage_service, workers_service, payment_service,booking_service
+from ..models import Worker
 from django.http import JsonResponse
 
 
@@ -73,7 +75,7 @@ class WorkerPaymentListView(View):
 
         print("Payments Data:", payments)  # Debugging
 
-        return render(request, "enduser/payment/worker_payment_list.html", {"payments": payments})
+        return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
     
 class CheckWorkerStatus(View):
@@ -85,19 +87,26 @@ class CheckWorkerStatus(View):
     
 
 class AssignedWorkerCreateView(View):
-    def get(self, request):
-        garage = garage_service.get_garage_id(request.user.id)
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            worker_id = data.get('worker_id')
+            booking_id = data.get('booking_id')
+
+            if not worker_id or not booking_id:
+                return JsonResponse({'message': 'Invalid data provided', 'status': 'error'}, status=400)
+
+            booking = booking_service.get_booking_object(booking_id)
+            worker = workers_service.get_worker_object(worker_id)
+
+            if not booking or not worker:
+                return JsonResponse({'message': 'Invalid worker or booking', 'status': 'error'}, status=404)
+
+            booking.assigned_worker = worker
+            booking.save()
+
+            return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
         
-        if not garage:
-            return JsonResponse({"error": "No garage found"}, status=404)
-
-        workers = workers_service.get_worker_of_garage(garage.id)
-
-        if not workers:
-            return JsonResponse({"workers": []})  # Empty list if no workers
-
-        # Convert worker objects to a JSON-serializable format
-        workers_list = [{"id": worker.id, "name": f"{worker.worker.first_name} {worker.worker.last_name}"} for worker in workers]
-
-        return JsonResponse({"workers": workers_list})
-    
+        except Exception as e:
+            return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+        

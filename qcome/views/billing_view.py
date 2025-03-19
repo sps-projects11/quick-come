@@ -12,12 +12,12 @@ class BillingHomeView(View):
     def get(self, request):
         booking = booking_service.get_booking_by_id(request.user.id)  # Get the booking object
         if not booking:
-            return render(request, 'enduser/Booking/cart.html')  # No active booking
+            return render(request, 'worker/cart.html')  # No active booking
 
         services = booking_service.get_services_by_id(booking.id)
         total_price = booking_service.total_price(services)
         print("booking",booking)
-        return render(request, 'enduser/Booking/cart.html', {
+        return render(request, 'worker/cart.html', {
             'booking_id': booking.id,  # ✅ Ensure it's an integer
             'services': services,
             'total_price': total_price  

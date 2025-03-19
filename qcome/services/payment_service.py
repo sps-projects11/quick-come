@@ -26,7 +26,7 @@ def create_payment(request, booking_id, user_id):
             return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
 
         data = json.loads(request.body)
-
+        print("data :", data)
         # Get the booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         if not booking:
@@ -103,14 +103,12 @@ def payment_details_by_payment_id(payment_id):
 
 
 def get_worker_payments(worker_user_id):
-    """Retrieve payments for a worker if they are of type CASH."""
-    worker_id=Worker.objects.filter(worker=worker_user_id).first()
-    all_bookings_by_worker = Booking.objects.filter(assigned_worker=worker_id.id)
+    worker_id=Worker.objects.get(worker=worker_user_id)
+    all_bookings_by_worker = Booking.objects.filter(assigned_worker=worker_id.id,is_active=False)
     payments = []
     for booking in all_bookings_by_worker:
         payment = Payment.objects.filter(
             booking_id=booking.id, 
-            type=PayType.CASH.value,  # Ensures only CASH payments are considered
             is_active=True
         ).first()  # Fetch a single matching payment
 
@@ -121,7 +119,7 @@ def get_worker_payments(worker_user_id):
                 "paid_at": payment.paid_at.strftime('%Y-%m-%d'),
                 "booking_id": booking.id,
                 "customer": f"{booking.customer.first_name} {booking.customer.last_name}",
-                "created_by": f"{payment.created_by.first_name} {payment.created_by.last_name}",
+                "pay_type":PayType(payment.type).name,
             })
 
     return payments

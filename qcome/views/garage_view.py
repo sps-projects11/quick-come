@@ -3,13 +3,14 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
-from django.core.files.storage import FileSystemStorage
-from qcome.constants.default_values import Role
-from qcome.decorators.auth_decorator import auth_required, role_required
-from qcome.models.garage_workers_model import Worker
-from ..models import Garage
-from ..constants import Vehicle_Type
-from qcome.services import booking_service
+from qcome.constants.default_values import Role, Vehicle_Type
+from qcome.decorators import auth_required, role_required
+from qcome.services import booking_service, garage_service,workers_service
+import hashlib
+from qcome.models import Garage
+from ..constants.error_message import ErrorMessage
+from ..constants.success_message import SuccessMessage
+
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -18,17 +19,51 @@ class GarageCreateView(View):
         """ Show the create garage form, or redirect to update if an active garage already exists """
         existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
         if existing_garage:
-            return redirect('garage_update', garage_id=existing_garage.id)  # Only redirect if it's active
+            return redirect('garage_profile')  # Only redirect if it's active
 
         vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', {'vehicle_types': vehicle_types})
 
     def post(self, request):
         """ Create a garage for the logged-in user (Only one allowed) """
-        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
+        user = request.user
+
+        existing_garage = Garage.objects.filter(garage_owner=user).first()
         if existing_garage:
-            messages.error(request, "You can only create one garage.")
-            return redirect('garage_profile', garage_id=existing_garage.id)
+            existing_garage.garage_name = request.POST.get('garage_name')
+            existing_garage.address = request.POST.get('address')
+            existing_garage.phone = request.POST.get('phone')
+            existing_garage.vehicle_type = request.POST.get('vehicle_type')
+            existing_garage.garage_ac = request.POST.get('garage_ac')
+            existing_garage.is_active=True
+             # Handle image upload
+            garage_profile_photo = request.FILES.get('garage_image')
+
+            garage_profile_photo_path = ''
+
+            if garage_profile_photo:
+                garage_profile_photo_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'garage-profile-photo')
+                if not os.path.exists(garage_profile_photo_dir):
+                    os.makedirs(garage_profile_photo_dir)
+
+                md5_hash = hashlib.md5()
+                for chunk in garage_profile_photo.chunks():
+                    md5_hash.update(chunk)
+                file_hash = md5_hash.hexdigest()
+
+                _, ext = os.path.splitext(garage_profile_photo.name)
+                new_file_name = f"{file_hash}{ext}"
+                file_path = os.path.join(garage_profile_photo_dir, new_file_name)
+
+                if not os.path.exists(file_path):
+                    garage_profile_photo.seek(0)
+                    with open(file_path, 'wb+') as destination:
+                        for chunk in garage_profile_photo.chunks():
+                            destination.write(chunk)
+
+                garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'   
+            existing_garage.save()
+            return redirect('garage_profile')
 
         garage_name = request.POST.get('garage_name')
         address = request.POST.get('address')
@@ -37,27 +72,35 @@ class GarageCreateView(View):
         garage_ac = request.POST.get('garage_ac')
 
         # Handle image upload
-        garage_image = request.FILES.get('garage_image')
-        file_url = None
-        if garage_image:
-            fs = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'static/all-Pictures/'))
-            filename = fs.save(garage_image.name, garage_image)
-            file_url = f"/static/all-Pictures/{filename}"
+        garage_profile_photo = request.FILES.get('garage_image')
 
-        garage = Garage.objects.create(
-            garage_owner=request.user,
-            garage_name=garage_name,
-            garage_image=file_url,
-            address=address,
-            phone=phone,
-            vehicle_type=vehicle_type,
-            garage_ac=garage_ac,
-            is_active=True,  # Make sure new garages are active
-            created_by=request.user,
-            updated_by=request.user,
-        )
+        garage_profile_photo_path = ''
 
-        messages.success(request, "Garage created successfully!")
+        if garage_profile_photo:
+            garage_profile_photo_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'garage-profile-photo')
+            if not os.path.exists(garage_profile_photo_dir):
+                os.makedirs(garage_profile_photo_dir)
+
+            md5_hash = hashlib.md5()
+            for chunk in garage_profile_photo.chunks():
+                md5_hash.update(chunk)
+            file_hash = md5_hash.hexdigest()
+
+            _, ext = os.path.splitext(garage_profile_photo.name)
+            new_file_name = f"{file_hash}{ext}"
+            file_path = os.path.join(garage_profile_photo_dir, new_file_name)
+
+            if not os.path.exists(file_path):
+                garage_profile_photo.seek(0)
+                with open(file_path, 'wb+') as destination:
+                    for chunk in garage_profile_photo.chunks():
+                        destination.write(chunk)
+
+            garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'   
+
+        garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, user)
+
+        messages.success(request, SuccessMessage.S00008.value)
         return redirect('garage_profile')
 
 
@@ -102,14 +145,35 @@ class GarageProfileView(View):
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
 class GarageWorkerListView(View):
     def get(self, request):
-        workers = Worker.objects.all()
-        return render(request, 'garage/workers.html')
+        # Fetch garage ID for the current user
+        garage_id = garage_service.get_garage_id(request.user.id)
+        print(f"Garage ID: {garage_id}")  # Debugging
 
-    def post(self, request):
-        return None
+        # Fetch workers in the garage
+        workers = workers_service.get_worker_of_garage(garage_id)
+        print(f"Workers: {workers}")  # Debugging
+
+        # Initialize worker data list
+        worker_data = []
+
+        # Ensure we only proceed if there are workers
+        if workers:
+            worker_data = [
+                {
+                    'id': worker.id,
+                    'worker_name': f"{worker.worker.first_name} {worker.worker.last_name}",
+                    'garage_name': worker.garage.garage_name,
+                    'experience': worker.experience,
+                    'expertise': worker.expertise,
+                    'is_verified': worker.is_verified
+                }
+                for worker in workers
+            ]
+
+        print(f"Worker Data: {worker_data}")  # Debugging
+        return render(request, 'garage/workers.html', {'workers': worker_data})
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -131,11 +195,33 @@ class GarageUpdateView(View):
         garage.garage_ac = request.POST.get('garage_ac')
 
         # Handle image update
-        garage_image = request.FILES.get('garage_image')
-        if garage_image:
-            fs = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'static/all-Pictures/'))
-            filename = fs.save(garage_image.name, garage_image)
-            garage.garage_image = f"/static/all-Pictures/{filename}"
+        garage_profile_photo = request.FILES.get('garage_image')
+
+        garage_profile_photo_path = ''
+
+        if garage_profile_photo:
+            garage_profile_photo_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'garage-profile-photo')
+            if not os.path.exists(garage_profile_photo_dir):
+                os.makedirs(garage_profile_photo_dir)
+
+            md5_hash = hashlib.md5()
+            for chunk in garage_profile_photo.chunks():
+                md5_hash.update(chunk)
+            file_hash = md5_hash.hexdigest()
+
+            _, ext = os.path.splitext(garage_profile_photo.name)
+            new_file_name = f"{file_hash}{ext}"
+            file_path = os.path.join(garage_profile_photo_dir, new_file_name)
+
+            if not os.path.exists(file_path):
+                garage_profile_photo.seek(0)
+                with open(file_path, 'wb+') as destination:
+                    for chunk in garage_profile_photo.chunks():
+                        destination.write(chunk)
+
+            garage_profile_photo_path = f'/static/all-Pictures/garage-profile-photo/{new_file_name}'      
+
+        garage.garage_image = garage_profile_photo_path
 
         garage.updated_by = request.user
         garage.save()
@@ -153,7 +239,7 @@ class GarageDeleteView(View):
         garage.is_active = False  # ✅ Mark as inactive
         garage.save()
         messages.success(request, "Garage deleted successfully!")
-        return redirect('garage_create')
+        return redirect('home')
     
 
 class GarageBillsListView(View):
