@@ -126,7 +126,19 @@ def toggle_user_status(user_id):
    
 
 def user_phone_create(user, worker_phone):
-    user.phone=worker_phone
+    user.phone = worker_phone
+    user.save()
+
+
+def user_profile_photo_create(user, worker_profile_photo_path):
+    user.profile_photo_url = worker_profile_photo_path
+    user.save()
+
+
+def user_name_update(user, first_name, middle_name, last_name):
+    user.first_name = first_name
+    user.middle_name = middle_name
+    user.last_name = last_name
     user.save()
 
 

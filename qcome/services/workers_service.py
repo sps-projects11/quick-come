@@ -9,6 +9,17 @@ def worker_create(user, expertise, experience, worker_garage):
     )
 
 
+def worker_update(worker, expertise, experience, worker_garage, user):
+    if worker:
+        worker.experience = experience
+        worker.expertise = expertise
+        worker.garage = worker_garage
+        worker.updated_by = user
+        worker.save()
+        return worker
+    return None
+
+
 def get_worker_details(worker_id):
     try:
         return Worker.objects.get(id=worker_id) 

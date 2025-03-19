@@ -48,6 +48,8 @@ class ManageWorkerCreateView(View):
 
         try:
             workers_service.worker_create(worker, expertise, experience, worker_garage)
+            user_service.user_phone_create(worker, worker_phone)
+            user_service.user_profile_photo_create(worker, worker_profile_photo_path)
             messages.success(request, SuccessMessage.S00009.value)
             return redirect('manage_worker_list')
         except Exception as e:
@@ -58,10 +60,46 @@ class ManageWorkerCreateView(View):
 
 class ManageWorkerUpdateView(View):
     def get(self, request, worker_id):
-        return render(request, 'adminuser/worker/worker_update.html.html')
+        worker = workers_service.get_worker_details(worker_id)
+        worker_user = user_service.get_user(worker.worker.id)
+        worker.worker_first_name = worker_user.first_name
+        worker.worker_middle_name = worker_user.middle_name
+        worker.worker_last_name = worker_user.last_name
+        worker.worker_image = worker_user.profile_photo_url
+        worker.phone = worker_user.phone
+        worker_garage = garage_service.get_garage(worker.garage.id)
+        worker.garage_name = worker_garage.garage_name
+
+        all_garage = garage_service.get_all_garages_exclude_worker_garage(worker.garage.id)
+
+        return render(request, 'adminuser/worker/worker_update.html', {'worker': worker, 'all_garage':all_garage})
     
     def post(self, request, worker_id):
-        return redirect('manage_worker_list')
+        worker_first_name = request.POST.get('worker_first_name')
+        worker_middle_name = request.POST.get('worker_middle_name')
+        worker_last_name = request.POST.get('worker_last_name')
+        garage = request.POST.get('worker_garage')
+        worker_phone = request.POST.get('worker_phone')
+        experience = request.POST.get('experience')
+        expertise = request.POST.get('expertise')
+        worker_profile_photo = request.FILES.get('worker_profile_photo')
+
+        worker_profile_photo_path = save_uploaded_file(worker_profile_photo, 'worker-profile-photo')
+
+        worker = workers_service.get_worker_details(worker_id)
+        worker_user = user_service.get_user(worker.worker.id)
+        worker_garage = garage_service.get_garage(garage)
+        try:
+            workers_service.worker_update(worker, expertise, experience, worker_garage, request.user)
+            user_service.user_name_update(worker_user, worker_first_name, worker_middle_name, worker_last_name)
+            user_service.user_phone_create(worker_user, worker_phone)
+            user_service.user_profile_photo_create(worker_user, worker_profile_photo_path)
+            messages.success(request, SuccessMessage.S00009.value)
+            return redirect('manage_worker_list')
+        except Exception as e:
+            print("Error occurred:", e)
+            messages.error(request, ErrorMessage.E00017.value)
+            return redirect('manage_worker_list')
 
 
 class ManageWorkerToggleView(View):

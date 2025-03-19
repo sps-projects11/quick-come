@@ -104,3 +104,6 @@ def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garag
 
 def get_all_garages():
     return Garage.objects.all()
+
+def get_all_garages_exclude_worker_garage(worker_garage):
+    return Garage.objects.exclude(id=worker_garage)
