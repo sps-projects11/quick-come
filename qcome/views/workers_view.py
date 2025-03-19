@@ -4,6 +4,19 @@ from ..services import user_service, garage_service, workers_service, payment_se
 from django.http import JsonResponse
 
 
+class WorkerView(View):
+    def get(self, request, worker_id):
+        worker_details = user_service.get_workers_details(worker_id)
+        garage_details = user_service.get_all_garages()
+        context = {
+            'worker_details': worker_details,
+            'user': request.user,
+            'garage_details': garage_details,
+        }
+        return render(request, 'worker/workers_profile.html', context)
+
+
+
 class WorkerCreateView(View):
     def get(self, request,worker_id):
         worker_details = user_service.get_workers_details(worker_id)
@@ -32,21 +45,7 @@ class WorkerCreateView(View):
 
     
 class WorkerUpdateView(View):
-    def get(self, request, worker_id):
-        worker_details = workers_service.get_worker_details(worker_id)
-        context = {'worker_details': worker_details}
-        return render(request, 'worker/worker_profile_update.html', context)
-
-    def post(self, request, worker_id):
-        worker = workers_service.get_worker_details(worker_id)
-        if worker:
-            worker.experience = request.POST.get('experience')
-            worker.expertise = request.POST.get('expertise')
-            worker.is_verified = request.POST.get('is_verified') == 'on'
-            worker.is_active = request.POST.get('is_active') == 'on'
-            worker.save()
-            return redirect('worker_list')  
-        return redirect('worker_list')  
+ pass 
     
     
 class WorkerDeleteView(View):
