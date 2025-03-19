@@ -110,3 +110,4 @@ class AssignedWorkerCreateView(View):
         
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+        

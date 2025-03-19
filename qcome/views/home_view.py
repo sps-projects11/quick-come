@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from qcome.services import garage_service, workers_service
+from qcome.services import garage_service, workers_service,booking_service
 
 
 class HomeView(View):
@@ -17,7 +17,11 @@ class HomeView(View):
             print("vcsdh",bookings)
             return render(request, 'garage/bookings.html', {'garage':garage,'bookings':bookings,'workers': workers_list})
         elif worker:
-            return render(request, 'worker/index.html', {'worker':worker})
+            worker_id=workers_service.get_worker_id(user)
+            print("worker:",worker_id)
+            bookings = booking_service.get_bookings(worker_id)
+            print(bookings)
+            return render(request, 'worker/work/work_list.html', {'bookings':bookings})
         else:
             return render(request, 'enduser/home/index.html', {'user':user})
 

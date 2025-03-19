@@ -1,31 +1,95 @@
-{% extends "enduser/base.html" %}
+{% extends "worker/index.html" %}
 {% load static %}
 {% block title %}Work_list{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/work_list.css' %}"> 
+<style>
+    .work-list {
+        width: 100%;
+        margin: auto;
+        padding: 10px;
+    }
+    .work-card {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .customer-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 12px;
+        object-fit: cover;
+    }
 
+    .work-details {
+        flex: 1;
+    }
+
+    .work-details h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .work-details p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #b0b0b0;
+    }
+
+    .services {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .service-img {
+        width: 25px;
+        height: 25px;
+        border-radius: 5px;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
+    .service-item {
+        display: flex;
+        align-items: center;
+    }
+</style>
 <div class="wrapper">   
      <div class="container">
         <h2>Work List</h2>
         <div class="work-list">
-            {% if booking %}
-                {% for work in booking %}
+            {% if bookings %}
+                {% for work in bookings %}
                     <div class="work-card">
-                        <img src="{{ work.customer_photo }}" alt="Customer Photo" class="customer-photo">
-                        <div class="work-details">
-                            <h3>{{ work.customer_id }}</h3>
-                            <p><strong>Address:</strong> {{ work.address }}</p>
-                            <p><strong>Service:</strong> {{ work.service }}</p>
-                            <p><strong>Vehicle Type:</strong> {{ work.vehicle_type }}</p>
+                            <div class="work-details">
+                                <h3>{{ work.customer_name }}</h3>
+                                <p><strong>Vehicle:</strong> {{ work.vehicle_type }}</p>
+                                <p>{{ work.description }}</p>
+                            </div>
+                            <div class="service_div">
+                                <p><strong>Location:</strong> {{ work.current_location }}</p>
+                                <p class="services">
+                                    {% for service in work.services %}
+                                        <span class="service-item">
+                                            <img src="{{ service.service_image }}" alt="{{ service.service_name }}" class="service-img">
+                                            {{ service.service_name }} - ₹{{ service.price }}
+                                        </span><br>
+                                    {% endfor %}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p class="no-data">No work available.</p>
+                <p class="no-data">No bookings available.</p>
             {% endif %}
-        </div>
+        </div>      
     </div>
 </div>
-
 {% endblock %}
