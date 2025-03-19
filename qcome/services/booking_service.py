@@ -198,7 +198,7 @@ def get_booking_object(booking_id):
     return Booking.objects.get(id=booking_id)
 
 def get_bookings(worker_id):
-    bookings=Booking.objects.filter(assigned_worker=worker_id).values('id','customer__first_name','customer__last_name','vehicle_type','current_location','service','description')
+    bookings=Booking.objects.filter(assigned_worker=worker_id,is_active=True).values('id','customer__first_name','customer__last_name','vehicle_type','current_location','service','description')
     booking_data=[]
     for booking in bookings:
             booking_data.append({

@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views import View
-from qcome.services import payment_service,booking_service
+from qcome.services import payment_service,booking_service,workers_service
 from django.shortcuts import render
 from ..decorators import auth_required, role_required, garage_required, worker_required
 from ..constants import Role,PayType
@@ -81,4 +81,7 @@ class PaymentReceipt(View):
         payment["paid_to"]=paid_to
         payment["type"]=type
         print(payment)
+        worker=workers_service.is_user_a_garage_worker(request.user.id)
+        if worker:
+            return render(request, 'worker/reciept.html',{'payment':payment})
         return render(request, 'enduser/payment/reciept.html',{'payment':payment})

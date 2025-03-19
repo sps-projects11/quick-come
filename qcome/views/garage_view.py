@@ -5,8 +5,7 @@ from django.views import View
 from django.contrib import messages
 from qcome.constants.default_values import Role, Vehicle_Type
 from qcome.decorators import auth_required, role_required
-from qcome.models import Worker, Garage
-from qcome.services import booking_service, garage_service
+from qcome.services import booking_service, garage_service,workers_service
 import hashlib
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
@@ -145,14 +144,35 @@ class GarageProfileView(View):
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
 class GarageWorkerListView(View):
     def get(self, request):
-        workers = Worker.objects.all()
-        return render(request, 'garage/workers.html')
+        # Fetch garage ID for the current user
+        garage_id = garage_service.get_garage_id(request.user.id)
+        print(f"Garage ID: {garage_id}")  # Debugging
 
-    def post(self, request):
-        return None
+        # Fetch workers in the garage
+        workers = workers_service.get_worker_of_garage(garage_id)
+        print(f"Workers: {workers}")  # Debugging
+
+        # Initialize worker data list
+        worker_data = []
+
+        # Ensure we only proceed if there are workers
+        if workers:
+            worker_data = [
+                {
+                    'id': worker.id,
+                    'worker_name': f"{worker.worker.first_name} {worker.worker.last_name}",
+                    'garage_name': worker.garage.garage_name,
+                    'experience': worker.experience,
+                    'expertise': worker.expertise,
+                    'is_verified': worker.is_verified
+                }
+                for worker in workers
+            ]
+
+        print(f"Worker Data: {worker_data}")  # Debugging
+        return render(request, 'garage/workers.html', {'workers': worker_data})
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')

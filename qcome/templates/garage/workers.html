@@ -3,10 +3,10 @@
 {% load static %}
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
 <script src="{% static 'js/profile.js' %}"></script>
-<div class="profile-container">
-    <table class="table table-striped table-dark">
+<div class = "wrapper">
+<div class="profile-container" style="height:100%;margin:auto; width:80%;">
+    <table class="table table-striped ">
         <thead>
             <tr>
                 <th style="color: green;">Worker</th>
@@ -14,28 +14,33 @@
                 <th style="color: green;">Experience</th>
                 <th style="color: green;">Expertise</th>
                 <th style="color: green;">Verified</th>
-                <th style="color: green;">Active</th>
-                <th style="color: green;">Actions</th>
             </tr>
         </thead>
         <tbody style="color: green;">
             {% for worker in workers %}
             <tr>
-                <td>{{ worker.worker }}</td>
-                <td>{{ worker.garage }}</td>
+                <td>{{ worker.id }}</td>
+                <td>{{ worker.garage_name }}</td>
                 <td>{{ worker.experience }}</td>
                 <td>{{ worker.expertise }}</td>
-                <td>{{ worker.is_verified|yesno:"Yes,No" }}</td>
-                <td>{{ worker.is_active|yesno:"Yes,No" }}</td>
-                <td>
-                    <a href="{% url 'worker_update' worker.id %}" class="btn btn-primary btn-sm">Update</a>
-                    <a href="{% url 'worker_delete' worker.id %}" class="btn btn-danger btn-sm">Delete</a>
-                </td>
+                <td>{{ worker.is_verified}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-
+</div>
+<style>
+    .wrapper{
+        background: #c8d6e2;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        display: flex;
+        padding: 20px;
+        margin: auto;
+        height: 100vh;
+    }
+</style>
 
 {% endblock %}
