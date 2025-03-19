@@ -27,3 +27,13 @@ def get_worker_object(worker_id):
 
 def get_all_workers():
     return Worker.objects.all()
+
+def worker_toggle(worker_id):
+    worker = get_worker_details(worker_id)
+
+    if worker:
+        worker.is_active = not worker.is_active
+        worker.save()
+        return worker
+    
+    return None

@@ -66,4 +66,8 @@ class ManageWorkerUpdateView(View):
 
 class ManageWorkerToggleView(View):
     def post(self, request, worker_id):
-        return redirect('manage_worker_list')
+        worker = workers_service.worker_toggle(worker_id)
+        if worker is None:
+            return JsonResponse(error_response(ErrorMessage.E00018.value))
+                
+        return JsonResponse(success_response(SuccessMessage.S00010.value))
