@@ -6,6 +6,7 @@
 <script src="{% static 'js/profile.js' %}"></script>
 <div class = "wrapper">
 <div class="profile-container" style="height:100%;margin:auto; width:80%;">
+    {% if workers %}
     <table class="table table-striped ">
         <thead>
             <tr>
@@ -28,6 +29,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+        <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No workers found.</p>
+        {% endif %}
 </div>
 </div>
 <style>
