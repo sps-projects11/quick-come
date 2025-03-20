@@ -176,3 +176,11 @@ def get_all_payments():
         payments_data.append(payment_data)
     
     return payments_data
+
+
+def get_total_revenue():
+    """Calculate the total revenue from all payments."""
+    qs = Payment.objects.filter(is_active=True).values_list('amount', flat=True).iterator()
+    total_revenue = sum(qs) or 0  # Ensure 0 is returned if no records
+    return total_revenue
+

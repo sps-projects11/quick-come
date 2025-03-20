@@ -196,3 +196,15 @@ def get_bill_details_by_booking_id(booking_id):
 
 def get_booking_object(booking_id):
     return Booking.objects.get(id=booking_id)
+
+def get_last_5_booking():
+    Bookings = Booking.objects.all().order_by('-created_at')[:5]
+
+    for booking in Bookings:
+        booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
+        booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
+        service_ids = booking.service
+        services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
+        booking.service_names = ", ".join(services) if services else "No service"
+        booking.vehicle_type = Vehicle_Type(booking.vehicle_type).name
+        

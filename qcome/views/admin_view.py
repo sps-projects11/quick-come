@@ -7,7 +7,7 @@ from django.contrib import messages  # For user feedback
 import datetime
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
-from ..services import user_service, admin_service
+from ..services import user_service, admin_service, garage_service, workers_service, payment_service, booking_service, service_service
 import os
 import hashlib
 from django.conf import settings
@@ -47,16 +47,26 @@ class LoginOutAdminView(View):
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminHomeView(View):
-    def get(self, request):
+    def get(self, request):        
         user = user_service.get_user(request.user.id)
-        return render(request, 'adminuser/home/dashboard.html', {'admin':user})
+        total_users = user_service.get_all_user().count()
+        total_admins = user_service.get_all_admins().count()
+        total_garages = garage_service.get_all_garages().count()
+        total_workers = workers_service.get_all_workers().count()
+        total_revenue = payment_service.get_total_revenue()
 
-    
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
-class AsminDashboard(View):
-    def get(self, request):
-        return render(request, 'adminuser/home/dashboard.html')
+        booking = booking_service.get_last_5_booking()
+
+        data = {
+            'total_users': total_users,
+            'total_admins': total_admins,
+            'total_garages': total_garages,
+            'total_workers': total_workers,
+            'total_revenue': total_revenue,
+            'admin': user
+        }
+
+        return render(request, 'adminuser/home/dashboard.html', {'data':data})
     
 
 @auth_required(login_url='/login/admin/')

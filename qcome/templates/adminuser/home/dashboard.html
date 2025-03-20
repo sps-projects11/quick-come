@@ -19,7 +19,7 @@
         <div class="card-body">
           <i class="fas fa-users fa-3x mb-2 text-primary"></i>
           <h4 class="card-title">Total Users</h4>
-          <p class="card-text fs-4">250</p>
+          <p class="card-text fs-4">{{ data.total_users }}</p>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
         <div class="card-body">
           <i class="fas fa-user-shield fa-3x mb-2 text-danger"></i>
           <h4 class="card-title">Admins</h4>
-          <p class="card-text fs-4">10</p>
+          <p class="card-text fs-4">{{ data.total_admins }}</p>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
         <div class="card-body">
           <i class="fas fa-warehouse fa-3x mb-2 text-warning"></i>
           <h4 class="card-title">Garages</h4>
-          <p class="card-text fs-4">50</p>
+          <p class="card-text fs-4">{{ data.total_garages }}</p>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
         <div class="card-body">
           <i class="fas fa-user-tie fa-3x mb-2 text-success"></i>
           <h4 class="card-title">Workers</h4>
-          <p class="card-text fs-4">100</p>
+          <p class="card-text fs-4">{{ data.total_workers }}</p>
         </div>
       </div>
     </div>
@@ -57,9 +57,9 @@
     <div class="col-md-3 mb-3">
       <div class="card text-center shadow-sm metric-card h-100">
         <div class="card-body">
-          <i class="fas fa-dollar-sign fa-3x mb-2 text-info"></i>
+          <i class="fa-solid fa-indian-rupee-sign fa-3x mb-2 text-info"></i>
           <h4 class="card-title">Total Revenue</h4>
-          <p class="card-text fs-4">$12,500</p>
+          <p class="card-text fs-4">₹ {{ data.total_revenue }}</p>
         </div>
       </div>
     </div>

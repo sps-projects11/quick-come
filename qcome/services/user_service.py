@@ -152,3 +152,6 @@ def get_non_garage_and_non_worker_users():
     # Exclude users who are garage owners or workers
     return active_users.exclude(id__in=garage_owner_ids).exclude(id__in=worker_user_ids)
 
+
+def get_all_admins():
+    return User.objects.filter(roles=Role.ADMIN.value, is_active=True)

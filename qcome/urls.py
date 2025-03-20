@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/profile/', views.AdminProfileView.as_view(), name='myadmin_profile'),
     path('admin/profile/update', views.AdminProfileUpdateView.as_view(), name='myadmin_profile_update'),
     path('admin/password/update', views.AdminPasswordUpdateView.as_view(), name='myadmin_password_update'),
-    path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
+    path('admin/dashboard', views.AdminHomeView.as_view(), name='admin_dashboard'),
 
     # Admin-User Management
     path('admin/users/', views.ManageUsersListView.as_view(), name='manage_users'),
