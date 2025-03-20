@@ -1,18 +1,20 @@
 
 .wrapper {
-    height:100vh;
-    display: flex;
-    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
+    display: flex;
     padding: 20px;
-    width: 100%;
+    width: 80%;
+    margin: auto;
+    height: 85vh;
 }
 
 .container {
     margin: auto;
     height: 100%;
     width: 50%;
-    background: #fff;
+    background: #cbc6c6;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

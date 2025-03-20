@@ -4,14 +4,14 @@
     flex-direction: column;
     display: flex;
     padding: 20px;
-    width: 80%;
+    width: 100%;
     margin: auto;
     height: 85vh;
 }
 .cart-container {
     height: 100%;
     margin: auto;
-    background: white;
+    background: #cbc6c6;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -19,9 +19,7 @@
     text-align: center;
     transition: transform 0.3s ease-in-out;
 }
-.cart-container:hover {
-    transform: scale(1.02);
-}
+
 .cart-items {
     scrollbar-width: none; /* Hide scrollbar in Firefox */
     -ms-overflow-style: none; 
