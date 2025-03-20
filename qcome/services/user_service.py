@@ -77,7 +77,7 @@ def getFCMtoken(user_id):
 
 def get_all_garages():
     return Garage.objects.filter(is_active=True) 
-    
+
 
 def user_create(first_name, middle_name, last_name, dob, email, phone, gender, profile_photo_path, user_password):
     return User.objects.create(

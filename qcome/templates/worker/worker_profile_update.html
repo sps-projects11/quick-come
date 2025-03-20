@@ -1,4 +1,4 @@
-{% comment %} {% extends "enduser/base.html" %}
+{% extends "enduser/base.html" %}
 {% block title %}Quick-Come Booking{% endblock %}
 {%load static %}
 {% block content %}
@@ -8,7 +8,7 @@
 
 <section id="emergency-form" class="container">
     <div class="form-container">
-        <h2>Become a Worker</h2>
+        <h2>Update Worker Profile</h2>
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -27,14 +27,15 @@
             <div class="form-group">
                 <select name="garage" required>
                     <option value="">Select the Garage</option>
-                    {% for garage in garage_details %}
-                        <option value="{{ garage.id }}" {% if booking.garage.id == garage.id %}selected{% endif %}>
+                    {% for garage in gargae_details %}
+                        <option value="{{ garage.id }}" {% if  worker_details.garage.id == garage.id %}selected{% endif %}>
                             {{ garage.garage_name }}
                         </option>
                     {% endfor %}
                 </select>                
             </div>
-            <button type="submit" class="submit-button">Submit</button>
+            <button type="submit" class="submit-button">Update</button>
+            <a href="JavaScript:history.back()" class="submit-button" style="gap:10px;text-decoration:none; background-color:red;">Cancel</a>
         </form>
     </div>
 </section>
@@ -103,7 +104,7 @@
 
 
 
-
+{% comment %}  
 {% comment %} {% extends "enduser/base.html" %}
 {% block title %}Quick-Come Booking{% endblock %}
 {%load static %}

@@ -1,5 +1,11 @@
 from ..models import Worker
 
+def get_worker_details(worker_id):
+    try:
+        return Worker.objects.get(id=worker_id)
+    except Worker.DoesNotExist:
+        return None
+
 def worker_create(user, expertise, experience, worker_garage):
     return Worker.objects.create(
         worker = user,
@@ -9,11 +15,17 @@ def worker_create(user, expertise, experience, worker_garage):
     )
 
 
-def get_worker_details(worker_id):
+def update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id):
     try:
-        return Worker.objects.get(id=worker_id) 
+        worker = Worker.objects.get(id=worker_id)
+        worker.name = worker_name
+        worker.phone = worker_phone
+        worker.experience = experience
+        worker.expertise = expertise
+        worker.garage_id = garage_id  
+        worker.save()
     except Worker.DoesNotExist:
-        return None
+        print(f"Worker with ID {worker_id} does not exist.")
 
 
 def is_user_a_garage_worker(user):

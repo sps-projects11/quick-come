@@ -2,26 +2,22 @@ import json
 from django.views import View
 from django.shortcuts import render,redirect
 from ..services import user_service, garage_service, workers_service, payment_service,booking_service
-from ..models import Worker
 from django.http import JsonResponse
 
-
 class WorkerView(View):
-    def get(self, request, worker_id):
-        worker_details = user_service.get_workers_details(worker_id)
+    def get(self,request,worker_id):
+        worker_details = workers_service.get_worker_details(worker_id)
         garage_details = user_service.get_all_garages()
         context = {
-            'worker_details': worker_details,
-            'user': request.user,
-            'garage_details': garage_details,
-        }
-        return render(request, 'worker/workers_profile.html', context)
-
-
+            'worker_details':worker_details,
+            'gargae_details':garage_details,
+            'user':request.user,
+            }
+        return render(request,'worker/workers_profile.html',context)    
 
 class WorkerCreateView(View):
     def get(self, request,worker_id):
-        worker_details = user_service.get_workers_details(worker_id)
+        worker_details = workers_service.get_worker_details(worker_id)
         garage_details = user_service.get_all_garages() 
         context = {
             'worker_details': worker_details,
@@ -43,26 +39,39 @@ class WorkerCreateView(View):
         workers_service.worker_create(user, expertise, experience, garage)
         user_service.user_phone_create(user, worker_phone)
 
-        return redirect('home')
+        return redirect('worker',worker_id = worker_id)
 
-    
+
 class WorkerUpdateView(View):
- pass 
-    
-    
-class WorkerDeleteView(View):
     def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
-        context = {'worker_details': worker_details}
-        return render(request, 'worker/worker_profile_delete.html', context)
+        garage_details = user_service.get_all_garages()
+        context = {
+            'worker_details': worker_details,
+            'gargae_details': garage_details,
+            'user': request.user,
+        }
+        return render(request, 'worker\worker_profile_update.html', context)
+    
+    def post(self, request, worker_id):
+        worker_name = request.POST.get('worker_name')
+        worker_phone = request.POST.get('worker_phone')
+        experience = request.POST.get('experience')
+        expertise = request.POST.get('expertise')
+        garage_id = request.POST.get('garage')
+        
+        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id)
+        return redirect('worker',worker_id = worker_id)  
 
+
+class WorkerDeleteView(View):
     def post(self, request, worker_id):
         worker = workers_service.get_worker_details(worker_id)
         if worker:
             worker.delete()
-            return redirect('worker_list')
-        return redirect('worker_list')
-    
+        return redirect('home')
+  
+
 
 class WorkerPaymentListView(View):
     def get(self, request):

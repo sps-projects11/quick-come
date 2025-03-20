@@ -1,4 +1,4 @@
-{% extends "garage/index.html" %}
+{% extends "worker/index.html" %}
 {% block title %}Worker Profile{% endblock %}
 {% load static %}
 {% block content %}
@@ -59,35 +59,36 @@
 <div class="container">
     <div class="profile-container">
         <h2>Worker Profile</h2>
-
-        <!-- Worker Details -->
         <div class="profile-details">
+            {% if user.profile_photo_url %}
+            <img src="{{ user.profile_photo_url }}" class="profile-img" alt="Garage Image">
+        {% else %}
+            <img src="https://via.placeholder.com/130" class="profile-img" alt="No Image">
+        {% endif %}
             <p><i class="fas fa-user"></i> <strong>Name:</strong> {{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}</p>
             <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
             <p><i class="fas fa-tools"></i> <strong>Experience:</strong> {{ worker_details.experience }}</p>
             <p><i class="fas fa-clipboard-check"></i> <strong>Expertise:</strong> {{ worker_details.expertise }}</p>
             <p><i class="fas fa-warehouse"></i> <strong>Garage:</strong> 
-                {% for garage in garage_details %}
-                    {% if booking.garage.id == garage.id %}
-                        {{ garage.garage_name }}
-                    {% endif %}
-                {% endfor %}
+             {% for garage  in gargae_details %}
+    {% if  worker_details.garage.id == garage.id %}{{ garage.garage_name}}{% endif %}       
+             {% endfor %}
             </p>
         </div>
-
         <!-- Action Buttons -->
-        <div class="btn-group d-flex justify-content-between">
+ <div class="btn-group d-flex justify-content-between">
             <!-- Edit Button -->
             <a href="{% url 'worker_update' user.id %}" class="btn btn-primary"><i class="fas fa-edit"></i> Update</a>
-
             <!-- Delete Button -->
             <form method="POST" action="{% url 'worker_delete' user.id %}" onsubmit="return confirm('Are you sure you want to delete this worker?');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
-            </form>
-        </div>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </button>
+            </form>            
+        </div> 
     </div>
 </div>
-
+{% comment %} onsubmit="return confirm('Are you sure you want to delete this worker?'); {% endcomment %}
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-{% endblock %}
+{% endblock %} 
