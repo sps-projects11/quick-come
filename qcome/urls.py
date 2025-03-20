@@ -69,6 +69,7 @@ urlpatterns = [
     # Work
     path('work/', views.WorkListView.as_view(), name='work'),
     path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
+    path('garage/work_list/', views.AllWorkListView.as_view(), name='garage_work_list'),
 
     # Billing
     path('billing/', views.BillingHomeView.as_view(), name='billing,'),
