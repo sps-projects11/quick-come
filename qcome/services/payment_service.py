@@ -11,6 +11,9 @@ def get_all_payments_created_by(user_id):
     payments = Payment.objects.filter(created_by=user_id, is_active=True,pay_status=PayStatus.COMPLETE.value).values(
         'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
     )
+
+    print(payments)
+
     return list(payments)
 
 def get_current_payment(booking_id):
@@ -29,6 +32,7 @@ def create_payment(request, booking_id, user_id):
         print("data :", data)
         # Get the booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
+        created_by = booking.customer
         if not booking:
             return JsonResponse({"error": "❌ Booking not found or already inactive"}, status=400)
 
@@ -49,7 +53,7 @@ def create_payment(request, booking_id, user_id):
             type=data.get('type'),
             amount=data.get('amount'),
             pay_status=PayStatus.COMPLETE.value,
-            created_by=user,
+            created_by=created_by,
         )
 
         # Deactivate the booking
@@ -175,14 +179,6 @@ def get_all_payments():
         payments_data.append(payment_data)
     
     return payments_data
-
-
-def get_total_revenue():
-    """Calculate the total revenue from all payments."""
-    qs = Payment.objects.filter(is_active=True).values_list('amount', flat=True).iterator()
-    total_revenue = sum(qs) or 0  # Ensure 0 is returned if no records
-    return total_revenue
-
 
 
 def get_total_revenue():

@@ -66,7 +66,7 @@
         <div class="work-list">
             {% if bookings %}
                 {% for work in bookings %}
-                    <div class="work-card" onclick = "window.location.href ='{% url 'worker_work_details' work_id=work.work_id %}'">
+                    <div class="work-card" onclick = "window.location.href ='{% url 'worker_work_details' work_id=work.id  %}'">
                             <div class="work-details">
                                 <h3>{{ work.customer_name }}</h3>
                                 <p><strong>Vehicle:</strong> {{ work.vehicle_type }}</p>

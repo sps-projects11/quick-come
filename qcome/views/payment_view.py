@@ -72,14 +72,19 @@ class PaymentReceipt(View):
             booking = booking_service.get_booking(payment['booking_id'])
             if booking and booking.assigned_worker:
                 paid_to = f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}".strip()
+                paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
             else:
                 paid_to = "Unknown"
+                paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
             type="CASH"
         else:
             paid_to = "Quick-come Company"
             type="UPI"
+            paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
+
         payment["paid_to"]=paid_to
         payment["type"]=type
+        payment["paid_by"]=paid_by
         print(payment)
         worker=workers_service.is_user_a_garage_worker(request.user.id)
         if worker:

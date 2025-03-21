@@ -5,7 +5,7 @@
 {% block content %}
    <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
    <div class="wrapper">
-      <div class="receipt-container">
+      <div class="container">
          <div class="receipt-header">
             <i class="fas fa-arrow-left back-btn" onclick="goBack()"></i>
             <h3 style="font-size: 30px;font-weight: bold;">Payment Receipt</h3>
@@ -14,7 +14,7 @@
             <div class="item"><strong>Transaction ID:</strong> <span>{{ payment.id }}</span></div>
             <div class="item"><strong>Amount Paid:</strong> <span>₹ {{ payment.amount }}</span></div>
             <div class="item"><strong>Paid At:</strong> <span>{{ payment.paid_at }}</span></div>
-            <div class="item"><strong>Paid By:</strong> <span>{{ payment.created_by__first_name }} {{ payment.created_by__last_name }}</span></div>
+            <div class="item"><strong>Paid By:</strong> <span>{{ payment.paid_by }}</span></div>
             <div class="item"><strong>Paid to:</strong> <span>{{ payment.paid_to }}</span></div>
             <div class="item"><strong>payment method:</strong> <span>{{ payment.type }}</span></div>
          </div>
