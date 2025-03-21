@@ -1,6 +1,6 @@
 {% extends "worker/index.html" %}
 {% load static %}
-{% block title %}Payment Receipt{% endblock %}
+{% block title %} Work Details{% endblock %}
 
 {% block content %}
    <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
@@ -35,7 +35,7 @@
                    <strong>Services:</strong>
                    <ul>
                        {% for service in work_data.services %}
-                           <li>{{ service.service_name }} - ${{ service.price }}</li>
+                           <li>{{ service.service_name }} - ₹{{ service.price }}</li>
                        {% endfor %}
                    </ul>
                </div>
@@ -73,9 +73,8 @@
                })
                .then(response => response.json())
                .then(result => {
-                   alert(result.message);
-                   if (result.status === 'success') {
-                       location.reload(); // Reload to reflect the updated status
+                   if (result.status === 'success' && result.updated_status === '4') {
+                    window.location.href = '/billing/';
                    }
                })
                .catch(error => {

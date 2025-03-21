@@ -39,7 +39,7 @@ def get_statuss_work_id():
     statuss = []
     
     # Iterate over the specific status values you want (e.g., 4, 5, 6)
-    for status_value in [4, 5, 6]:
+    for status_value in [3, 4, 5, 6]:
         if Status(status_value):  # If valid in the Status Enum
             statuss.append({
                 'id': status_value,
@@ -54,9 +54,12 @@ def is_work_complete(booking_id):
     return False
 
 def is_work_status_updatable(work_id):
-    res = Work.objects.filter(id=work_id, is_active=True, status=Status.ACCEPTED.value)
-    if res.exists():  # Check if any records match the filter
-        return True
-    return False
+    res = Work.objects.filter(
+        id=work_id, 
+        is_active=True, 
+        status__in=[Status.ACCEPTED.value, Status.WORKING.value]  # Use `status__in`
+    )
+    return res.exists()  # Returns True if any records match, otherwise False
+
 
 

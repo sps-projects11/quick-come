@@ -151,7 +151,7 @@ class WorkerWorkRecieptView(View):
             # Update work status
             work_service.update_work_status(work_id, status)
             
-            return JsonResponse({'message': 'Status updated successfully', 'status': 'success'})
+            return JsonResponse({'message': 'Status updated successfully', 'status': 'success', 'updated_status': status})
         
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
