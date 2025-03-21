@@ -3,11 +3,12 @@ from django.views import View
 from django.shortcuts import render,redirect
 from ..services import user_service, garage_service, workers_service, payment_service,booking_service,work_service
 from django.http import JsonResponse
-from ..constants.error_message import ErrorMessage
-from ..package.response import success_response,error_response
 from django.contrib import messages
 from ..constants.success_message import SuccessMessage
+from ..decorators import auth_required, garage_required,worker_required
 
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkerView(View):
     def get(self,request,worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
@@ -19,6 +20,8 @@ class WorkerView(View):
             }
         return render(request,'worker/workers_profile.html',context)    
 
+
+@auth_required(login_url='/sign-in/')
 class WorkerCreateView(View):
     def get(self, request,worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
@@ -45,7 +48,8 @@ class WorkerCreateView(View):
         messages.success(request,SuccessMessage.S00022.value)
         return redirect('worker',worker_id = worker_id)
 
-
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkerUpdateView(View):
     def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
@@ -68,7 +72,8 @@ class WorkerUpdateView(View):
         messages.success(request,SuccessMessage.S00023.value)
         return redirect('worker',worker_id = worker_id)  
 
-
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkerDeleteView(View):
     def post(self, request, worker_id):
         worker = workers_service.get_worker_details(worker_id)
@@ -78,7 +83,8 @@ class WorkerDeleteView(View):
         return redirect('home')
   
 
-
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkerPaymentListView(View):
     def get(self, request):
         worker_user_id = request.user.id
@@ -92,7 +98,7 @@ class WorkerPaymentListView(View):
 
         return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
-    
+@auth_required(login_url='/sign-in/')
 class CheckWorkerStatus(View):
     def get(self, request):
         user_id = request.user.id
@@ -100,7 +106,8 @@ class CheckWorkerStatus(View):
         
         return JsonResponse({"is_worker": is_worker})
     
-
+@auth_required(login_url='/sign-in/')
+@garage_required 
 class AssignedWorkerCreateView(View):
     def post(self, request):
         try:
@@ -126,7 +133,8 @@ class AssignedWorkerCreateView(View):
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
     
-
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
         try:

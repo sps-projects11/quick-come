@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views import View
 from qcome.services import payment_service,booking_service,workers_service
 from django.shortcuts import render
-from ..decorators import auth_required, role_required, garage_required, worker_required
+from ..decorators import auth_required, role_required, worker_required
 from ..constants import Role,PayType
 
 @auth_required(login_url='/sign-in/')
@@ -40,7 +40,7 @@ class PaymentListView(View):
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@worker_required
 class PaymentCreateView(View):
     def get(self, request,booking_id):
         booking_id=booking_id
@@ -63,8 +63,7 @@ class PaymentCreateView(View):
         return payment_service.create_payment(request, booking.id, user_id)  
 
 
-auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@auth_required(login_url='/sign-in/')
 class PaymentReceipt(View):
     def get(self,request,payment_id):
         payment=payment_service.payment_details_by_payment_id(payment_id)

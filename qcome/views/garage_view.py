@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 from qcome.constants.default_values import Role, Vehicle_Type
-from qcome.decorators import auth_required, role_required
+from qcome.decorators import auth_required, role_required,garage_required
 from qcome.services import booking_service, garage_service,workers_service
 import hashlib
 from qcome.models import Garage
@@ -106,7 +106,7 @@ class GarageCreateView(View):
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@garage_required
 class GarageProfileView(View):
     def get(self, request):
         """ Display the garage profile for the logged-in user """
@@ -145,6 +145,7 @@ class GarageProfileView(View):
 
 
 @auth_required(login_url='/sign-in/')
+@garage_required
 class GarageWorkerListView(View):
     def get(self, request):
         # Fetch garage ID for the current user
@@ -176,7 +177,7 @@ class GarageWorkerListView(View):
         return render(request, 'garage/workers.html', {'workers': worker_data})
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@garage_required
 class GarageUpdateView(View):
     def get(self, request, garage_id):
         """ Load the same create page but pre-fill it for update """
@@ -231,7 +232,7 @@ class GarageUpdateView(View):
 
 
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@garage_required
 class GarageDeleteView(View):
     def post(self, request, garage_id):
         """ Delete garage and redirect to home page """
@@ -240,13 +241,18 @@ class GarageDeleteView(View):
         garage.save()
         messages.success(request, "Garage deleted successfully!")
         return redirect('home')
-    
-
+   
+     
+@auth_required(login_url='/sign-in/')
+@garage_required
 class GarageBillsListView(View):
     def get(self,request):
         bills_data=booking_service.get_bills_garage(request.user.id)
         return render(request,'garage/garage_bills.html',{'bills_data':bills_data})
-    
+
+
+@auth_required(login_url='/sign-in/')
+@garage_required    
 class GarageBillReceipeView(View):
     def get(self, request, booking_id):
         bill_data = booking_service.get_bill_details_by_booking_id(booking_id)
