@@ -5,7 +5,10 @@ from ..services import user_service, garage_service, workers_service, payment_se
 from django.http import JsonResponse
 from django.contrib import messages
 from ..constants.success_message import SuccessMessage
+from ..constants.error_message import ErrorMessage
 from ..decorators import auth_required, garage_required,worker_required
+
+
 
 @auth_required(login_url='/sign-in/')
 @worker_required
@@ -65,6 +68,7 @@ class WorkerCreateView(View):
         else:
             messages.error(request, ErrorMessage.E00017.value)
 
+
 @auth_required(login_url='/sign-in/')
 @worker_required
 class WorkerUpdateView(View):
@@ -115,6 +119,8 @@ class WorkerPaymentListView(View):
 
         return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
+
+    
 @auth_required(login_url='/sign-in/')
 class CheckWorkerStatus(View):
     def get(self, request):
@@ -122,6 +128,8 @@ class CheckWorkerStatus(View):
         is_worker = workers_service.is_user_a_garage_worker(user_id)
         
         return JsonResponse({"is_worker": is_worker})
+    
+
     
 @auth_required(login_url='/sign-in/')
 @garage_required 
@@ -149,6 +157,8 @@ class AssignedWorkerCreateView(View):
         
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+        
+        
     
 @auth_required(login_url='/sign-in/')
 @worker_required
