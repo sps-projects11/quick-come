@@ -82,6 +82,7 @@ urlpatterns = [
     path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt'),
 
     # Workers
+    path('worker/work/<int:work_id>/', views.WorkerWorkRecieptView.as_view(), name='worker_work_details'),
     path('worker/<int:worker_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
     path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
     path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),

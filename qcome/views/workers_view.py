@@ -1,7 +1,7 @@
 import json
 from django.views import View
 from django.shortcuts import render,redirect
-from ..services import user_service, garage_service, workers_service, payment_service,booking_service
+from ..services import user_service, garage_service, workers_service, payment_service,booking_service,work_service
 from ..models import Worker
 from django.http import JsonResponse
 
@@ -106,8 +106,15 @@ class AssignedWorkerCreateView(View):
             booking.assigned_worker = worker
             booking.save()
 
+            work_service.work_create(booking,booking.assigned_worker,booking.customer)
             return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
         
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
-        
+    
+
+class WorkerWorkRecieptView(View):
+    def get(self,request,work_id):
+        print("work_id ",work_id)
+        work = work_service.get_work_by_id(work_id)
+        return render(request,'worker/work/work_details.html',{'work_data':work})

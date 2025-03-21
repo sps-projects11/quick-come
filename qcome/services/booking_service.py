@@ -1,7 +1,8 @@
 from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
-from qcome.constants.default_values import Vehicle_Type
+from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
+from qcome.services import payment_service
 
 
 def get_booking_list():
@@ -16,9 +17,17 @@ def get_booking_list():
         service_ids = booking.service  # List of service IDs
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
-
+        booking.status= Status(get_booking_status(booking.id)).name
     return bookings
 
+def get_booking_status(booking_id):
+    status = Work.objects.filter(booking=booking_id,is_active=True).values('status').first()
+    if status:
+        status = status['status']
+        print(status)
+    else:
+        status = Status.PENDING.value
+    return status
 
 def create_booking(user, current_location, vehicle_type, service_id, description):
     """Allow only one active booking per user."""
@@ -167,6 +176,7 @@ def get_bills_garage(user_id):
             {   "booking_id":booking.id,
                 "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
                 "created_at":booking.created_at,
+                "status":PayStatus(payment_service.get_payment_status(booking.id)).name,
                 "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),
             }
             for booking in bookings
@@ -201,14 +211,29 @@ def get_bookings(worker_id):
     bookings=Booking.objects.filter(assigned_worker=worker_id,is_active=True).values('id','customer__first_name','customer__last_name','vehicle_type','current_location','service','description')
     booking_data=[]
     for booking in bookings:
-            booking_data.append({
-                'id': booking["id"],
-                'customer_name': f"{booking['customer__first_name']} {booking['customer__last_name']}",
-                'vehicle_type': Vehicle_Type(booking["vehicle_type"]).value,  # Assuming Vehicle_Type is an Enum
-                'current_location': booking["current_location"],
-                'description': booking["description"],
-                'services': list(ServiceCatalog.objects.filter(id__in=booking["service"]).values(
-                    'service_name', 'service_image', 'price'
-                ))
-            })
+        # Create the dictionary for this booking
+        booking_entry = {
+            'id': booking["id"],
+            'customer_name': f"{booking['customer__first_name']} {booking['customer__last_name']}",
+            'vehicle_type': Vehicle_Type(booking["vehicle_type"]).value,  # Assuming Vehicle_Type is an Enum
+            'current_location': booking["current_location"],
+            'description': booking["description"],
+            'services': list(ServiceCatalog.objects.filter(id__in=booking["service"]).values(
+                'service_name', 'service_image', 'price'
+            )),
+        }
+
+        # Add the work_id to the booking entry
+        work_id = get_work_id(booking["id"])
+        booking_entry['work_id'] = work_id
+
+        # Append the updated entry to booking_data
+        booking_data.append(booking_entry)
+    print(booking_data)
+
     return booking_data
+
+def get_work_id(booking_id):
+    work_id = Work.objects.filter(booking=booking_id).values('id').first()
+    work_id = work_id['id']
+    return work_id

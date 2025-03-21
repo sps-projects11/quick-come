@@ -1,0 +1,32 @@
+{% extends "worker/index.html" %}
+{% load static %}
+{% block title %}Payment Receipt{% endblock %}
+
+{% block content %}
+   <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
+   <div class="wrapper">
+    <div class="container">
+        <div class="receipt-header">
+            <i class="fas fa-arrow-left back-btn" onclick="window.location.href ='{% url 'home' %}' "></i>
+            <h3 style="font-size: 30px;font-weight: bold;">Work Details</h3>
+        </div>
+        <div class="receipt-content">
+            <div class="item"><strong>Work ID:</strong> <span>{{ work_data.id }}</span></div>
+            <div class="item"><strong>Customer:</strong> <span>{{ work_data.customer_name }}</span></div>
+            <div class="item"><strong>Status:</strong> <span>{{ work_data.status }}</span></div>
+            <div class="item"><strong>Location:</strong> <span>{{ work_data.location }}</span></div>
+            
+            <div class="item">
+                <strong>Services:</strong>
+                <ul>
+                    {% for service in work_data.services %}
+                        <li>{{ service.service_name }} - ${{ service.price }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <a href="{% url 'home' %}" class="btn">Back to Home</a>
+    </div>
+</div>
+
+{% endblock %}

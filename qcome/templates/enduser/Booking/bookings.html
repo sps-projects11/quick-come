@@ -17,8 +17,8 @@
                 <p class="date-time"><i class="bi bi-calendar2-event-fill"></i> {{ booking.created_at|date:"Y-m-d H:i" }}</p>
                 <p class="location"><i class="bi bi-geo-alt-fill"></i> {{ booking.current_location }}</p>
             </div>
-            <div class="status {% if booking.is_active %}activee{% else %}cancelled{% endif %}">
-                {{ booking.is_active|yesno:"Active,Cancelled" }}
+            <div class="status">
+                {{booking.status}}
             </div>
         </a>
         {% empty %}
