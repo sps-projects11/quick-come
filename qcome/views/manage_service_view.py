@@ -2,10 +2,8 @@ from django.views import View
 from django.shortcuts import render, redirect
 from ..services import service_service 
 from ..constants import Role
-import os
-import hashlib
-from django.conf import settings
 from django.http import HttpResponse
+from qcome.package.file_management import save_uploaded_file
 
 class ManageServiceList(View):
     def get(self, request):
@@ -25,37 +23,7 @@ class ManageServiceListCreate(View):
             price = request.POST.get('price', '')
             
             service_image_file = request.FILES.get('service_image')
-            service_image_path = ''  # Default to empty if no file is provided
-            
-            if service_image_file:
-                # Define the static directory path where you want to save the image in your service folder
-                static_service_catalog_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'service_catalog_img')
-                # Create the directory if it doesn't exist
-                if not os.path.exists(static_service_catalog_img_dir):
-                    os.makedirs(static_service_catalog_img_dir)
-                
-                # Compute a hash of the file's content
-                md5_hash = hashlib.md5()
-                for chunk in service_image_file.chunks():
-                    md5_hash.update(chunk)
-                file_hash = md5_hash.hexdigest()
-                
-                # Get the original file extension (e.g. .jpg, .png)
-                _, ext = os.path.splitext(service_image_file.name)
-                new_file_name = f"{file_hash}{ext}"
-                file_path = os.path.join(static_service_catalog_img_dir, new_file_name)
-                
-                # Check if a file with this hash already exists
-                if not os.path.exists(file_path):
-                    # Rewind the file pointer since we've read the file for hashing
-                    service_image_file.seek(0)
-                    # Save the file in chunks
-                    with open(file_path, 'wb+') as destination:
-                        for chunk in service_image_file.chunks():
-                            destination.write(chunk)
-                
-                # Set the URL for the saved image (using the static URL pointing to the service folder)
-                service_image_path = f'/static/all-Pictures/service_catalog_img/{new_file_name}'
+            service_image_path = save_uploaded_file(service_image_file, 'service-catalog-image')
             
             # Save the service record using your service_create helper function
             service_service.service_create(user, service_name, service_image_path, spare_part, price)

@@ -1,0 +1,274 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <!-- Welcome Header -->
+  <header class="mb-4 text-center">
+    <h1>Welcome, Admin</h1>
+    <p>Your admin panel provides an overview of key metrics and recent activity.</p>
+  </header>
+  
+  <!-- Metrics Section -->
+  <div class="row mb-4">
+    <!-- Total Users -->
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow-sm metric-card h-100">
+        <div class="card-body">
+          <i class="fas fa-users fa-3x mb-2 text-primary"></i>
+          <h4 class="card-title">Total Users</h4>
+          <p class="card-text fs-4">{{ data.total_users }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Total Admins -->
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow-sm metric-card h-100">
+        <div class="card-body">
+          <i class="fas fa-user-shield fa-3x mb-2 text-danger"></i>
+          <h4 class="card-title">Admins</h4>
+          <p class="card-text fs-4">{{ data.total_admins }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Total Garages -->
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow-sm metric-card h-100">
+        <div class="card-body">
+          <i class="fas fa-warehouse fa-3x mb-2 text-warning"></i>
+          <h4 class="card-title">Garages</h4>
+          <p class="card-text fs-4">{{ data.total_garages }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Total Workers -->
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow-sm metric-card h-100">
+        <div class="card-body">
+          <i class="fas fa-user-tie fa-3x mb-2 text-success"></i>
+          <h4 class="card-title">Workers</h4>
+          <p class="card-text fs-4">{{ data.total_workers }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Total Payments (Summary Card) -->
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow-sm metric-card h-100">
+        <div class="card-body">
+          <i class="fa-solid fa-indian-rupee-sign fa-3x mb-2 text-info"></i>
+          <h4 class="card-title">Total Revenue</h4>
+          <p class="card-text fs-4">₹ {{ data.total_revenue }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Charts Section -->
+  <div class="row mb-4">
+    <div class="col-md-6 mb-4">
+      <h2 class="mb-3">Weekly Bookings (Line Chart)</h2>
+      <canvas id="weeklyLineChart"></canvas>
+    </div>
+    <div class="col-md-6 mb-4">
+      <h2 class="mb-3">Monthly Overview (Bar Chart)</h2>
+      <canvas id="monthlyBarChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- Recent Bookings Section -->
+  <section class="mb-4">
+    <h2 class="mb-3">Recent Bookings</h2>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Booking ID</th>
+            <th>Customer Name</th>
+            <th>Service</th>
+            <th>Status</th>
+            <th>Date/Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#101</td>
+            <td>John Doe</td>
+            <td>Oil Change</td>
+            <td><span class="badge bg-success">Completed</span></td>
+            <td>2025-03-20 10:30 AM</td>
+          </tr>
+          <tr>
+            <td>#102</td>
+            <td>Jane Smith</td>
+            <td>Tire Replacement</td>
+            <td><span class="badge bg-warning">Pending</span></td>
+            <td>2025-03-20 11:00 AM</td>
+          </tr>
+          <tr>
+            <td>#103</td>
+            <td>Michael Johnson</td>
+            <td>Brake Repair</td>
+            <td><span class="badge bg-danger">Cancelled</span></td>
+            <td>2025-03-20 12:15 PM</td>
+          </tr>
+          <tr>
+            <td>#104</td>
+            <td>Emily Davis</td>
+            <td>Car Wash</td>
+            <td><span class="badge bg-primary">In Progress</span></td>
+            <td>2025-03-20 1:00 PM</td>
+          </tr>
+          <tr>
+            <td>#105</td>
+            <td>Chris Brown</td>
+            <td>Engine Check</td>
+            <td><span class="badge bg-success">Completed</span></td>
+            <td>2025-03-20 2:30 PM</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- Include Chart.js via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // WEEKLY LINE CHART with detailed booking data
+  var weeklyLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  var totalBookings = [30, 40, 35, 50, 45, 55, 60];
+  var confirmedBookings = [25, 30, 28, 42, 38, 48, 52];
+  var cancelledBookings = [5, 10, 7, 8, 7, 7, 8];
+
+  var ctxWeekly = document.getElementById('weeklyLineChart').getContext('2d');
+  var weeklyLineChart = new Chart(ctxWeekly, {
+    type: 'line',
+    data: {
+      labels: weeklyLabels,
+      datasets: [
+        {
+          label: 'Total Bookings',
+          data: totalBookings,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Confirmed Bookings',
+          data: confirmedBookings,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Cancelled Bookings',
+          data: cancelledBookings,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: false,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: {
+        duration: 1000,
+        easing: 'easeInOutQuart'
+      },
+      plugins: {
+        tooltip: {
+          mode: 'index',
+          intersect: false
+        },
+        title: {
+          display: true,
+          text: 'Weekly Booking Overview'
+        }
+      },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Days of the Week'
+          }
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Number of Bookings'
+          },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // MONTHLY BAR CHART with static data
+  var monthlyLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var monthlyUsers = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
+  var monthlyGarages = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+  var monthlyWorkers = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+  var ctxMonthly = document.getElementById('monthlyBarChart').getContext('2d');
+  var monthlyBarChart = new Chart(ctxMonthly, {
+    type: 'bar',
+    data: {
+      labels: monthlyLabels,
+      datasets: [
+        {
+          label: 'Users',
+          data: monthlyUsers,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Garages',
+          data: monthlyGarages,
+          backgroundColor: 'rgba(255, 206, 86, 0.6)',
+          borderColor: 'rgba(255, 206, 86, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Workers',
+          data: monthlyWorkers,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: {
+        duration: 1000,
+        easing: 'easeInOutQuart'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}
+
+<style>
+  /* Additional CSS for interactive hover effects on metric cards */
+  .metric-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  }
+</style>

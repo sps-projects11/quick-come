@@ -22,13 +22,25 @@ urlpatterns = [
     path('admin/profile/', views.AdminProfileView.as_view(), name='myadmin_profile'),
     path('admin/profile/update', views.AdminProfileUpdateView.as_view(), name='myadmin_profile_update'),
     path('admin/password/update', views.AdminPasswordUpdateView.as_view(), name='myadmin_password_update'),
-    path('admin/dashboard', views.AsminDashboard.as_view(), name='admin_dashboard'),
+    path('admin/dashboard', views.AdminHomeView.as_view(), name='admin_dashboard'),
 
     # Admin-User Management
     path('admin/users/', views.ManageUsersListView.as_view(), name='manage_users'),
     path('admin/users/create', views.ManageUsersCreateView.as_view(), name='manage_user_create'),
     path('admin/<int:user_id>/profile', views.ManageUserUpdateView.as_view(), name='manage_user_update'),
     path('admin/<int:user_id>/profile/toggle', views.ManageUserToggleView.as_view(), name='manage_user_toggle'),
+
+    # Admin-Garage Management
+    path('admin/garage/', views.ManageGarageListView.as_view(), name='manage_garages_list'),
+    path('admin/garage/create', views.ManageGarageCreateView.as_view(), name='manage_garage_create'),
+    path('admin/garage/<int:garage_id>/update', views.ManageGarageUpdateView.as_view(), name='manage_garage_update'),
+    path('admin/<int:garage_id>/garage/toggle', views.ManageGarageToggleView.as_view(), name='manage_garage_toggle'),
+
+    # Admin-Worker Management
+    path('admin/worker/', views.ManageWorkerListView.as_view(), name='manage_worker_list'),
+    path('admin/worker/create', views.ManageWorkerCreateView.as_view(), name='manage_worker_create'),   
+    path('admin/worker/<int:worker_id>/update', views.ManageWorkerUpdateView.as_view(), name='manage_worker_update'),
+    path('admin/worker/<int:worker_id>/toggle', views.ManageWorkerToggleView.as_view(), name='manage_worker_toggle'),
 
     # Admin-Service Management
     path('admin/service/', views.ManageServiceList.as_view(), name='manage_service_list'),
@@ -38,12 +50,6 @@ urlpatterns = [
 
     # Admin-Payment Management
     path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
-
-    # Admin-Garage Management
-    path('admin/garage/', views.ManageGarageListView.as_view(), name='manage_garages_list'),
-    path('admin/garage/create', views.ManageGarageCreateView.as_view(), name='manage_garage_create'),
-    path('admin/garage/<int:garage_id>/update', views.ManageGarageUpdateView.as_view(), name='manage_garage_update'),
-    path('admin/<int:garage_id>/garage/toggle', views.ManageGarageToggleView.as_view(), name='manage_garage_toggle'),
 
     # Theme
     path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),

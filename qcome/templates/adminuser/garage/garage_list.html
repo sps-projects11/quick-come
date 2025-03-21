@@ -31,7 +31,8 @@
       <tr id="garage-row-{{ garage.id }}">
         <td>{{ garage.id }}</td>
         <td>
-          <img src="{{ garage.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" alt="Garage Image" class="rounded" width="50" height="50">
+          <img src="{{ garage.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" 
+               alt="Garage Image" class="rounded" width="50" height="50">
         </td>
         <td>{{ garage.garage_name }}</td>
         <td>{{ garage.garage_owner_name }}</td>
@@ -53,35 +54,34 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="9" class="text-center">No garages found.</td>
+        <td colspan="10" class="text-center">No garages found.</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-
 <script>
   $(document).ready(function(){
     $('.garage-toggle').change(function(){
-      var checkbox = $(this);
-      var garageId = checkbox.data('garage-id');
-      var isActive = checkbox.is(':checked');
-      var td = checkbox.closest('td');
-      var labelActive = td.find('.toggle-label-active');
-      var labelDeactivate = td.find('.toggle-label-deactivate');
+      const checkbox = $(this);
+      const garageId = checkbox.data('garage-id');
+      const isActive = checkbox.is(':checked');
+      const td = checkbox.closest('td');
+      const labelActive = td.find('.toggle-label-active');
+      const labelDeactivate = td.find('.toggle-label-deactivate');
       
       // Update label styling immediately
       if(isActive){
-         labelActive.addClass('active-label');
-         labelDeactivate.removeClass('active-label');
+        labelActive.addClass('active-label');
+        labelDeactivate.removeClass('active-label');
       } else {
-         labelDeactivate.addClass('active-label');
-         labelActive.removeClass('active-label');
+        labelDeactivate.addClass('active-label');
+        labelActive.removeClass('active-label');
       }
 
       // Construct the URL using the garage ID.
-      var toggleUrl = '{% url "manage_garage_toggle" 0 %}'.replace("0", garageId);
+      const toggleUrl = '{% url "manage_garage_toggle" 0 %}'.replace("0", garageId);
 
       $.ajax({
         url: toggleUrl,
@@ -98,11 +98,11 @@
           // Revert the checkbox state if there is an error
           checkbox.prop('checked', !isActive);
           if(isActive){
-              labelDeactivate.addClass('active-label');
-              labelActive.removeClass('active-label');
+            labelDeactivate.addClass('active-label');
+            labelActive.removeClass('active-label');
           } else {
-              labelActive.addClass('active-label');
-              labelDeactivate.removeClass('active-label');
+            labelActive.addClass('active-label');
+            labelDeactivate.removeClass('active-label');
           }
         }
       });
@@ -116,6 +116,7 @@
     text-align: center;
     vertical-align: middle;
   }
+
   /* Toggle switch styling */
   .switch {
     position: relative;

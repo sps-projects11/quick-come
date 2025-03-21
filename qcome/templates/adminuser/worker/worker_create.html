@@ -1,0 +1,214 @@
+{% extends "adminuser/base.html" %}
+{% load static %}
+{% block title %}Quick Come Admin-Worker Create{% endblock %}
+
+{% block navbar_extra %}  
+  <a class="navbar-brand position-absolute start-50 translate-middle-x" href="{% url 'manage_worker_list' %}">
+    Workers
+  </a> 
+{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="min-height: 80vh;">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Create Worker</h2>
+          <form method="post" enctype="multipart/form-data" id="workerForm" novalidate>
+            {% csrf_token %}
+
+            <!-- Profile Photo Section with Plus Icon and Remove Option -->
+            <div class="mb-3 text-center">
+              <div class="profile-picture-container position-relative d-inline-block" style="cursor: default;">
+                <!-- Default image -->
+                <img 
+                  src="{{ '/static/all-Pictures/Feature boxes/location.jpg' }}" 
+                  alt="Profile Photo" 
+                  id="profilePreview" 
+                  class="rounded-circle" 
+                  style="width:150px; height:150px; object-fit:cover; transition: all 0.3s ease;"
+                >
+                <div 
+                  class="profile-plus-icon position-absolute" 
+                  style="bottom: 10px; right: 10px; z-index: 10; cursor: pointer;"
+                >
+                  <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+                </div>
+                <!-- Remove icon: shown only when the container has "has-image" class -->
+                <div id="removePhotoIcon" class="remove-photo-icon">
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
+              <!-- Hidden file input -->
+              <input 
+                type="file" 
+                class="d-none" 
+                id="id_worker_profile_photo" 
+                name="worker_profile_photo" 
+                accept="image/*"
+              >
+            </div>
+
+            <!-- Select Worker -->
+            <div class="form-group mb-3">
+              <label for="id_worker_user">Worker</label>
+              <select class="form-control" id="id_worker_user" name="worker_user" required>
+                <option value="">Select Worker to Create</option>
+                {% for worker in available_worker %}
+                  <option value="{{ worker.id }}">
+                    {{ worker.first_name }}{% if worker.middle_name %} {{ worker.middle_name }}{% endif %} {{ worker.last_name }}
+                  </option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">Please select a worker.</div>
+            </div>
+
+            <!-- Select Garage -->
+            <div class="form-group mb-3">
+              <label for="id_garage">Garage</label>
+              <select class="form-control" id="id_garage" name="worker_garage" required>
+                <option value="">Select Garage</option>
+                {% for garage in all_garage %}
+                  <option value="{{ garage.id }}">
+                    {{ garage.garage_name }}
+                  </option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">Please select a garage.</div>
+            </div>
+
+            <!-- Worker Phone -->
+            <div class="form-group mb-3">
+              <label for="id_worker_phone">Worker Phone</label>
+              <input 
+                type="text" 
+                name="worker_phone" 
+                id="id_worker_phone" 
+                class="form-control" 
+                placeholder="Enter worker phone" 
+                required
+              >
+              <div class="invalid-feedback">Please enter the worker phone.</div>
+            </div>
+
+            <!-- Worker Experience -->
+            <div class="form-group mb-3">
+              <label for="id_worker_experience">Worker Experience</label>
+              <input 
+                type="text" 
+                name="experience" 
+                id="id_worker_experience" 
+                class="form-control" 
+                placeholder="Enter worker experience" 
+                required
+              >
+              <div class="invalid-feedback">Please enter worker experience.</div>
+            </div>
+            
+            <!-- Worker Expertise -->
+            <div class="form-group mb-3">
+              <label for="id_worker_expertise">Worker Expertise</label>
+              <input 
+                type="text" 
+                name="expertise" 
+                id="id_worker_expertise" 
+                class="form-control" 
+                placeholder="Enter worker expertise" 
+                required
+              >
+              <div class="invalid-feedback">Please enter worker expertise.</div>
+            </div>
+            
+            <!-- Submit Button with Spinner -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="submitBtnText">Create Worker</span>
+                <span id="submitBtnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom CSS for Remove Icon -->
+<style>
+  .remove-photo-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    padding: 3px;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+  }
+  .profile-picture-container.has-image:hover .remove-photo-icon {
+    display: block;
+  }
+  .remove-photo-icon i {
+    color: #fff;
+    font-size: 0.8rem;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const profileContainer = document.querySelector('.profile-picture-container');
+    const fileInput = document.getElementById('id_worker_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+    const removePhotoIcon = document.getElementById('removePhotoIcon');
+    const plusIcon = document.querySelector('.profile-plus-icon');
+    const defaultImage = "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}";
+
+    // Clicking the plus icon opens the file dialog
+    plusIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+
+    // When file is selected, update preview and add "has-image" class
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          profilePreview.src = e.target.result;
+          profileContainer.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Clicking the remove icon clears the file and resets the image
+    removePhotoIcon.addEventListener('click', (event) => {
+      event.stopPropagation();
+      fileInput.value = "";
+      profilePreview.src = defaultImage;
+      profileContainer.classList.remove('has-image');
+    });
+
+    // Form validation + interactive submit button
+    const form = document.getElementById('workerForm');
+    form.addEventListener('submit', (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        form.classList.add('was-validated');
+      } else {
+        const submitBtn = document.getElementById('submitBtn');
+        const submitBtnText = document.getElementById('submitBtnText');
+        const submitBtnSpinner = document.getElementById('submitBtnSpinner');
+        submitBtnSpinner.classList.remove('d-none');
+        submitBtnText.textContent = "Processing...";
+        submitBtn.disabled = true;
+      }
+    });
+  });
+</script>
+{% endblock %}
