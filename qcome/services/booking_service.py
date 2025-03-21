@@ -5,9 +5,9 @@ from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
 from qcome.services import payment_service
 
 
-def get_booking_list():
+def get_booking_list(user):
     """Fetch all active bookings with service names."""
-    bookings = Booking.objects.filter(is_active=True)
+    bookings = Booking.objects.filter(customer=user,is_active=True)
 
     for booking in bookings:
         # Add customer details
