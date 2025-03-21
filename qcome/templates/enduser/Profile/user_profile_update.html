@@ -1,5 +1,5 @@
 {% extends "enduser/base.html" %}
-{% block title %}Update Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 {% load static %}
 {% block content %}
 <section id="profile-form" class="container">
@@ -9,13 +9,14 @@
             {% csrf_token %}
             <div class="image-card">
                 <div class="text-center mb-4">
-                    <div class="position-relative d-inline-block" style="width: 130px; height: 130px; background-color: black; border-radius: 50%;">
-                        <img id="profilePic" src="#" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover; background-color:black;">
-                        <button type="button" id="uploadBtn" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle" onclick="selectImage()">+</button>
+                    <div class="position-relative d-inline-block" style="width: 125px; height: 125px; background-color: black; border-radius: 50%;">
+                        <img id="profilePic" src="{{ user_details.profile_photo_url }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        <button type="button" class="btn btn-primary position-absolute top-50 start-50 translate-middle rounded-circle" onclick="selectImage()">+</button>
                         <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <input type="text" name="first_name" placeholder="First Name" value="{{ user_details.first_name }}">
             </div>
@@ -44,65 +45,54 @@
 
             <div class="d-flex justify-content-center gap-3">
                 <button type="submit" class="submit-button">Update</button>
-                <a href="javascript:history.back()" class="submit-button cancel-button" style="text-decoration:none;">Cancel</a>
+                <a href="javascript:history.back()" class="submit-button cancel-button">Cancel</a>
             </div>
         </form>
     </div>
 </section>
 
 <style>
-    /* General Form Container Responsiveness */
+    /* Profile Form Styles */
     .form-container {
         background-color: white;
-        padding: 1.5rem;
+        padding: 2rem;
         border-radius: 1rem;
         box-shadow: var(--shadow);
         max-width: 600px;
-        margin: 20px auto;
+        margin: 40px auto;
         text-align: center;
     }
 
     .form-container h2 {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         color: #343a40;
     }
 
     .form-group {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .form-group input,
     .form-group select {
         width: 100%;
-        padding: 0.5rem;
+        padding: 0.75rem;
         border: 1px solid #e5e7eb;
         border-radius: 0.5rem;
         font-size: 1rem;
     }
 
     .image-card {
-        margin-bottom: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .image-card img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 50%;
+        margin-bottom: 1.5rem;
     }
 
     /* Buttons */
-    .submit-button, 
-    .cancel-button {
+    .submit-button {
         background-color: var(--primary-color);
         color: var(--white);
-        padding: 0.75rem 1.5rem;
+        padding: 1rem 2rem;
         border: none;
         border-radius: 0.5rem;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         cursor: pointer;
         transition: background-color 0.3s ease;
@@ -111,6 +101,7 @@
 
     .cancel-button {
         background-color: #dc3545;
+        color: white;
     }
 
     .submit-button:hover {
@@ -120,72 +111,9 @@
     .cancel-button:hover {
         background-color: #c82333;
     }
-
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-        .form-container {
-            padding: 1 rem;
-        }
-
-        .form-container h2 {
-            font-size: 1.5rem;
-        }
-
-        .image-card {
-            flex-direction: column;
-        }
-
-        .image-card img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .submit-button,
-        .cancel-button {
-            width: 100%;
-        }
-
-        .d-flex {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .gap-3 {
-            gap: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .form-container {
-            padding: 0.5rem;
-            max-width: 90%;
-        }
-
-        .form-container h2 {
-            font-size: 1.3rem;
-        }
-
-        .submit-button,
-        .cancel-button {
-            padding: 0.5rem;
-            font-size: 0.9rem;
-        }
-    }
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const profilePic = document.getElementById("profilePic");
-        const uploadBtn = document.getElementById("uploadBtn");
-        const imageInput = document.getElementById("imageInput");
-
-        if (!profilePic.src || profilePic.src.includes("#")) {
-            uploadBtn.style.display = "block";
-        } else {
-            uploadBtn.style.display = "none";
-        }
-    });
-
     function selectImage() {
         document.getElementById("imageInput").click();
     }
@@ -196,7 +124,6 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 document.getElementById("profilePic").src = e.target.result;
-                document.getElementById("uploadBtn").style.display = "none";
             };
             reader.readAsDataURL(file);
         }

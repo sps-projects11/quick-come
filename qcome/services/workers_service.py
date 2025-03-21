@@ -74,3 +74,8 @@ def worker_toggle(worker_id):
 
 def get_worker_id(user):
     return Worker.objects.get(worker=user)
+
+def get_check(user):
+    return Worker.objects.filter(worker=user).exists()
+
+    

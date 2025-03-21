@@ -7,7 +7,10 @@ from ..constants.error_message import ErrorMessage
 from ..package.response import success_response,error_response
 from django.contrib import messages
 from ..constants.success_message import SuccessMessage
+from ..decorators import auth_required, role_required, garage_required, worker_required
 
+@auth_required
+@worker_required
 class WorkerView(View):
     def get(self,request,worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
@@ -20,31 +23,49 @@ class WorkerView(View):
         return render(request,'worker/workers_profile.html',context)    
 
 class WorkerCreateView(View):
-    def get(self, request,worker_id):
+    def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
-        garage_details = user_service.get_all_garages() 
+        garage_details = user_service.get_all_garages()
+
         context = {
             'worker_details': worker_details,
             'user': request.user,
-            'garage_details':garage_details,
+            'garage_details': garage_details,
         }
         return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
 
     def post(self, request, worker_id):
-        worker_id = request.POST.get('worker_id')
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         worker_garage = request.POST.get('garage')
 
-        user = user_service.get_user(worker_id)
-        garage = garage_service.get_garage(worker_garage)
-        
-        workers_service.worker_create(user, expertise, experience, garage)
-        user_service.user_phone_create(user, worker_phone)
-        messages.success(request,SuccessMessage.S00022.value)
-        return redirect('worker',worker_id = worker_id)
+        # Validate essential fields
+        if not all([worker_id, worker_phone, experience, expertise, worker_garage]):
+            messages.error(request, "All fields are required.")
+            return redirect('worker', worker_id=worker_id)
 
+        user = user_service.get_user(worker_id)
+
+        if not user:
+            messages.error(request, "User not found.")
+            return redirect('worker', worker_id=worker_id)
+
+        is_worker = workers_service.is_user_a_garage_worker(user)
+
+        if not is_worker:
+            garage = garage_service.get_garage(worker_garage)
+            if not garage:
+                messages.error(request, "Garage not found.")
+                return redirect('worker', worker_id=worker_id)
+
+            workers_service.worker_create(user, expertise, experience, garage)
+            user_service.user_phone_create(user, worker_phone)
+            messages.success(request, SuccessMessage.S00022.value)
+        else:
+            messages.error(request, ErrorMessage.E00017.value)
+
+        return redirect('worker', worker_id=worker_id)
 
 class WorkerUpdateView(View):
     def get(self, request, worker_id):
