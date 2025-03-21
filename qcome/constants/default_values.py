@@ -17,6 +17,7 @@ class Status(Enum):
     WORKING = 3
     COMPLETED = 4
     CANCELLED = 5
+    FAILED = 6
 
     
 class Vehicle_Type(Enum):

@@ -22,7 +22,41 @@ def get_work_by_id(work_id):
                 'service_name', 'service_image', 'price'
             )),
         }
-    print(work_data)
     return work_data
+
+def update_work_status(work_id, work_status):
+    work = Work.objects.filter(id=work_id).first()
+    
+    if work:
+        # Ensure status is a valid choice, you might have a status enum
+        work.status = work_status
+        work.save()  # Save changes
+        return True
+    return False
+
+
+def get_statuss_work_id():
+    statuss = []
+    
+    # Iterate over the specific status values you want (e.g., 4, 5, 6)
+    for status_value in [4, 5, 6]:
+        if Status(status_value):  # If valid in the Status Enum
+            statuss.append({
+                'id': status_value,
+                'name': Status(status_value).name,  # Get status name
+            })
+    return statuss
+
+def is_work_complete(booking_id):
+    result=Work.objects.filter(booking=booking_id,is_active=True,status=Status.COMPLETED.value)
+    if result:
+        return True
+    return False
+
+def is_work_status_updatable(work_id):
+    res = Work.objects.filter(id=work_id, is_active=True, status=Status.ACCEPTED.value)
+    if res.exists():  # Check if any records match the filter
+        return True
+    return False
 
 

@@ -1,4 +1,4 @@
-{% extends "enduser/base.html" %}
+{% extends "worker/index.html" %}
 {% load static %}
 {% block title %}Payment Gateway{% endblock %}
 
@@ -7,7 +7,7 @@
    <script src="{% static 'js/payment.js' %}" defer></script>
 
    <div class="wrapper">
-      <div class="payment-container">
+      <div class="container payment-container">
          <h2>Make a Payment</h2>
          <div class="form-wrapper">
             <form id="paymentForm">

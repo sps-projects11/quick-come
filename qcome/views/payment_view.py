@@ -47,7 +47,7 @@ class PaymentCreateView(View):
         services=booking_service.get_services_by_id(booking_id)
         total_price=booking_service.total_price(services)
         payment = payment_service.get_current_payment(booking_id)
-        return render(request, 'enduser/payment/payment.html', {"payment": payment,'booking_id':booking_id,'total_price':total_price})
+        return render(request, 'worker/payment.html', {"payment": payment,'booking_id':booking_id,'total_price':total_price})
 
     """Create a payment"""
     def post(self, request, booking_id):
