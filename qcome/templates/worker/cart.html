@@ -18,7 +18,7 @@
                         <img src="{{ service.service_image }}" alt="Product" width="100">
                         <div class="item-details">
                             <h5>{{ service.service_name }}</h5>
-                            <p>${{ service.price }}</p>
+                            <p>₹{{ service.price }}</p>
                             <button class="remove-btn">Remove</button>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                 <button class="btn" onclick="openServiceModal()">Add Service</button>
         
                 <div class="cart-total">
-                    <h5>Total: ${{ total_price }}</h5>
+                    <h5>Total: ₹{{ total_price }}</h5>
                     
                 </div>
                 <div>

@@ -1,8 +1,10 @@
 import json
 from django.views import View
 from django.shortcuts import render,redirect
-from ..services import user_service, garage_service, workers_service, payment_service,booking_service
+from ..services import user_service, garage_service, workers_service, payment_service,booking_service,work_service
 from django.http import JsonResponse
+from ..constants.error_message import ErrorMessage
+from ..package.response import success_response,error_response
 from django.contrib import messages
 from ..constants.success_message import SuccessMessage
 
@@ -118,8 +120,50 @@ class AssignedWorkerCreateView(View):
             booking.assigned_worker = worker
             booking.save()
 
+            work_service.work_create(booking,booking.assigned_worker,booking.customer)
             return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
         
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+    
+
+class WorkerWorkRecieptView(View):
+    def get(self, request, work_id):
+        try:
+            print("work_id ", work_id)
+            # Fetch work details using the work_id
+            work = work_service.get_work_by_id(work_id)
+            is_updatable=work_service.is_work_status_updatable(work_id)
+            # Fetch status options (e.g., 4, 5, 6)
+            statuss = work_service.get_statuss_work_id()
+
+            if not work:
+                return JsonResponse({'message': 'Work not found', 'status': 'error'}, status=404)
+
+            # Pass work data and status options to the template
+            return render(request, 'worker/work/work_details.html', {'work_data': work, 'statuss': statuss, 'is_changable':is_updatable})
         
+        except Exception as e:
+            return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+
+    def post(self, request, work_id):  # Include work_id here
+        try:
+            data = json.loads(request.body)
+            print(data)
+            work_id = data.get('work_id')
+            status = data.get('status')
+            
+            if not work_id or not status:
+                return JsonResponse({'message': 'Invalid data provided', 'status': 'error'}, status=400)
+
+            work = work_service.get_work_by_id(work_id)
+            if not work:
+                return JsonResponse({'message': 'Work not found', 'status': 'error'}, status=404)
+
+            # Update work status
+            work_service.update_work_status(work_id, status)
+            
+            return JsonResponse({'message': 'Status updated successfully', 'status': 'success', 'updated_status': status})
+        
+        except Exception as e:
+            return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)

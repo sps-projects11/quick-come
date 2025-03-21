@@ -13,9 +13,11 @@ class Gender(Enum):
 
 class Status(Enum):
     PENDING = 1
-    IN_PROGRESS = 2
-    COMPLETED = 3
-    CANCELLED = 4
+    ACCEPTED=2
+    WORKING = 3
+    COMPLETED = 4
+    CANCELLED = 5
+    FAILED = 6
 
     
 class Vehicle_Type(Enum):

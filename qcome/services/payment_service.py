@@ -3,19 +3,19 @@ from django.shortcuts import get_object_or_404
 from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from ..constants import PayType
+from ..constants import PayType,PayStatus
 
     
 def get_all_payments_created_by(user_id):
     """Retrieve all payments"""
-    payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
+    payments = Payment.objects.filter(created_by=user_id, is_active=True,pay_status=PayStatus.COMPLETE.value).values(
         'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
     )
     return list(payments)
 
 def get_current_payment(booking_id):
     """Retrieve all payments"""
-    payment = Payment.objects.filter(booking_id=booking_id,is_active=True).values()
+    payment = Payment.objects.filter(booking_id=booking_id,is_active=True,pay_status=PayStatus.COMPLETE.value).values()
     return list(payment)
 
 def create_payment(request, booking_id, user_id):
@@ -48,7 +48,7 @@ def create_payment(request, booking_id, user_id):
             booking_id=booking,
             type=data.get('type'),
             amount=data.get('amount'),
-            pay_status=data.get('pay_status'),
+            pay_status=PayStatus.COMPLETE.value,
             created_by=user,
         )
 
@@ -109,7 +109,8 @@ def get_worker_payments(worker_user_id):
     for booking in all_bookings_by_worker:
         payment = Payment.objects.filter(
             booking_id=booking.id, 
-            is_active=True
+            is_active=True,
+            pay_status=PayStatus.COMPLETE.value
         ).first()  # Fetch a single matching payment
 
         if payment:
@@ -129,7 +130,7 @@ def get_worker_payments(worker_user_id):
 def get_all_payments():
     """Retrieve and customize all active payments."""
     # Use select_related to join Payment -> Booking -> assigned_worker -> worker (User)
-    payments = Payment.objects.filter(is_active=True)\
+    payments = Payment.objects.filter(is_active=True,pay_status=PayStatus.COMPLETE.value)\
         .select_related('booking_id__assigned_worker__worker')\
         .values(
             'id', 
@@ -182,3 +183,17 @@ def get_total_revenue():
     total_revenue = sum(qs) or 0  # Ensure 0 is returned if no records
     return total_revenue
 
+
+
+def get_total_revenue():
+    """Calculate the total revenue from all payments."""
+    qs = Payment.objects.filter(is_active=True).values_list('amount', flat=True).iterator()
+    total_revenue = sum(qs) or 0  # Ensure 0 is returned if no records
+    return total_revenue
+
+
+
+def get_payment_status(booking_id):
+    status=Payment.objects.filter(booking_id=booking_id,is_active=True).values('pay_status').first()
+    status=status['pay_status']
+    return status

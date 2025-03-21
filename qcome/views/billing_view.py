@@ -1,7 +1,7 @@
 from django.views import View
 from django.shortcuts import render
 from ..decorators import auth_required, worker_required
-from ..services import booking_service
+from ..services import booking_service,work_service
 from django.http import JsonResponse
 import json
 
@@ -10,18 +10,37 @@ import json
 @worker_required
 class BillingHomeView(View):
     def get(self, request):
-        booking = booking_service.get_booking_by_id(request.user.id)  # Get the booking object
+        # Attempt to retrieve the booking object
+        booking = booking_service.get_booking_by_id(request.user.id)
+        
+        # Check if the booking exists
         if not booking:
-            return render(request, 'worker/cart.html')  # No active booking
-
+            # If no booking is found, return the cart page or any other page indicating no active booking
+            return render(request, 'worker/cart.html')
+        
+        # Check if the work is completed (assuming booking exists here)
+        is_work_done = work_service.is_work_complete(booking.id)
+        
+        # If the work is not done, return the cart page
+        if not is_work_done:
+            return render(request, 'worker/cart.html')  # No active booking or work not completed
+        
+        # Get services associated with the booking
         services = booking_service.get_services_by_id(booking.id)
+        
+        # Calculate the total price for the services
         total_price = booking_service.total_price(services)
-        print("booking",booking)
+        
+        # Print the booking object (for debugging purposes)
+        print("booking", booking)
+        
+        # Return the rendered cart page with booking details
         return render(request, 'worker/cart.html', {
-            'booking_id': booking.id,  # ✅ Ensure it's an integer
+            'booking_id': booking.id,
             'services': services,
             'total_price': total_price  
         })
+
 
 @auth_required(login_url='/sign-in/')
 @worker_required

@@ -63,6 +63,7 @@ class BookingCreateView(View):
             return redirect('booking_create')
 
         if booking:
+            
             messages.success(request, "Booking created successfully!")
             return redirect('home')
 

@@ -1,4 +1,6 @@
-from ..models import Garage, Booking, ServiceCatalog
+from ..models import Garage, Booking, ServiceCatalog,Work
+from ..services import workers_service
+from qcome.constants.default_values import Vehicle_Type,Status
 
 def get_garage_bookings():
     """ Get all active bookings that are not assigned """
@@ -101,6 +103,41 @@ def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garag
 
     garage.save()
     return garage
+
+def get_all_garage_works(garage):
+    workers = workers_service.get_worker_of_garage(garage)
+    queryset = Booking.objects.filter(assigned_worker__in=workers).order_by('-created_at')
+
+    bookings = []
+
+    if queryset:
+        bookings = [
+            {
+                'id':booking.id,
+                'customer_name': f"{booking.customer.first_name} {booking.customer.last_name}",
+                'description':booking.description,
+                'customer_phone': booking.customer.phone,
+                'services': list(ServiceCatalog.objects.filter(id__in=booking.service).values_list("service_name", flat=True)),
+                'assigned_worker': f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}",
+                'vehicle_type':Vehicle_Type(booking.vehicle_type).name,
+                'current_location':booking.current_location,
+            }
+            for booking in queryset
+        ]
+
+        # Adding formatted service names
+        for booking in bookings:
+            booking['service_name'] = services_name(booking["services"])    
+            booking['status'] = Status(booking_status(booking["id"])).name if booking_status(booking["id"]) is not None else None
+    return bookings  # Return the modified list
+
+def services_name(services):
+    return ", ".join(services) if services else "No service"
+
+def booking_status(booking_id):
+    status = Work.objects.filter(booking=booking_id).values_list('status', flat=True)
+    return status.first() if status else None  # Return the first status if available
+
 
 def get_all_garages():
     return Garage.objects.all()
