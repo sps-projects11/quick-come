@@ -3,6 +3,8 @@ from django.views import View
 from django.shortcuts import render,redirect
 from ..services import user_service, garage_service, workers_service, payment_service,booking_service
 from django.http import JsonResponse
+from django.contrib import messages
+from ..constants.success_message import SuccessMessage
 
 class WorkerView(View):
     def get(self,request,worker_id):
@@ -38,7 +40,7 @@ class WorkerCreateView(View):
         
         workers_service.worker_create(user, expertise, experience, garage)
         user_service.user_phone_create(user, worker_phone)
-
+        messages.success(request,SuccessMessage.S00022.value)
         return redirect('worker',worker_id = worker_id)
 
 
@@ -61,6 +63,7 @@ class WorkerUpdateView(View):
         garage_id = request.POST.get('garage')
         
         workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id)
+        messages.success(request,SuccessMessage.S00023.value)
         return redirect('worker',worker_id = worker_id)  
 
 
@@ -69,6 +72,7 @@ class WorkerDeleteView(View):
         worker = workers_service.get_worker_details(worker_id)
         if worker:
             worker.delete()
+        messages.success(request,SuccessMessage.S00024.value)
         return redirect('home')
   
 

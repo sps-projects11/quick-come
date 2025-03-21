@@ -6,6 +6,8 @@ from ..constants import Role
 import os
 import hashlib
 from django.conf import settings
+from django.contrib import messages
+from ..constants.success_message import SuccessMessage
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -64,23 +66,19 @@ class EnduserProfileUpdate(View):
 
             user_service.update_user_details(user, mutable_post)  # Pass the modified request data
             return redirect('user_profile')
-
+        messages.success(request, SuccessMessage.S00020.value)
         return redirect('user_profile')
 
 
 
 class EnduserProfileDelete(View):
-    def get(self, request, user_id):
-        user_details = user_service.get_user_details(user_id)
-        context = {'user_details': user_details}
-        return render(request, 'enduser/profile/user_profile_delete.html', context)
-
     def post(self, request, user_id):
         user = user_service.get_user_details(user_id)
         if user:
             user.delete()
-            return redirect('user_profile')  
-        return redirect('user_profile')
+            messages.success(request, SuccessMessage.S00021.value)
+            return redirect('home')  
+        return redirect('home')
 
 
 

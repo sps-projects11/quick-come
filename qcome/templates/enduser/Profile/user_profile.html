@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "enduser/base.html" %}
     {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Quick Come{% endblock %}</title>
+  {% block title %}Profile{% endblock %}
+    {% block content %}
     <link rel="icon" type="image/png" href="{% static 'all-Pictures/logo.jpg' %}"> 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -17,10 +14,15 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f8f9fa;
+            background-color: aqua;
+            padding: 20px;
         }
         .profile-card {
-            max-width: 600px; 
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border: 1px solid black;
+            padding: 20px;
         }
         .profile-pic {
             width: 120px;
@@ -28,75 +30,52 @@
             object-fit: cover;
             border: 3px solid #007bff;
         }
+        @media(min-width:768px){
+            #drop{
+            width:80%;
+            margin-left:50px;
+            }
+        }
+        @media (max-width: 768px) {
+            .profile-buttons {
+                flex-direction: column;
+            }
+            .profile-buttons .btn, select.form-select {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
     </style>
-</head>
-<body>
-    <section id="header">
-        <div class="logo">
-            <a href="/"><img src="{% static 'all-Pictures/logo.jpg' %}" alt="logo"></a>
-        </div>
-        <div>
-            <ul id="navber">
-                <li><a class="active" href="/">Home</a></li>
-                <li><a href="/services/">Services</a></li>
-                <li><a href="/booking/">Booking Details</a></li>
-                <li><a href="/contact/">Contact</a></li>
-                <li><a href="/about/">About</a></li>
-                <form class="d-flex ms-3">
-                    <input class="form-control me-2" type="search" placeholder="Search">
-                </form>
-                <li id="lg-bag">
-                    <a id="profile-link" href="/sign-in/">
-                        <i class="fas fa-user-circle" style="font-size: 18px;"></i>
-                    </a>
-                </li>
-                <!-- Dropdown Menu (Initially Hidden) -->
-                <div id="profile-dropdown">
-                    <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-                    <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
-                </div>
-                <a href="#" id="close"><i class="fas fa-times"></i></a>
-            </ul>
-        </div>
-        <div id="mobile">
-            <a href="#"><i class="fas fa-search"></i></a>
-            <a id="profile-link" href="/sign-in/">
-                <i class="fas fa-user-circle"></i>
-            </a>
-            <!-- Dropdown Menu (Initially Hidden) -->
-            <div id="profile-dropdown">
-                <a href="/profile" style="display: block; padding: 8px;">Profile</a>
-                <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
-            </div>
-            <i id="bar" class="fas fa-outdent"></i>
-        </div>
-    </section>
-    <!-- Profile Container -->
-    <div class="profile-container" style="background-color:red;">
-        <div class="card shadow-lg p-4 profile-card" style=" width: 900px;background-color:green;">
+
+    <div class="profile-container">
+        <div class="card shadow-lg profile-card">
             <div class="d-flex justify-content-center mt-3">
                 <img src="{{ user.profile_photo_url }}" alt="Profile Picture" class="profile-pic rounded-circle">
             </div>
             <div class="card-body text-center">
-                <h5 class="card-title">{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</h5>
+                <h5 class="card-title">{{ user.first_name }} {{ user.middle_name|default:'' }} {{ user.last_name }}</h5>
                 <p class="card-text">
                     <strong>Email:</strong> {{ user.email }}<br>
-                    <strong>Phone:</strong> {{ user.phone }}<br>
+                    <strong>Phone:</strong> {{ user.phone|default:'' }}<br>
                     <strong>Gender:</strong> <span id="gender"></span><br>
                     <strong>Date of Birth:</strong> {{ user.dob }}
                 </p>
-                <select class="form-select mb-3" aria-label="Profile Options" onchange="redirect(this.value)">
+                <select class="form-select mb-3" id="drop" aria-label="Profile Options" onchange="redirect(this.value)" style="border:2px solid black;">
                     <option value="" selected>Be with us</option>
                     <option value="1">Connect as a garage owner</option>
                     <option value="2">Connect as a worker</option>
                 </select>
-                <div class="d-flex justify-content-center gap-3">
+                <div class="d-flex justify-content-center gap-3 profile-buttons">
                     <a href="{% url 'profile_update' user_id=user.id %}" class="btn btn-primary">Edit Profile</a>
-                    <a href="{% url 'profile_delete' user_id=user.id %}" class="btn btn-danger">Delete</a>
+                    <form method="POST" action="{% url 'profile_delete' user_id=user.id %}" onsubmit="return confirm('Are you sure you want to delete this worker?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
     <footer class="section-p1">
         <div class="col">
             <img class="logo" src="{% static 'all-Pictures/logo.jpg' %}" alt="logo">
@@ -156,8 +135,7 @@
     
         function redirect(value) {
             if (value === '1') {
-                // window.location.href = `/garage/${garageID}/create/`;
-                window.location.href = "/garage/create/"
+                window.location.href = "/garage/create/";
 
             } else if (value === '2') {
                 const workerID = "{{ worker_id|default:user.id }}"; 
@@ -174,5 +152,4 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    {% endblock %}
