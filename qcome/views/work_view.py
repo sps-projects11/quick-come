@@ -1,12 +1,12 @@
 from django.views import View
 from django.shortcuts import render
-from ..services import booking_service,garage_service,workers_service,work_service
+from ..services import booking_service,garage_service
 from ..constants.default_values import Vehicle_Type
-from qcome.decorators import auth_required, role_required
-import json
-from django.http import JsonResponse
+from qcome.decorators import auth_required,garage_required,worker_required
 
 
+@auth_required(login_url='/sign-in/')
+@worker_required
 class WorkListView(View):
     def get(self, request):
         bookings = booking_service.get_booking_worker(request.user.id)
@@ -34,6 +34,7 @@ class WorkUpdate(View):
     
 
 @auth_required(login_url='/sign-in/')
+@garage_required
 class AllWorkListView(View):
     def get(self,request):
         garage= garage_service.get_garage_id(request.user.id)

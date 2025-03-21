@@ -1,10 +1,12 @@
 from django.views import View
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
 from django.contrib import messages
 from ..models import Booking,ServiceCatalog
 from ..services import booking_service 
+from ..decorators import auth_required, role_required
+
 
 
 # ✅ View to Show Booking History (List of Bookings)
@@ -75,7 +77,6 @@ class BookingCreateView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
-
 class BookingUpdateView(View):
     def get(self, request, booking_id):
         """Show the booking form with existing booking data for update."""

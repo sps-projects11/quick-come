@@ -23,7 +23,8 @@ class EnduserProfileCreate(View):
         return
     
 
-
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class EnduserProfileUpdate(View):
     def get(self, request, user_id):
         user_details = user_service.get_user_details(user_id)
@@ -70,7 +71,8 @@ class EnduserProfileUpdate(View):
         return redirect('user_profile')
 
 
-
+@auth_required(login_url='/sign-in/')
+@role_required(Role.END_USER.value, page_type='enduser')
 class EnduserProfileDelete(View):
     def post(self, request, user_id):
         user = user_service.get_user_details(user_id)

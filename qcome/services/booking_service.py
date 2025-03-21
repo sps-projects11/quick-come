@@ -165,7 +165,7 @@ def total_price(services):
 
 
 def get_booking(booking_id):
-    return Booking.objects.filter(id=booking_id).select_related('assigned_worker').first()
+    return Booking.objects.filter(id=booking_id).first()
 
 def get_bills_garage(user_id):
     bookings = Booking.objects.filter(assigned_worker__garage__garage_owner=user_id)
