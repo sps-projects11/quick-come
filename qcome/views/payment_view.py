@@ -78,6 +78,7 @@ class PaymentReceipt(View):
                 paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
             type="CASH"
         else:
+            booking = booking_service.get_booking(payment['booking_id'])
             paid_to = "Quick-come Company"
             type="UPI"
             paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
