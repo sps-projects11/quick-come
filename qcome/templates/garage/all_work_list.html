@@ -6,6 +6,7 @@
 
 <section id="booking_details">
     <h2>Your Works</h2>
+    <div class="profile-container" style="height:100%;margin:auto; width:90%;">
 
     {% if error %}
         <p class="alert alert-warning">{{ error }}</p>
@@ -54,6 +55,7 @@
     {% else %}
         <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No Works found.</p>
     {% endif %}
+    </div>
 </section>
 <style>
     #booking_details {

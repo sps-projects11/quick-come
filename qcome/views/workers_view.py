@@ -145,21 +145,14 @@ class AssignedWorkerCreateView(View):
 @worker_required
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
-        try:
-            # Fetch work details using the work_id
-            work = work_service.get_work_by_id(work_id)
-            is_updatable=work_service.is_work_status_updatable(work_id)
-            # Fetch status options (e.g., 4, 5, 6)
-            statuss = work_service.get_statuss_work_id()
+        work = work_service.get_work_by_id(work_id)
+        is_updatable=work_service.is_work_status_updatable(work_id)
+        statuss = work_service.get_statuss_work_id()
 
-            if not work:
-                return JsonResponse({'message': 'Work not found', 'status': 'error'}, status=404)
-
-            # Pass work data and status options to the template
-            return render(request, 'worker/work/work_details.html', {'work_data': work, 'statuss': statuss, 'is_changable':is_updatable})
-        
-        except Exception as e:
-            return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
+        if not work:
+            return redirect('worker')
+        return render(request, 'worker/work/work_details.html', {'work_data': work, 'statuss': statuss, 'is_changable':is_updatable})
+    
 
     def post(self, request, work_id):  # Include work_id here
         try:

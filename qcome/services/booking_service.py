@@ -2,7 +2,7 @@ from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
-from qcome.services import payment_service
+from qcome.services import payment_service,work_service
 
 
 def get_booking_list(booking_id):
@@ -210,18 +210,20 @@ def get_booking_object(booking_id):
     return Booking.objects.get(id=booking_id)
 
 def get_bookings(worker_id):
-    bookings=Booking.objects.filter(assigned_worker=worker_id,is_active=True).values('id','customer__first_name','customer__last_name','vehicle_type','current_location','service','description')
+    bookings=Booking.objects.filter(assigned_worker=worker_id,is_active=True).values('id','customer__first_name','customer__last_name','vehicle_type','current_location','service','description','created_at')
     booking_data=[]
     for booking in bookings:
             booking_data.append({
-                'id': booking["id"],
+                'id': work_service.get_work_id(booking["id"]),
                 'customer_name': f"{booking['customer__first_name']} {booking['customer__last_name']}",
-                'vehicle_type': Vehicle_Type(booking["vehicle_type"]).value,  # Assuming Vehicle_Type is an Enum
+                'vehicle_type': Vehicle_Type(booking["vehicle_type"]).name,  # Assuming Vehicle_Type is an Enum
                 'current_location': booking["current_location"],
                 'description': booking["description"],
                 'services': list(ServiceCatalog.objects.filter(id__in=booking["service"]).values(
                     'service_name', 'service_image', 'price'
-                ))
+                )),
+                'created_at':booking['created_at'],
+                'status':Status(get_booking_status(booking['id'])).name
             })
     return booking_data
 

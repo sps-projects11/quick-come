@@ -1,95 +1,145 @@
 {% extends "worker/index.html" %}
 {% load static %}
-{% block title %}Work_list{% endblock %}
+{% block title %}Work List{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/work_list.css' %}"> 
 <style>
-    .work-list {
-        width: 100%;
-        margin: auto;
-        padding: 10px;
-    }
-    .work-card {
+    /* Wrapper */
+    .wrapper {
         display: flex;
-        align-items: center;
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    .customer-photo {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 12px;
-        object-fit: cover;
+        height: 100vh;
     }
 
+    .container {
+        width: 90%;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .work-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 10px;
+    }
+    .work-card{
+        margin:auto;
+        border-radius: 10px;
+        padding: 20px;
+        align-items: center;
+        display: flex;
+        background: #1effb3;
+        width: 90%;
+        overflow: hidden;
+        height: 10vh;
+    }
     .work-details {
-        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 92%;
     }
 
     .work-details h3 {
+        align-items: center;
+        display: flex;
         margin: 0;
         font-size: 16px;
-        font-weight: 500;
+        font-weight: bold;
+        color: #333;
     }
 
     .work-details p {
         margin: 4px 0;
         font-size: 14px;
-        color: #b0b0b0;
+        color: #666;
     }
 
-    .services {
-        font-size: 13px;
+    .status {
+        left: 15px;
+        bottom: 14px;
+        position: relative;
         font-weight: bold;
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: #E1F5FE;
+        color: #4A90E2;
+        text-transform: uppercase;
     }
-
-    .service-img {
-        width: 25px;
-        height: 25px;
-        border-radius: 5px;
-        margin-right: 5px;
-        vertical-align: middle;
+    @media(max-width: 480px){
+        .container{
+            max-width:100%!important;
+        }
+        .work-card{
+            width:100%;
+        }
+        .work-details p{
+            font-size: 10px !important;
+        }
+        .status{
+            font-size: 7px !important;
+        }
+        ..work-details h3 {
+            font-size:12px !important;
+        }
     }
-
-    .service-item {
-        display: flex;
-        align-items: center;
+    @media(max-width: 768px){
+        .container{
+           max-width:100%!important;
+        }
+        .work-card{
+            width:100%;
+        }
+        .work-details p{
+            font-size: 12px !important;
+        }
+    }
+    @media(max-width: 992px){
+        .container{
+           max-width:90%!important;
+        }
+        .work-card{
+            width:100%;
+        }
+    }
+    @media(max-width: 662px){
+        .container{
+           max-width:90%!important;
+        }
+        .work-card{
+            width:100%;
+        }
     }
 </style>
-<div class="wrapper">   
-     <div class="container">
+
+<div class="wrapper">
+    <div class="container">
         <h2>Work List</h2>
         <div class="work-list">
             {% if bookings %}
                 {% for work in bookings %}
-                    <div class="work-card" onclick = "window.location.href ='{% url 'worker_work_details' work_id=work.id  %}'">
-                            <div class="work-details">
-                                <h3>{{ work.customer_name }}</h3>
-                                <p><strong>Vehicle:</strong> {{ work.vehicle_type }}</p>
-                                <p>{{ work.description }}</p>
-                            </div>
-                            <div class="service_div">
-                                <p><strong>Location:</strong> {{ work.current_location }}</p>
-                                <p class="services">
-                                    {% for service in work.services %}
-                                        <span class="service-item">
-                                            <img src="{{ service.service_image }}" alt="{{ service.service_name }}" class="service-img">
-                                            {{ service.service_name }} - ₹{{ service.price }}
-                                        </span><br>
-                                    {% endfor %}
-                                </p>
-                            </div>
+                    <div class="work-card" onclick="window.location.href='{% url 'worker_work_details' work_id=work.id %}'">
+                        <div class="work-details">
+                            <h3>{{ work.customer_name }}</h3>
+                            <p><strong>Vehicle:</strong> {{ work.vehicle_type }}</p>
+                            <p><strong>Location:</strong> {{ work.current_location }}</p>
+                            <p><strong>Services:</strong> 
+                                {% for service in work.services %}
+                                    {{ service.service_name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
                         </div>
+                        <div class="status">{{ work.status|upper }}</div>
                     </div>
                 {% endfor %}
             {% else %}
                 <p class="no-data">No bookings available.</p>
             {% endif %}
-        </div>      
+        </div>
     </div>
 </div>
+
 {% endblock %}

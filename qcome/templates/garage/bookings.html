@@ -6,6 +6,7 @@
 
 <section id="booking_details">
     <h2>Your Bookings</h2>
+    <div class="profile-container" style="height:100%;margin:auto; width:90%;">
 
     {% if error %}
         <p class="alert alert-warning">{{ error }}</p>
@@ -63,6 +64,7 @@
     {% else %}
         <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No bookings found.</p>
     {% endif %}
+    </div>
 </section>
 <script>
     function create_assign_worker(selectElement, bookingId) {
@@ -90,8 +92,8 @@
     
                 setTimeout(() => {
                     console.log("Now Redirecting...");
-                    window.location.href = '/contact/';
-                }, 1000);
+                    window.location.href = '/garage/work_list/';
+                }, 200);
             } else {
                 console.log("Error in Response:", data.message);
             }
