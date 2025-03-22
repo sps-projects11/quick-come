@@ -57,6 +57,14 @@ class AdminHomeView(View):
 
         booking = booking_service.get_last_5_booking()
 
+        total_booking_by_week = booking_service.get_total_booking_by_week()
+
+        print(total_booking_by_week)
+        
+        # total_user_by_month = user_service.get_total_user_by_month()
+
+        # print(total_user_by_month)
+
         data = {
             'total_users': total_users,
             'total_admins': total_admins,

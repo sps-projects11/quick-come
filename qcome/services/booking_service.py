@@ -1,8 +1,10 @@
 from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
-from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
+from qcome.constants.default_values import Vehicle_Type, PayStatus, Status
 from qcome.services import payment_service,work_service
+from django.db.models import Count
+from django.db.models.functions import ExtractWeekDay
 
 
 def get_booking_list(booking_id):
@@ -227,15 +229,18 @@ def get_bookings(worker_id):
 
 
 def get_last_5_booking():
-    Bookings = Booking.objects.all().order_by('-created_at')[:5]
+    bookings = Booking.objects.all().order_by('-created_at')[:5]
 
-    for booking in Bookings:
+    for booking in bookings:
         booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
         booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
         service_ids = booking.service
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"
         booking.vehicle_type = Vehicle_Type(booking.vehicle_type).name
+        booking.status = Status(get_booking_status(booking.id)).name
+
+    return bookings
 
 
 def get_all_booking_list(user):
@@ -253,6 +258,44 @@ def get_all_booking_list(user):
         booking.status= Status(get_booking_status(booking.id)).name
     return bookings
 
+
 def get_current_booking(user_id):
     return Booking.objects.filter(customer=user_id,is_active = True).first()
-        
+
+
+
+
+def get_total_booking_by_week():
+    # Annotate each booking with the weekday (Sunday=1, Monday=2, ..., Saturday=7)
+    bookings = (
+        Booking.objects
+        .annotate(weekday=ExtractWeekDay('created_at'))
+        .values('weekday')
+        .annotate(status=get_booking_status('id'))
+        .filter(status)
+        .annotate(total=Count('id'))
+        .order_by('weekday')
+    )
+
+    print(bookings)
+    # Map the weekday numbers to names
+    weekday_mapping = {
+        1: 'Sunday',
+        2: 'Monday',
+        3: 'Tuesday',
+        4: 'Wednesday',
+        5: 'Thursday',
+        6: 'Friday',
+        7: 'Saturday'
+    }
+
+    # Build a dictionary with the totals for each weekday
+    result = {weekday_mapping[item['weekday']]: item['total'] for item in bookings}
+
+    # Ensure all days are present even if the count is zero
+    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']:
+        result.setdefault(day, 0)
+
+    return result
+
+
