@@ -50,7 +50,7 @@
     <div class="profile-container">
         <div class="card shadow-lg profile-card">
             <div class="d-flex justify-content-center mt-3">
-                <img src="{{ user.profile_photo_url }}" alt="Profile Picture" class="profile-pic rounded-circle">
+                <img src="{{ user.profile_photo_url | default:'' }}" alt="Profile Picture" class="profile-pic rounded-circle">
             </div>
             <div class="card-body text-center">
                 <h5 class="card-title">{{ user.first_name }} {{ user.middle_name|default:'' }} {{ user.last_name }}</h5>
