@@ -76,35 +76,57 @@
       <canvas id="monthlyBarChart"></canvas>
     </div>
   </div>
-  
-  <!-- Recent Bookings Section -->
-  <section class="mb-4">
-    <h2 class="mb-3">Recent Bookings</h2>
-    <div class="table-responsive">
-      <table class="table table-striped align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Booking ID</th>
-            <th>Customer Name</th>
-            <th>Service</th>
-            <th>Status</th>
-            <th>Date/Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for booking in data.recent_bookings %}
+<!-- Recent Bookings Section -->
+<section class="mb-4">
+  <h2 class="mb-3">Recent Bookings</h2>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Booking ID</th>
+          <th>Customer Name</th>
+          <th>Service</th>
+          <th>Vehicle Type</th>
+          <th>Status</th>
+          <th>Date/Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in data.recent_bookings %}
           <tr>
             <td>{{ booking.id }}</td>
-            <td>{{ booking.customer }}</td>
+            <td>{{ booking.customer_name }}</td>
             <td>{{ booking.service_names }}</td>
-            <td>{{ booking.status }}</td>
-            <td>{{ booking.created_at }}</td>
+            <td>{{ booking.vehicle_type }}</td>
+            <td>
+              {% if booking.status == "PENDING" %}
+                <span class="badge bg-warning text-dark">{{ booking.status }}</span>
+              {% elif booking.status == "ACCEPTED" %}
+                <span class="badge bg-success">{{ booking.status }}</span>
+              {% elif booking.status == "WORKING" %}
+                <span class="badge bg-info text-dark">{{ booking.status }}</span>
+              {% elif booking.status == "COMPLETED" %}
+                <span class="badge bg-primary">{{ booking.status }}</span>
+              {% elif booking.status == "CANCELLED" %}
+                <span class="badge bg-danger">{{ booking.status }}</span>
+              {% elif booking.status == "FAILED" %}
+                <span class="badge bg-secondary">{{ booking.status }}</span>
+              {% else %}
+                {{ booking.status }}
+              {% endif %}
+            </td>
+            <td>{{ booking.created_at|date:"M d, Y H:i" }}</td>
           </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">No recent bookings found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
 </div>
 
 <!-- Include Chart.js via CDN -->
