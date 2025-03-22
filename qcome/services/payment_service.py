@@ -190,6 +190,10 @@ def get_total_revenue():
 
 
 def get_payment_status(booking_id):
-    status=Payment.objects.filter(booking_id=booking_id,is_active=True).values('pay_status').first()
-    status=status['pay_status']
+    is_paid=Payment.objects.filter(booking_id=booking_id,is_active=True).exists()
+    if is_paid:
+        status=Payment.objects.filter(booking_id=booking_id,is_active=True).values('pay_status').first()
+        status=status['pay_status']
+        return status
+    status= 4
     return status

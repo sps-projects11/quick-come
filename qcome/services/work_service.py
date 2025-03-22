@@ -1,4 +1,4 @@
-from qcome.models import Work,ServiceCatalog
+from qcome.models import Work,ServiceCatalog,Booking
 from qcome.constants.default_values import Status
 
 def work_create(booking,work_by,user):
@@ -60,6 +60,20 @@ def is_work_status_updatable(work_id):
         status__in=[Status.ACCEPTED.value, Status.WORKING.value]  # Use `status__in`
     )
     return res.exists()  # Returns True if any records match, otherwise False
+
+def get_status_of_work(booking_id):
+    booking=Booking.objects.filter(id=booking_id).first()
+    status="NOT_STARTED"
+    if booking.assigned_worker:
+        is_work=Work.objects.filter(booking=booking_id,is_active=True).exists()
+        if is_work:
+            work=Work.objects.filter(booking=booking_id,is_active=True).first()
+            status = Status(work.status).name
+            print(status)
+
+            return status
+    print(status)
+    return status
 
 
 

@@ -1,15 +1,16 @@
 from ..models import Garage, Booking, ServiceCatalog,Work
-from ..services import workers_service
+from ..services import workers_service,work_service
 from qcome.constants.default_values import Vehicle_Type,Status
 
 def get_garage_bookings():
     """ Get all active bookings that are not assigned """
     queryset = Booking.objects.filter(is_active=True, assigned_worker=None).order_by('-created_at')
-
+    print("hiiiiiiiiiii")
     # Convert queryset to a list to allow modification
     bookings = list(queryset)
 
     for booking in bookings:
+        booking.status=work_service.get_status_of_work(booking.id)
         # Add customer details
         if booking.customer:
             booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
@@ -22,6 +23,7 @@ def get_garage_bookings():
         service_ids = booking.service  # This is assumed to be a list of IDs
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"
+    print("hiiiiiiiiiii")
 
     return bookings  # Return modified list
 
