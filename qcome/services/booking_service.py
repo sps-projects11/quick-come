@@ -27,8 +27,10 @@ def get_booking_list(booking_id):
 
 def get_booking_status(booking_id):
     is_deleted=Booking.objects.filter(id=booking_id,is_active=False,assigned_worker=None).exists()
+    print("is_delete:", is_deleted)
     if is_deleted:
-        status=Status.CANCELLED.name
+        status=Status.CANCELLED.value
+        return status
     status = Work.objects.filter(booking=booking_id,is_active=True).values('status').first()
     if status:
         status = status['status']
