@@ -15,7 +15,10 @@ from ..decorators import auth_required, role_required
 class BookingListView(View):
     def get(self, request):
         booking_id = booking_service.get_current_booking(request.user.id)
-        bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
+        if not booking_id:
+            bookings=[]
+        else:
+            bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)

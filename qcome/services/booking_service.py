@@ -24,6 +24,9 @@ def get_booking_list(booking_id):
     return bookings
 
 def get_booking_status(booking_id):
+    is_deleted=Booking.objects.filter(id=booking_id,is_active=False,assigned_worker=None).exists()
+    if is_deleted:
+        status=Status.CANCELLED.name
     status = Work.objects.filter(booking=booking_id,is_active=True).values('status').first()
     if status:
         status = status['status']
@@ -81,9 +84,15 @@ def update_booking(user, booking_id, current_location, vehicle_type, service_id,
 def delete_booking(user, booking_id):
     """Soft delete a booking (only if the user owns it)."""
     try:
+        is_work=Work.objects.filter(booking=booking_id).exists()
         booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
         booking.is_active = False  # Soft delete by setting is_active to False
         booking.save(update_fields=["is_active"])  # Save the updated field
+
+        if is_work:
+            work = Work.objects.filter(booking=booking_id).first()
+            work.status = Status.CANCELLED.value
+            work.save()
         return "deleted"
     except Booking.DoesNotExist:
         return "not_found"
