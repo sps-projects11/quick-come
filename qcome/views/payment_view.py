@@ -49,11 +49,8 @@ class PaymentCreateView(View):
 
     """Create a payment"""
     def post(self, request, booking_id):
-        print("actual payment :  ", request.user.id)
         user_id = request.user.id
         booking = booking_service.get_booking_by_id(request.user.id)
-        print("booking:", booking)
-
         if not booking:
             return JsonResponse({"error": "❌ No booking found for user"}, status=400)
 
@@ -84,7 +81,6 @@ class PaymentReceipt(View):
         payment["type"]=type
         payment["paid_by"]=paid_by
         payment["status"]=status
-        print(payment)
         worker=workers_service.is_user_a_garage_worker(request.user.id)
         is_garage = garage_service.is_user_a_garage_owner(request.user.id)
         if is_garage:

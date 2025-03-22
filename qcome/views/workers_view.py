@@ -43,7 +43,6 @@ class WorkerCreateView(View):
         expertise = request.POST.get('expertise')
         worker_garage = request.POST.get('garage')
         worker_worker_id = request.POST.get('user_id')
-        print(worker_phone)
         is_exists=workers_service.is_user_a_garage_worker(worker_worker_id)
         if is_exists:
             return redirect('worker')
@@ -99,9 +98,6 @@ class WorkerPaymentListView(View):
         # Convert Decimal to string for safe rendering
         for payment in payments:
             payment["amount"] = str(payment["amount"])
-
-        print("Payments Data:", payments)  # Debugging
-
         return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
 
@@ -150,7 +146,6 @@ class AssignedWorkerCreateView(View):
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
         try:
-            print("work_id ", work_id)
             # Fetch work details using the work_id
             work = work_service.get_work_by_id(work_id)
             is_updatable=work_service.is_work_status_updatable(work_id)
@@ -169,7 +164,6 @@ class WorkerWorkRecieptView(View):
     def post(self, request, work_id):  # Include work_id here
         try:
             data = json.loads(request.body)
-            print(data)
             work_id = data.get('work_id')
             status = data.get('status')
             

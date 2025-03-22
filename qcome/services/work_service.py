@@ -69,10 +69,7 @@ def get_status_of_work(booking_id):
         if is_work:
             work=Work.objects.filter(booking=booking_id,is_active=True).first()
             status = Status(work.status).name
-            print(status)
-
             return status
-    print(status)
     return status
 
 

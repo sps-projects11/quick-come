@@ -1,5 +1,5 @@
 {% extends "enduser/base.html" %}
-{% block title %}Your Bookings{% endblock %}
+{% block title %}Booking History{% endblock %}
 {% load static %}
 {% block content %}
 <!-- Bootstrap Icons -->
@@ -7,7 +7,7 @@
 
 
 <section id="booking_section">
-    <h2 class="section-title">Your Booking</h2>
+    <h2 class="section-title">Your Booking History</h2>
     <div class="booking-list">
         {% for booking in bookings %}
         <a href="{% url 'booking_details' booking_id=booking.id %}" class="booking-card">

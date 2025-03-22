@@ -11,9 +11,6 @@ def get_all_payments_created_by(user_id):
     payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
         'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
     )
-
-    print(payments)
-
     return list(payments)
 
 def get_current_payment(booking_id):
@@ -29,7 +26,6 @@ def create_payment(request, booking_id, user_id):
             return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
 
         data = json.loads(request.body)
-        print("data :", data)
         # Get the booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
         created_by = booking.customer

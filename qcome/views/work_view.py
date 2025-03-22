@@ -20,8 +20,6 @@ class WorkListView(View):
                 'service':booking.service.service_name,
                 'vehicle_type': Vehicle_Type(booking.vehicle_type).name  # Fix Enum access
             } for booking in bookings]
-
-        print(booking_data)
         return render(request,'worker/work/work_list.html')
 
     
@@ -32,7 +30,6 @@ class AllWorkListView(View):
     def get(self,request):
         garage= garage_service.get_garage_id(request.user.id)
         works=garage_service.get_all_garage_works(garage)
-        print(works)
         return render(request,'garage/all_work_list.html',{'bookings':works})
 
   

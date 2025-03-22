@@ -105,7 +105,7 @@ urlpatterns = [
     path('booking/update/<int:booking_id>/',views.BookingUpdateView.as_view(), name='booking_update'),
     path('booking/delete/<int:booking_id>/',views.BookingDeleteView.as_view(), name='booking_delete'),
     path('services/', views.ServiceCatalogueView.as_view(), name='list_service_catalouge'),
-
+    path('booking/list/', views.AllBookingListView.as_view(), name='booking_lists'),
     #--------------------------------------------------------------------------------->
 
      #Contact

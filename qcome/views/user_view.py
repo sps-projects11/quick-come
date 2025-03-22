@@ -14,13 +14,8 @@ class EnduserProfileView(View):
     def get(self, request):
         user_id=request.user.id
         user_details=user_service.get_user_details(user_id)
-        print("khbj")
         is_worker=workers_service.is_user_a_garage_worker(user_id)
-        print("hiiiii")
-
         is_garage=garage_service.is_user_a_garage_owner(user_id)
-        print("byeee")
-
         if is_garage:
            return redirect('/garage/profile/') 
         if is_worker:
