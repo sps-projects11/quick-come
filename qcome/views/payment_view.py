@@ -3,7 +3,7 @@ from django.views import View
 from qcome.services import payment_service,booking_service,workers_service,garage_service
 from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required, worker_required
-from ..constants import Role,PayType
+from ..constants import Role,PayType,PayStatus
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -65,6 +65,7 @@ class PaymentCreateView(View):
 class PaymentReceipt(View):
     def get(self,request,payment_id):
         payment=payment_service.payment_details_by_payment_id(payment_id)
+        status =PayStatus(payment_service.get_payment_status(payment['booking_id'])).name
         if payment['type'] == PayType.CASH.value:
             booking = booking_service.get_booking(payment['booking_id'])
             if booking and booking.assigned_worker:
@@ -79,10 +80,10 @@ class PaymentReceipt(View):
             paid_to = "Quick-come Company"
             type="UPI"
             paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
-
         payment["paid_to"]=paid_to
         payment["type"]=type
         payment["paid_by"]=paid_by
+        payment["status"]=status
         print(payment)
         worker=workers_service.is_user_a_garage_worker(request.user.id)
         is_garage = garage_service.is_user_a_garage_owner(request.user.id)

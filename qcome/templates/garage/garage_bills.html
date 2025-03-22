@@ -15,7 +15,7 @@
                 <div class="bill-row">
                     <span class="customer"><strong>Booking ID:</strong> {{ bill.booking_id }}</span>
                     <span class="vehicle"><strong>Car Type:</strong> {{ bill.vehicle_type }}</span>
-                    <span><strong> Status:</strong>{{bill.status}}</span>
+                    <span>Payment Status:{{bill.status}}</span>
                 </div>
                 <div class="bill-date">
                     <span><strong>Date:</strong> {{ bill.created_at|date:"d M Y, h:i A" }}</span>
