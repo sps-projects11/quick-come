@@ -13,8 +13,10 @@ from ..decorators import auth_required, garage_required,worker_required
 @auth_required(login_url='/sign-in/')
 @worker_required
 class WorkerView(View):
-    def get(self,request,worker_id):
-        worker_details = workers_service.get_worker_details(worker_id)
+    def get(self,request):
+        user_id = request.user.id
+        worker_id=workers_service.get_worker_id(user_id)
+        worker_details = workers_service.get_worker_details(worker_id.id)
         garage_details = user_service.get_all_garages()
         context = {
             'worker_details':worker_details,
