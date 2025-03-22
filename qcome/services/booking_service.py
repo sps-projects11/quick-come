@@ -31,30 +31,28 @@ def get_booking_status(booking_id):
         status = Status.PENDING.value
     return status
 
-def create_booking(user, current_location, vehicle_type, service_id, description):
-    """Allow only one active booking per user."""
-    try:
-        # Check if the user already has an active booking
-        if Booking.objects.filter(customer=user, is_active=True).exists():
-            return False  # Indicating booking is already present
-        
-        # Ensure service_id is valid
-        service = get_object_or_404(ServiceCatalog, id=service_id)
+def create_booking(user, current_location, vehicle_type, service_id, description,phone):
+    # Check if the user already has an active booking
+    if Booking.objects.filter(customer=user, is_active=True).exists():
+        return False  # Indicating booking is already present
+    
+    # Ensure service_id is valid
+    service = get_object_or_404(ServiceCatalog, id=service_id)
 
-        # Create a new booking
-        booking = Booking.objects.create(
-            customer=user,
-            current_location=current_location,
-            vehicle_type=vehicle_type,
-            service=[service.id],  # Pass the actual service object
-            description=description,
-            created_by=user,
-            updated_by=user
-        )
-        return booking
+    # Create a new booking
+    booking = Booking.objects.create(
+        customer=user,
+        current_location=current_location,
+        vehicle_type=vehicle_type,
+        service=[service.id],  # Pass the actual service object
+        description=description,
+        created_by=user,
+        updated_by=user
+    )
+    user.phone = phone  
+    user.save() 
+    return booking
 
-    except:
-        return "error"
 
 
 def update_booking(user, booking_id, current_location, vehicle_type, service_id, description):

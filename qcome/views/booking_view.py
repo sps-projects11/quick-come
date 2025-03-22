@@ -54,8 +54,9 @@ class BookingCreateView(View):
         vehicle_type = request.POST.get('vehicle_type')
         service_id = request.POST.get('service')
         description = request.POST.get('description')
+        phone =request.POST.get('customer_phone')
 
-        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description)
+        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description,phone)
 
         if booking == False:
             messages.error(request, "You have already made a booking. You cannot book again.")

@@ -65,6 +65,9 @@
                })
                .then(response => response.json())
                .then(result => {
+                    if (result.status === 'success' && result.updated_status === '3') {
+                        window.location.href = '/';
+                    }
                    if (result.status === 'success' && result.updated_status === '4') {
                        window.location.href = '/billing/';
                    }
