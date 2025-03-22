@@ -1,5 +1,5 @@
- {% extends "enduser/base.html" %}
-{% comment %}{% block title %}Profile{% endblock %}
+{% extends "enduser/base.html" %}
+{% block title %}Profile{% endblock %}
 {% load static %}
 {% block content %}
 <section id="profile-form" class="container">
@@ -9,11 +9,11 @@
             {% csrf_token %}
             <div class="image-card">
                 <div class="text-center mb-4">
-                    <div class="position-relative d-inline-block profile-container" style="width: 125px; height: 125px; background-color: black; border-radius: 50%;">
-                        <img id="profilePic" src="{{ user_details.profile_photo_url }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
-                        <button type="button" class="btn btn-primary position-absolute bottom-0 end-0 translate-middle rounded-circle" onclick="selectImage()">+</button>
-                        <button type="button" id="removeButton" class="btn btn-danger position-absolute top-0 end-0 rounded-circle" style="display: none;" onclick="removeImage()">✕</button>
-                        <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
+                    <div class="position-relative d-inline-block" style="width: 140px; height: 140px; background-color: black; border-radius: 50%;border:2px solid blue;">
+                        <img id="profilePic" src="{{ user_details.profile_photo_url}}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        <button type="button" id="uploadBtn" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle">+</button>
+                        <button type="button" id="removeButton" class="btn btn-danger position-absolute top-0 end-0 rounded-circle" style="display:none;">x</button>
+                        <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;">
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
 
             <div class="d-flex justify-content-center gap-3">
                 <button type="submit" class="submit-button">Update</button>
-                <a href="javascript:history.back()" class="submit-button cancel-button">Cancel</a>
+                <a href="javascript:history.back()" class="submit-button cancel-button" style="text-decoration:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -86,23 +86,6 @@
         margin-bottom: 1.5rem;
     }
 
-    /* Profile Section */
-    .profile-container:hover #removeButton {
-        display: block;
-    }
-
-    #removeButton {
-        background-color: red;
-        color: white;
-        font-weight: bold;
-        width: 25px;
-        height: 25px;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-    }
-
     /* Buttons */
     .submit-button {
         background-color: var(--primary-color);
@@ -129,9 +112,16 @@
     .cancel-button:hover {
         background-color: #c82333;
     }
+    #removeButton:hover{
+        display:block;
+    }
 </style>
 
 <script>
+    document.getElementById("uploadBtn").addEventListener("click", selectImage);
+    document.getElementById("imageInput").addEventListener("change", setImage);
+    document.getElementById("removeButton").addEventListener("click", removeImage);
+
     function selectImage() {
         document.getElementById("imageInput").click();
     }
@@ -149,17 +139,11 @@
     }
 
     function removeImage() {
-        const profilePic = document.getElementById("profilePic");
-        const imageInput = document.getElementById("imageInput");
-
-        // Reset profile image to placeholder and clear input
-        profilePic.src = "{{ user_details.profile_photo_url }}"; // Default or placeholder image
-        imageInput.value = ""; // Clear input value
+        document.getElementById("profilePic").src = ""; // Remove image preview
+        document.getElementById("imageInput").value = ""; // Clear input file value
         document.getElementById("removeButton").style.display = "none"; // Hide remove button
     }
 </script>
-{% endblock %} {% endcomment %}
 
 
-
-
+{% endblock %}

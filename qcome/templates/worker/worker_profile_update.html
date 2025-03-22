@@ -2,30 +2,44 @@
 {% block title %}Worker_Profile_Update{% endblock %}
 {%load static %}
 {% block content %}
-<!-- SwiperJS CDN -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!-- <link rel="stylesheet" href="{% static 'css/user_profile.css' %}"> -->
-
 <section id="emergency-form" class="container">
     <div class="form-container">
         <h2>Update Worker Profile</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group">
-                <input type="hidden" name="worker_id" value="{{ user.id }}">
-                <input type="text" name="worker_name" value="{{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}" placeholder="Your Name" required>
+            <div class="image-card">
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block" style="width: 140px; height: 140px; background-color: black; border-radius: 50%;border:2px solid blue;">
+                        <img id="profilePic" src="{{ user.profile_photo_url | default:'/static/all-Pictures/profile-images/user.png' }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        <button type="button" id="uploadBtn" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle">+</button>
+                        <button type="button" id="removeButton" class="btn btn-danger position-absolute top-0 end-0 rounded-circle" style="display:none;">x</button>
+                        <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <input type="tel" name="worker_phone" value="{% if user.phone %} {{ user.phone }} {% endif %}" placeholder="Phone Number" required>
+                <input type="hidden" id="worker_id" name="worker_id" value="{{ user.id }}">
             </div>
             <div class="form-group">
+                <label for="worker_name">Name</label>
+                <input type="text" id="worker_name" name="worker_name" value="{{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <label for="worker_phone">Phone Number</label>
+                <input type="tel" id="worker_phone" name="worker_phone" value="{% if user.phone %}{{ user.phone }}{% endif %}" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience</label>
                 <input type="text" id="experience" name="experience" placeholder="Your Experience" value="{{ worker_details.experience }}" required>
             </div>
             <div class="form-group">
-                <input type="text" id="expertise" name="expertise"  placeholder="Your Expertise" value="{{ worker_details.expertise }}" required>
+                <label for="expertise">Expertise</label>
+                <input type="text" id="expertise" name="expertise" placeholder="Your Expertise" value="{{ worker_details.expertise }}" required>
             </div>
             <div class="form-group">
-                <select name="garage" required>
+                <label for="garage">Garage</label>
+                <select id="garage" name="garage" required>
                     <option value="">Select the Garage</option>
                     {% for garage in gargae_details %}
                         <option value="{{ garage.id }}" {% if  worker_details.garage.id == garage.id %}selected{% endif %}>
@@ -47,10 +61,12 @@
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: var(--shadow);
-    max-width: 580px;
+    max-width: 560px;
     margin: 20px auto;
 }
-
+.image-card {
+    margin-bottom: 1.5rem;
+}
 .form-container h2 {
     text-align: center;
     margin-bottom: 2rem;
@@ -93,5 +109,35 @@
 }
 
 </style>
+
+<script>
+    document.getElementById("uploadBtn").addEventListener("click", selectImage);
+    document.getElementById("imageInput").addEventListener("change", setImage);
+    document.getElementById("removeButton").addEventListener("click", removeImage);
+
+    function selectImage() {
+        document.getElementById("imageInput").click();
+    }
+
+    function setImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("profilePic").src = e.target.result;
+                document.getElementById("removeButton").style.display = "block"; // Show remove button
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeImage() {
+        document.getElementById("profilePic").src = ""; // Remove image preview
+        document.getElementById("imageInput").value = ""; // Clear input file value
+        document.getElementById("removeButton").style.display = "none"; 
+    }
+</script>
+
+
 
 {% endblock %}
