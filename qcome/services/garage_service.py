@@ -139,8 +139,5 @@ def booking_status(booking_id):
     return status.first() if status else None  # Return the first status if available
 
 
-def get_all_garages():
-    return Garage.objects.all()
-
 def get_all_garages_exclude_worker_garage(worker_garage):
     return Garage.objects.exclude(id=worker_garage)

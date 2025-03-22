@@ -29,7 +29,7 @@ class ManageWorkerListView(View):
 class ManageWorkerCreateView(View):
     def get(self, request):
         available_worker = user_service.get_non_garage_and_non_worker_users()
-        all_garage = garage_service.get_all_garages()
+        all_garage = user_service.get_all_garages()
         return render(request, 'adminuser/worker/worker_create.html', {'all_garage': all_garage, 'available_worker': available_worker})
     
     def post(self, request):
@@ -70,7 +70,7 @@ class ManageWorkerUpdateView(View):
         worker_garage = garage_service.get_garage(worker.garage.id)
         worker.garage_name = worker_garage.garage_name
 
-        all_garage = garage_service.get_all_garages_exclude_worker_garage(worker.garage.id)
+        all_garage = user_service.get_all_garages_exclude_worker_garage(worker.garage.id)
 
         return render(request, 'adminuser/worker/worker_update.html', {'worker': worker, 'all_garage':all_garage})
     

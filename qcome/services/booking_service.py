@@ -3,7 +3,6 @@ from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from qcome.constants.default_values import Vehicle_Type, PayStatus, Status
 from qcome.services import payment_service,work_service
-from django.db.models import Count
 from django.db.models.functions import ExtractWeekDay
 
 
@@ -273,10 +272,7 @@ def get_current_booking(user_id):
     return Booking.objects.filter(customer=user_id,is_active = True).first()
 
 
-
-
-
-def get_total_booking_by_week():
+def get_weekly_booking_data():
     """
     Returns a nested dictionary where each weekday maps to counts for every booking status.
     For example:
@@ -324,9 +320,7 @@ def get_total_booking_by_week():
     # Iterate over bookings and apply your custom status logic
     for booking in bookings_qs:
         booking_status = get_booking_status(booking.id)
-        day_name = weekday_mapping.get(booking.weekday, 'Unknown')
-        # Debug prints to verify mapping:
-        print(f"Booking ID: {booking.id} | Raw weekday: {booking.weekday} | Mapped day: {day_name} | Computed status: {booking_status}")
+        day_name = weekday_mapping.get(booking.weekday, 'Unknown')        
         
         if day_name == 'Unknown':
             continue  # Skip bookings with unknown weekday annotation

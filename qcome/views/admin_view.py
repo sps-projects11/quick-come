@@ -8,9 +8,8 @@ import datetime
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..services import user_service, admin_service, garage_service, workers_service, payment_service, booking_service, service_service
-import os
-import hashlib
-from django.conf import settings
+from qcome.package.file_management import save_uploaded_file
+import json
 
 
 class LoginAdminView(View):
@@ -51,19 +50,15 @@ class AdminHomeView(View):
         user = user_service.get_user(request.user.id)
         total_users = user_service.get_all_user().count()
         total_admins = user_service.get_all_admins().count()
-        total_garages = garage_service.get_all_garages().count()
+        total_garages = user_service.get_all_garages().count()
         total_workers = workers_service.get_all_workers().count()
         total_revenue = payment_service.get_total_revenue()
 
         booking = booking_service.get_last_5_booking()
 
-        total_booking_by_week = booking_service.get_total_booking_by_week()
-
-        print(total_booking_by_week)
+        weekly_booking_data = booking_service.get_weekly_booking_data()        
         
-        # total_user_by_month = user_service.get_total_user_by_month()
-
-        # print(total_user_by_month)
+        monthly_user_data  = user_service.get_monthly_user_data()        
 
         data = {
             'total_users': total_users,
@@ -71,7 +66,10 @@ class AdminHomeView(View):
             'total_garages': total_garages,
             'total_workers': total_workers,
             'total_revenue': total_revenue,
-            'admin': user
+            'admin': user,
+            'recent_bookings': booking,
+            'weekly_booking_data': json.dumps(weekly_booking_data),
+            'monthly_user_data': json.dumps(monthly_user_data)
         }
 
         return render(request, 'adminuser/home/dashboard.html', {'data':data})
@@ -134,27 +132,7 @@ class AdminProfileUpdateView(View):
         profile_photo_path = user.profile_photo_url
 
         if profile_photo:
-            profile_photo_img_dir = os.path.join(settings.BASE_DIR, 'static', 'all-Pictures', 'profile-images')
-            if not os.path.exists(profile_photo_img_dir):
-                os.makedirs(profile_photo_img_dir)
-
-            md5_hash = hashlib.md5()
-            for chunk in profile_photo.chunks():
-                md5_hash.update(chunk)
-            file_hash = md5_hash.hexdigest()
-
-            _, ext = os.path.splitext(profile_photo.name)
-            new_file_name = f"{file_hash}{ext}"
-            file_path = os.path.join(profile_photo_img_dir, new_file_name)
-
-            if not os.path.exists(file_path):
-                profile_photo.seek(0)
-                with open(file_path, 'wb+') as destination:
-                    for chunk in profile_photo.chunks():
-                        destination.write(chunk)
-
-            profile_photo_path = f'/static/all-Pictures/profile-images/{new_file_name}'
-
+            profile_photo_path = save_uploaded_file(profile_photo, subfolder="profile-images")
         
         admin_service.admin_profile_update(
             user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
