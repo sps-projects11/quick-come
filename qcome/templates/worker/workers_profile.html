@@ -99,8 +99,8 @@
             <p><strong>Garage:</strong> {% for garage in gargae_details %}{% if worker_details.garage.id == garage.id %}{{ garage.garage_name }}{% endif %}{% endfor %}</p>
         </div>
         <div class="btn-group">
-            <a href="{% url 'worker_update' user.id %}" class="btn btn-primary" id="up">Update</a>
-            <form method="POST" action="{% url 'worker_delete' user.id %}" onsubmit="return confirm('Are you sure you want to delete this worker?');">
+            <a href="{% url 'worker_update' worker_details.id %}" class="btn btn-primary" id="up">Update</a>
+            <form method="POST" action="{% url 'worker_delete' worker_details.id %}" onsubmit="return confirm('Are you sure you want to delete this worker?');">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger" id="del">Delete</button>
             </form>

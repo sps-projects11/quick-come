@@ -12,7 +12,7 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <input type="hidden" name="worker_id" value="{{ user.id }}">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
                 <input type="text" name="worker_name" value="{{user.first_name}} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{user.last_name}}" placeholder="Your Name" required>
             </div>
             <div class="form-group">

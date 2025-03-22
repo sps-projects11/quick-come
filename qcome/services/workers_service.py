@@ -1,4 +1,4 @@
-from ..models import Worker
+from ..models import Worker,User,Garage
 
 def get_worker_details(worker_id):
     try:
@@ -8,8 +8,8 @@ def get_worker_details(worker_id):
 
 def worker_create(user, expertise, experience, worker_garage):
     return Worker.objects.create(
-        worker = user,
-        garage = worker_garage,
+        worker = User.objects.filter(id=user).first(),
+        garage = Garage.objects.filter(id=worker_garage).first(),
         experience = experience,
         expertise = expertise
     )
@@ -37,9 +37,10 @@ def worker_update(worker, expertise, experience, worker_garage, user):
     return None
 
 
-def update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id):
+def update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id,user_id):
     try:
-        worker = Worker.objects.get(id=worker_id)
+        worker = Worker.objects.filter(id=worker_id).first()
+        worker.worker = User.objects.filter(id=user_id).first()
         worker.name = worker_name
         worker.phone = worker_phone
         worker.experience = experience
@@ -73,7 +74,7 @@ def worker_toggle(worker_id):
     return None
 
 def get_worker_id(user):
-    return Worker.objects.get(worker=user)
+    return Worker.objects.filter(worker=user).first()
 
 def get_check(user):
     return Worker.objects.filter(worker=user).exists()

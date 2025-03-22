@@ -33,8 +33,9 @@ class PayType(Enum):
 
 class PayStatus(Enum):
     PENDING = 1
-    COMPLETE = 2
+    COMPLETED = 2
     FAILED = 3
+    NOT_PAID = 4
 
 
 class ResponseMessageType(Enum):

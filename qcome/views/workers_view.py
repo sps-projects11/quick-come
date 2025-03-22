@@ -13,8 +13,10 @@ from ..decorators import auth_required, garage_required,worker_required
 @auth_required(login_url='/sign-in/')
 @worker_required
 class WorkerView(View):
-    def get(self,request,worker_id):
-        worker_details = workers_service.get_worker_details(worker_id)
+    def get(self,request):
+        user_id = request.user.id
+        worker_id=workers_service.get_worker_id(user_id)
+        worker_details = workers_service.get_worker_details(worker_id.id)
         garage_details = user_service.get_all_garages()
         context = {
             'worker_details':worker_details,
@@ -26,47 +28,29 @@ class WorkerView(View):
 
 @auth_required(login_url='/sign-in/')
 class WorkerCreateView(View):
-    def get(self, request, worker_id):
-        worker_details = workers_service.get_worker_details(worker_id)
+    def get(self, request, user_id):  
         garage_details = user_service.get_all_garages()
 
         context = {
-            'worker_details': worker_details,
             'user': request.user,
             'garage_details': garage_details,
         }
         return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
 
-    def post(self, request, worker_id):
+    def post(self, request, user_id):
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         worker_garage = request.POST.get('garage')
-
-        # Validate essential fields
-        if not all([worker_id, worker_phone, experience, expertise, worker_garage]):
-            messages.error(request, "All fields are required.")
-            return redirect('worker', worker_id=worker_id)
-
-        user = user_service.get_user(worker_id)
-
-        if not user:
-            messages.error(request, "User not found.")
-            return redirect('worker', worker_id=worker_id)
-
-        is_worker = workers_service.is_user_a_garage_worker(user)
-
-        if not is_worker:
-            garage = garage_service.get_garage(worker_garage)
-            if not garage:
-                messages.error(request, "Garage not found.")
-                return redirect('worker', worker_id=worker_id)
-
-            workers_service.worker_create(user, expertise, experience, garage)
-            user_service.user_phone_create(user, worker_phone)
-            messages.success(request, SuccessMessage.S00022.value)
-        else:
-            messages.error(request, ErrorMessage.E00017.value)
+        worker_worker_id = request.POST.get('user_id')
+        is_exists=workers_service.is_user_a_garage_worker(worker_worker_id)
+        if is_exists:
+            return redirect('worker')
+        worker = workers_service.worker_create(worker_worker_id, expertise, experience, worker_garage) 
+        worker_phone=user_service.user_phone_create(worker_worker_id,worker_phone)
+        if worker:
+            return redirect('worker')
+        
 
 
 @auth_required(login_url='/sign-in/')
@@ -88,10 +72,10 @@ class WorkerUpdateView(View):
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         garage_id = request.POST.get('garage')
-        
-        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id)
+        user_id = request.user.id
+        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id,user_id)
         messages.success(request,SuccessMessage.S00023.value)
-        return redirect('worker',worker_id = worker_id)  
+        return redirect('worker')  
 
 @auth_required(login_url='/sign-in/')
 @worker_required
@@ -114,9 +98,6 @@ class WorkerPaymentListView(View):
         # Convert Decimal to string for safe rendering
         for payment in payments:
             payment["amount"] = str(payment["amount"])
-
-        print("Payments Data:", payments)  # Debugging
-
         return render(request, "worker/worker_payment_list.html", {"payments": payments})
     
 
@@ -165,7 +146,6 @@ class AssignedWorkerCreateView(View):
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
         try:
-            print("work_id ", work_id)
             # Fetch work details using the work_id
             work = work_service.get_work_by_id(work_id)
             is_updatable=work_service.is_work_status_updatable(work_id)
@@ -184,7 +164,6 @@ class WorkerWorkRecieptView(View):
     def post(self, request, work_id):  # Include work_id here
         try:
             data = json.loads(request.body)
-            print(data)
             work_id = data.get('work_id')
             status = data.get('status')
             

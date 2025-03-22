@@ -1,0 +1,21 @@
+{% extends "garage/index.html" %}
+{% block title %}Service List{% endblock %}
+{%load static %}
+{% block content %}
+<link rel="stylesheet" href="\static\css\services.css">
+<div class="wrapper"> 
+    <h2 style="text-align:center;font-size:35px; margin-bottom: 10px;">Our Services</h2>
+    <div class="container">
+        <div class="product-grid">
+            {% for service in services %}
+            <div class="product-card">
+                <img class="product-image" src="{{ service.service_image }}" alt="{{ service.service_name }}">
+                <div class="product-name">{{ service.service_name }}</div>
+                <div class="product-price">₹{{ service.price }}</div>
+                <p class="product-description">High-quality service with great features.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -14,7 +14,8 @@ from ..decorators import auth_required, role_required
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingListView(View):
     def get(self, request):
-        bookings = booking_service.get_booking_list(request.user)  # Fetch all bookings
+        booking_id = booking_service.get_current_booking(request.user.id)
+        bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
@@ -22,7 +23,7 @@ class BookingListView(View):
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingDetailView(View):
     def get(self, request, booking_id):
-        booking = booking_service.get_booking_list(self.request.user)  # Fetch a specific booking
+        booking = booking_service.get_booking_list(booking_id)  # Fetch a specific booking
         return render(request, 'enduser/Booking/booking_list.html', {'bookings': booking})
 
 
@@ -138,3 +139,9 @@ class BookingDeleteView(View):
             messages.success(request, "Booking deleted successfully!")
 
         return redirect('home')
+    
+
+class AllBookingListView(View):
+    def get(self, request):
+        booking = booking_service.get_all_booking_list(request.user.id)  # Fetch a specific booking
+        return render(request, 'enduser/Booking/all_bookings.html', {'bookings': booking})

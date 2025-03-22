@@ -10,8 +10,8 @@
         <div class="booking-card">
             <div class="card-header">
                 <h3>Booking #{{ booking.id }}</h3>
-                <span class="status {% if booking.is_active %}activee{% else %}cancelled{% endif %}">
-                    {{ booking.is_active|yesno:"Active,Cancelled" }}
+                <span class="status">
+                    {{ booking.status}}
                 </span>
             </div>
             <div class="card-body">

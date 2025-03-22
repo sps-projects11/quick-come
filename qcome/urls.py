@@ -54,67 +54,66 @@ urlpatterns = [
     # Theme
     path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),
 
-    # User-Profile
-    path('profile/', views.EnduserProfileView.as_view(), name='user_profile'),
-    path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
-    path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
-
+   
+ #GARAGE ----------------------------------------------------------------------->
     # Garage
     path('garage/create/', views.GarageCreateView.as_view(), name='garage_create'),
     path('garage/profile/', views.GarageProfileView.as_view(), name='garage_profile'),
     path('garage/update/<int:garage_id>/', views.GarageUpdateView.as_view(), name='garage_update'),
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
+    path('garage/work_list/', views.AllWorkListView.as_view(), name='garage_work_list'),
+    path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
+    path('worker/asigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
+    #Garage bills
+    path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
+    path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe'),
 
+
+ #WORKER ----------------------------------------------------------------------->
+    # Work
+    path('work/', views.WorkListView.as_view(), name='work'),
+    # Billing
+    path('billing/', views.BillingHomeView.as_view(), name='billing,'),
+    path('billing/<int:booking_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
+    path('billing/<int:booking_id>/delete', views.BillingDelete.as_view(), name='billing_update'),
+    #Payment
+    path('payment/',views.PaymentListView.as_view(), name='payment_list'),
+    path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
+    path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt'),
+    # Workers
+    path('worker/',views.WorkerView.as_view(),name='worker'),
+    path('worker/<int:user_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
+    path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
+    path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
+    path('worker/payments/', views.WorkerPaymentListView.as_view(), name='worker_payments'),
+    path('services/list/', views.ServiceListView.as_view(), name='list_service'),
+    path('work/<int:work_id>/', views.WorkerWorkRecieptView.as_view(), name='worker_work_details'),
+
+    path("api/check-worker/", views.CheckWorkerStatus.as_view(), name='check_worker_status'),
+
+    
+ ##ENDUSER ----------------------------------------------------------------------------------------->
+
+    # User-Profile
+    path('profile/', views.EnduserProfileView.as_view(), name='user_profile'),
+    path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
+    path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
     #Booking
     path('booking/',views.BookingListView.as_view(), name='booking_list'),
     path('booking/<int:booking_id>/',views.BookingDetailView.as_view(), name='booking_details'),
     path('booking/create/',views.BookingCreateView.as_view(), name='booking_create'),
     path('booking/update/<int:booking_id>/',views.BookingUpdateView.as_view(), name='booking_update'),
     path('booking/delete/<int:booking_id>/',views.BookingDeleteView.as_view(), name='booking_delete'),
+    path('services/', views.ServiceCatalogueView.as_view(), name='list_service_catalouge'),
+    path('booking/list/', views.AllBookingListView.as_view(), name='booking_lists'),
+    #--------------------------------------------------------------------------------->
 
-    # Work
-    path('work/', views.WorkListView.as_view(), name='work'),
-    path('work/<int:booking_id>update', views.WorkUpdate.as_view(), name='work_update'),
-    path('garage/work_list/', views.AllWorkListView.as_view(), name='garage_work_list'),
-
-    # Billing
-    path('billing/', views.BillingHomeView.as_view(), name='billing,'),
-    path('billing/<int:booking_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
-    path('billing/<int:booking_id>/delete', views.BillingDelete.as_view(), name='billing_update'),
-
-    #Payment
-    path('payment/',views.PaymentListView.as_view(), name='payment_list'),
-    path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
-    path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt'),
-
-    # Workers
-     path('worker/<int:worker_id>/',views.WorkerView.as_view(),name='worker'),
-     path('worker/<int:worker_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
-     path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
-     path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
-    #worker
-    path('worker/payments/', views.WorkerPaymentListView.as_view(), name='worker_payments'),
-    path('services/list/', views.ServiceListView.as_view(), name='list_service'),
-
-    #Garage workers
-    path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
-    path("api/check-worker/", views.CheckWorkerStatus.as_view(), name='check_worker_status'),
-    path('services/', views.ServiceCatalogueView.as_view(), name='list_service'),
-    path('worker/asigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
-
-    #Garage bills
-    path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
-    path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe'),
-
-    #Contact
+     #Contact
     path('contact/',views.ContactView.as_view(), name='contact'),
 
     #About
     path('about/',views.AboutView.as_view(), name='about'),
 
-    #work
-    path('work/<int:work_id>/', views.WorkerWorkRecieptView.as_view(), name='worker_work_details'),
-    
 
 ]
 

@@ -115,12 +115,8 @@ class GarageWorkerListView(View):
     def get(self, request):
         # Fetch garage ID for the current user
         garage_id = garage_service.get_garage_id(request.user.id)
-        print(f"Garage ID: {garage_id}")  # Debugging
-
         # Fetch workers in the garage
         workers = workers_service.get_worker_of_garage(garage_id)
-        print(f"Workers: {workers}")  # Debugging
-
         # Initialize worker data list
         worker_data = []
 
@@ -137,8 +133,6 @@ class GarageWorkerListView(View):
                 }
                 for worker in workers
             ]
-
-        print(f"Worker Data: {worker_data}")  # Debugging
         return render(request, 'garage/workers.html', {'workers': worker_data})
     
 

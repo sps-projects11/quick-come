@@ -1,5 +1,5 @@
 from django.views import View
-from qcome.services import user_service
+from qcome.services import user_service,workers_service,garage_service
 from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required
 from ..constants import Role
@@ -14,7 +14,14 @@ class EnduserProfileView(View):
     def get(self, request):
         user_id=request.user.id
         user_details=user_service.get_user_details(user_id)
+        is_worker=workers_service.is_user_a_garage_worker(user_id)
+        is_garage=garage_service.is_user_a_garage_owner(user_id)
+        if is_garage:
+           return redirect('/garage/profile/') 
+        if is_worker:
+            return redirect('/worker/')
         return render(request,'enduser/Profile/user_profile.html',{'user':user_details})
+        
     
 
 class EnduserProfileCreate(View):

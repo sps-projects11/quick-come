@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import render
-from qcome.services import service_service
+from qcome.services import service_service,workers_service,garage_service
 from ..decorators import auth_required, role_required
 from ..constants import Role
 
@@ -16,5 +16,10 @@ class ServiceListView(View):
 class ServiceCatalogueView(View):
     def get(self, request):
         services = service_service.get_all_service_details()
-        print(services)  # Debugging print statement        
+        is_worker=workers_service.is_user_a_garage_worker(request.user.id)
+        is_garage = garage_service.is_user_a_garage_owner(request.user.id)
+        if is_worker:
+            return render(request, 'worker/services.html', {"services": services}) 
+        if is_garage:
+            return render(request, 'garage/services.html', {"services": services}) 
         return render(request, 'enduser/services.html', {"services": services}) 

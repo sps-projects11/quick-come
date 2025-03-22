@@ -30,11 +30,6 @@ class BillingHomeView(View):
         
         # Calculate the total price for the services
         total_price = booking_service.total_price(services)
-        
-        # Print the booking object (for debugging purposes)
-        print("booking", booking)
-        
-        # Return the rendered cart page with booking details
         return render(request, 'worker/cart.html', {
             'booking_id': booking.id,
             'services': services,

@@ -5,9 +5,12 @@ from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
 from qcome.services import payment_service
 
 
-def get_booking_list(user):
+def get_booking_list(booking_id):
     """Fetch all active bookings with service names."""
-    bookings = Booking.objects.filter(customer=user,is_active=True)
+    bookings = Booking.objects.filter(id=booking_id)
+    if not bookings:
+        bookings=[]
+        return bookings
 
     for booking in bookings:
         # Add customer details
@@ -24,7 +27,6 @@ def get_booking_status(booking_id):
     status = Work.objects.filter(booking=booking_id,is_active=True).values('status').first()
     if status:
         status = status['status']
-        print(status)
     else:
         status = Status.PENDING.value
     return status
@@ -234,4 +236,23 @@ def get_last_5_booking():
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"
         booking.vehicle_type = Vehicle_Type(booking.vehicle_type).name
+
+
+def get_all_booking_list(user):
+    """Fetch all active bookings with service names."""
+    bookings = Booking.objects.filter(customer=user,is_active=False)
+
+    for booking in bookings:
+        # Add customer details
+        booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
+        booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
+
+        service_ids = booking.service  # List of service IDs
+        services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
+        booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
+        booking.status= Status(get_booking_status(booking.id)).name
+    return bookings
+
+def get_current_booking(user_id):
+    return Booking.objects.filter(customer=user_id,is_active = True).first()
         
