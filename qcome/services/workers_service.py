@@ -1,4 +1,4 @@
-from ..models import Worker,User
+from ..models import Worker,User,Garage
 
 def get_worker_details(worker_id):
     try:
@@ -8,8 +8,8 @@ def get_worker_details(worker_id):
 
 def worker_create(user, expertise, experience, worker_garage):
     return Worker.objects.create(
-        worker = user,
-        garage = worker_garage,
+        worker = User.objects.filter(id=user).first(),
+        garage = Garage.objects.filter(id=worker_garage).first(),
         experience = experience,
         expertise = expertise
     )

@@ -107,6 +107,7 @@ def toggle_user_status(user_id):
    
 
 def user_phone_create(user, worker_phone):
+    user=User.objects.filter(id=user).first()
     user.phone = worker_phone
     user.save()
 
