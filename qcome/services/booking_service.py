@@ -27,7 +27,6 @@ def get_booking_list(booking_id):
 
 def get_booking_status(booking_id):
     is_deleted=Booking.objects.filter(id=booking_id,is_active=False,assigned_worker=None).exists()
-    print("is_delete:", is_deleted)
     if is_deleted:
         status=Status.CANCELLED.value
         return status
@@ -276,37 +275,68 @@ def get_current_booking(user_id):
 
 
 
-def get_total_booking_by_week():
-    # Annotate each booking with the weekday (Sunday=1, Monday=2, ..., Saturday=7)
-    bookings = (
-        Booking.objects
-        .annotate(weekday=ExtractWeekDay('created_at'))
-        .values('weekday')
-        .annotate(status=get_booking_status('id'))
-        .filter(status)
-        .annotate(total=Count('id'))
-        .order_by('weekday')
-    )
 
-    print(bookings)
-    # Map the weekday numbers to names
+def get_total_booking_by_week():
+    """
+    Returns a nested dictionary where each weekday maps to counts for every booking status.
+    For example:
+      {
+        'Monday': {
+            'PENDING': 3,
+            'ACCEPTED': 4,
+            'WORKING': 0,
+            'COMPLETED': 2,
+            'CANCELLED': 1,
+            'FAILED': 0
+        },
+        'Tuesday': {...},
+        ...
+      }
+    """
+    # Fetch all bookings and annotate each with its weekday (Sunday=1, Monday=2, ..., Saturday=7)
+    bookings_qs = Booking.objects.all().annotate(weekday=ExtractWeekDay('created_at')).order_by('weekday')
+
+    # Map database weekday numbers to day names
     weekday_mapping = {
-        1: 'Sunday',
         2: 'Monday',
         3: 'Tuesday',
         4: 'Wednesday',
         5: 'Thursday',
         6: 'Friday',
-        7: 'Saturday'
+        7: 'Saturday',
+        1: 'Sunday'
     }
 
-    # Build a dictionary with the totals for each weekday
-    result = {weekday_mapping[item['weekday']]: item['total'] for item in bookings}
+    # Mapping from Status enum values to status names
+    status_mapping = {
+        Status.PENDING.value: Status.PENDING.name,
+        Status.ACCEPTED.value: Status.ACCEPTED.name,
+        Status.WORKING.value: Status.WORKING.name,
+        Status.COMPLETED.value: Status.COMPLETED.name,
+        Status.CANCELLED.value: Status.CANCELLED.name,
+        Status.FAILED.value: Status.FAILED.name
+    }
 
-    # Ensure all days are present even if the count is zero
-    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']:
-        result.setdefault(day, 0)
+    # Initialize the result nested dictionary with all weekdays and all statuses set to 0
+    result = { day: {status_name: 0 for status_name in status_mapping.values()}
+               for day in weekday_mapping.values() }
+
+    # Iterate over bookings and apply your custom status logic
+    for booking in bookings_qs:
+        booking_status = get_booking_status(booking.id)
+        day_name = weekday_mapping.get(booking.weekday, 'Unknown')
+        # Debug prints to verify mapping:
+        print(f"Booking ID: {booking.id} | Raw weekday: {booking.weekday} | Mapped day: {day_name} | Computed status: {booking_status}")
+        
+        if day_name == 'Unknown':
+            continue  # Skip bookings with unknown weekday annotation
+        
+        # Get the status name from our mapping
+        status_name = status_mapping.get(booking_status)
+        if status_name:
+            result[day_name][status_name] += 1
+        else:
+            # If you see this message, it means the computed status isn’t in your mapping.
+            print(f"Warning: Booking ID {booking.id} returned an unmapped status: {booking_status}")
 
     return result
-
-

@@ -137,3 +137,5 @@ def get_non_garage_and_non_worker_users():
 
 def get_all_admins():
     return User.objects.filter(roles=Role.ADMIN.value, is_active=True)
+
+
