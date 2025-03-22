@@ -16,7 +16,9 @@ class WorkerView(View):
     def get(self,request):
         user_id = request.user.id
         worker_id=workers_service.get_worker_id(user_id)
+        print("worker_id:",worker_id)
         worker_details = workers_service.get_worker_details(worker_id.id)
+        print(worker_details)
         garage_details = user_service.get_all_garages()
         context = {
             'worker_details':worker_details,
@@ -90,10 +92,11 @@ class WorkerUpdateView(View):
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         garage_id = request.POST.get('garage')
-        
-        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id)
+        user_id = request.user.id
+        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id,user_id)
         messages.success(request,SuccessMessage.S00023.value)
-        return redirect('worker',worker_id = worker_id)  
+        print(worker_id)
+        return redirect('worker')  
 
 @auth_required(login_url='/sign-in/')
 @worker_required
