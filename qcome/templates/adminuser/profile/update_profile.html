@@ -9,97 +9,155 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container my-5 px-3">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <h2 class="mb-4 text-center">Update Profile</h2>
-      <form method="POST" action="{% url 'myadmin_profile_update' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Profile Photo Section with Plus Icon at Bottom Right -->
-        <div class="mb-3 text-center">
-          <label class="form-label d-block">Profile Photo</label>
-          <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-              <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" alt="Profile Photo" id="profilePreview" class="rounded-circle" style="width:150px; height:150px; object-fit:cover;">
-          <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
-              <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
-          </div>            
-          </div>
-          <!-- Hidden file input -->
-          <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow mb-5">
+        <div class="card-header text-center">
+          <h2 class="mb-0">Update Profile</h2>
         </div>
-        
-        <!-- Form Fields -->
-        <div class="mb-3">
-          <label for="id_first_name" class="form-label">First Name</label>
-          <input type="text" class="form-control" id="id_first_name" name="first_name" 
-                 value="{{ user.first_name|default:'' }}" placeholder="Enter your first name" required>
-        </div>
-        <div class="mb-3">
-          <label for="id_middle_name" class="form-label">Middle Name</label>
-          <input type="text" class="form-control" id="id_middle_name" name="middle_name" 
-                 value="{{ user.middle_name|default:'' }}" placeholder="Enter your middle name">
-        </div>
-        <div class="mb-3">
-          <label for="id_last_name" class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="id_last_name" name="last_name" 
-                 value="{{ user.last_name|default:'' }}" placeholder="Enter your last name">
-        </div>
-        <div class="mb-3">
-          <label for="id_email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="id_email" name="email" 
-                 value="{{ user.email|default:'' }}" placeholder="Enter your email" required>
-        </div>
-        <div class="mb-3">
-          <label for="id_phone" class="form-label">Phone</label>
-          <input type="text" class="form-control" id="id_phone" name="phone" 
-                 value="{{ user.phone|default:'' }}" placeholder="Enter your phone number">
-        </div>
-        <div class="mb-3">
-          <label for="id_gender" class="form-label">Gender</label>
-          <select class="form-control" id="id_gender" name="gender">
-            <option value="">Select Gender</option>
-            <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
-            <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
-            <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="id_dob" class="form-label">DOB</label>
-          <input type="date" class="form-control" id="id_dob" name="dob" 
-                 value="{{ user.dob|date:'Y-m-d'|default:'' }}" required>
-        </div>
+        <div class="card-body">
+          <form method="POST" action="{% url 'myadmin_profile_update' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Profile Photo Section -->
+            <div class="mb-4 text-center">
+              <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+                <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/Feature boxes/location.jpg' }}" 
+                     alt="Profile Photo" id="profilePreview" class="rounded-circle" 
+                     style="width:150px; height:150px; object-fit:cover;">
+                <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
+                  <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+                </div>
+                                <!-- Remove icon: shown only when the container has "has-image" class -->
+                                <div id="removePhotoIcon" class="remove-photo-icon">
+                                  <i class="bi bi-x-lg"></i>
+                                </div>
+              </div>
+              <!-- Hidden file input -->
+              <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
+            </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary">Update Profile</button>
+            <!-- First and Last Name -->
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_first_name" class="form-label">First Name</label>
+                  <input type="text" class="form-control" id="id_first_name" name="first_name" 
+                         value="{{ user.first_name|default:'' }}" placeholder="Enter your first name" required>
+                </div>
+              </div>              
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_middle_name" class="form-label">Middle Name</label>
+                  <input type="text" class="form-control" id="id_middle_name" name="middle_name" 
+                         value="{{ user.middle_name|default:'' }}" placeholder="Enter your middle name">
+                </div>
+                <div class="invalid-feedback">Please enter the garage address.</div>
+              </div>
+            </div>
+            
+            <!-- Middle Name and Phone -->
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_last_name" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="id_last_name" name="last_name" 
+                         value="{{ user.last_name|default:'' }}" placeholder="Enter your last name">
+                </div>
+              </div>  
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_phone" class="form-label">Phone</label>
+                  <input type="text" class="form-control" id="id_phone" name="phone" 
+                         value="{{ user.phone|default:'' }}" placeholder="Enter your phone number">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Email and Gender -->
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="id_email" name="email" 
+                         value="{{ user.email|default:'' }}" placeholder="Enter your email" required>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_gender" class="form-label">Gender</label>
+                  <select class="form-control" id="id_gender" name="gender">
+                    <option value="">Select Gender</option>
+                    <option value="1" {% if user.gender == 1 %}selected{% endif %}>Male</option>
+                    <option value="2" {% if user.gender == 2 %}selected{% endif %}>Female</option>
+                    <option value="3" {% if user.gender == 3 %}selected{% endif %}>Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- DOB Field (centered) -->
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-6">
+                <div class="mb-3">
+                  <label for="id_dob" class="form-label">DOB</label>
+                  <input type="date" class="form-control" id="id_dob" name="dob" 
+                         value="{{ user.dob|date:'Y-m-d'|default:'' }}" required>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Update Profile</button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const profileContainer = document.querySelector('.profile-picture-container');
-  const fileInput = document.getElementById('id_profile_photo');
-  const profilePreview = document.getElementById('profilePreview');
-
-  // Trigger file input when the container is clicked
-  profileContainer.addEventListener('click', function() {
-    fileInput.click();
+<script type="module">
+  import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
+  document.addEventListener("DOMContentLoaded", () => {
+    initProfileUploader({
+      profileContainerSelector: '.profile-picture-container',
+      fileInputId: 'id_profile_photo',
+      profilePreviewId: 'profilePreview',
+      removePhotoIconId: 'removePhotoIcon',
+      plusIconSelector: '.profile-plus-icon',
+      defaultImage: "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}"
+    });
   });
-
-  // Update the image preview after selecting a file
-  fileInput.addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        profilePreview.src = e.target.result;
-      }
-      reader.readAsDataURL(file);
-    }
-  });
-});
 </script>
+
+<style>
+  .remove-photo-icon {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+  }
+  /* Show the remove icon on hover only if the container has "has-image" */
+  .profile-picture-container.has-image:hover .remove-photo-icon {
+    opacity: 1;
+  }
+  .remove-photo-icon i {
+    color: #fff;
+    font-size: 1rem;
+  }
+</style>
+
 {% endblock %}
