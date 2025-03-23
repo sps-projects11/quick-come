@@ -88,7 +88,7 @@
         <h2>Worker Profile</h2>
         <div class="profile-details">
             {% if user.profile_photo_url %}
-                <img src="{{ user.profile_photo_url }}" class="profile-img" alt="Garage Image">
+                <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" class="profile-img" alt="Garage Image">
             {% else %}
                 <img src="https://via.placeholder.com/130" class="profile-img" alt="No Image">
             {% endif %}
