@@ -7,7 +7,7 @@
 <div class="container my-4">
   <!-- Welcome Header -->
   <header class="mb-4 text-center">
-    <h1>Welcome, Admin</h1>
+    <h1>Welcome, {{ admin.first_name }}</h1>
     <p>Your admin panel provides an overview of key metrics and recent activity.</p>
   </header>
   
@@ -138,9 +138,6 @@
   // The JSON strings from your view are rendered as JavaScript objects.
   const weeklyBookingData = {{ data.weekly_booking_data|safe }};
   const monthlyUserData = {{ data.monthly_user_data|safe }};
-
-  console.log(weeklyBookingData);
-  console.log(monthlyUserData);
 
   // --- WEEKLY LINE CHART ---
 
