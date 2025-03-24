@@ -15,7 +15,10 @@ from ..decorators import auth_required, role_required
 class BookingListView(View):
     def get(self, request):
         booking_id = booking_service.get_current_booking(request.user.id)
-        bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
+        if not booking_id:
+            bookings=[]
+        else:
+            bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
@@ -54,8 +57,9 @@ class BookingCreateView(View):
         vehicle_type = request.POST.get('vehicle_type')
         service_id = request.POST.get('service')
         description = request.POST.get('description')
+        phone =request.POST.get('customer_phone')
 
-        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description)
+        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description,phone)
 
         if booking == False:
             messages.error(request, "You have already made a booking. You cannot book again.")

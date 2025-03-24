@@ -72,5 +72,8 @@ def get_status_of_work(booking_id):
             return status
     return status
 
-
+def get_work_id(booking_id):
+    work = Work.objects.filter(booking=booking_id,is_active=True).first()
+    work_id = work.id
+    return work_id
 

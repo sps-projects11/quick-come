@@ -4,17 +4,17 @@
 {% block content %}
 
 <script src="{% static 'js/profile.js' %}"></script>
-<div class = "wrapper">
-<div class="profile-container" style="height:100%;margin:auto; width:80%;">
+<section id="booking_details">
+<div class="profile-container" style="height:100%;margin:auto; width:90%;">
     {% if workers %}
-    <table class="table table-striped ">
+    <table>
         <thead>
             <tr>
-                <th style="color: green;">Worker</th>
-                <th style="color: green;">Garage</th>
-                <th style="color: green;">Experience</th>
-                <th style="color: green;">Expertise</th>
-                <th style="color: green;">Verified</th>
+                <th>Worker</th>
+                <th>Garage</th>
+                <th>Experience</th>
+                <th>Expertise</th>
+                <th>Verified</th>
             </tr>
         </thead>
         <tbody style="color: green;">
@@ -33,17 +33,50 @@
         <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No workers found.</p>
         {% endif %}
 </div>
-</div>
+</section>
 <style>
-    .wrapper{
+    #booking_details {
         background: #c8d6e2;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
-        display: flex;
-        padding: 20px;
-        margin: auto;
         height: 100vh;
+        padding: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    tr:hover {
+        background-color: #e9ecef;
+        transition: background-color 0.3s;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 24px;
     }
 </style>
 
