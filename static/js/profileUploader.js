@@ -37,7 +37,7 @@ export function initProfileUploader(config) {
     // Clicking the remove icon clears the file and resets the image
     removePhotoIcon.addEventListener('click', (e) => {
       e.stopPropagation();
-      fileInput.value = "";
+      fileInput.value = defaultImage;
       profilePreview.src = defaultImage;
       profileContainer.classList.remove('has-image');
     });

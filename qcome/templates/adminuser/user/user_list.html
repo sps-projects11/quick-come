@@ -30,7 +30,7 @@
         <td>
           <img src="{{ user.profile_photo_url|default:'/static/all-Pictures/admin-person.jpg' }}" alt="Profile" class="rounded-circle" width="50" height="50">
         </td>
-        <td>{{ user.first_name }} {% if user.middle_name %} {{user.middle_name}} {% endif %} {{ user.last_name }}</td>
+        <td>{{ user.first_name }} {% if user.middle_name %} {{ user.middle_name }} {% endif %} {{ user.last_name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.gender }}</td>
         <td>
@@ -47,7 +47,7 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="5" class="text-center">No users found.</td>
+        <td colspan="7" class="text-center">No users found.</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -103,8 +103,15 @@
   });
 </script>
 
-<!-- Optional CSS for the switch and label styling -->
+<!-- Optional CSS for the switch and label styling plus improved spacing -->
 <style>
+/* Increase padding for table cells for better spacing */
+.table th, .table td {
+  padding: 0.75rem 1.25rem;
+  vertical-align: middle;
+}
+
+/* Switch styling */
 .switch {
   position: relative;
   display: inline-block;
@@ -154,8 +161,9 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+/* Reduced margin for switch labels to lessen extra space */
 .switch-label {
-  margin: 0 10px;
+  margin: 0 5px;
   font-weight: normal;
   transition: font-weight 0.2s, color 0.2s;
 }

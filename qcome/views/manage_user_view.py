@@ -84,7 +84,7 @@ class ManageUserUpdateView(View):
 
         if profile_photo:
             profile_photo_path = save_uploaded_file(profile_photo, 'profile-images')
-        
+
         admin_service.admin_profile_update(
             user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
         )

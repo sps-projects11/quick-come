@@ -28,7 +28,11 @@
                  style="width:150px; height:150px; object-fit:cover; border: 3px solid #007bff;">
             <div class="profile-plus-icon position-absolute" style="bottom: 5px; right: 5px;  border-radius: 50%; padding: 5px;">
               <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem;"></i>
-            </div>            
+            </div>
+            <!-- Remove icon: shown when an image is selected -->
+            <div id="removePhotoIcon" class="remove-photo-icon">
+              <i class="bi bi-x-lg"></i>
+            </div>
           </div>
           <!-- Hidden file input -->
           <input type="file" class="d-none" id="id_profile_photo" name="profile_photo" accept="image/*">
@@ -88,30 +92,46 @@
   </div>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const profileContainer = document.querySelector('.profile-picture-container');
-    const fileInput = document.getElementById('id_profile_photo');
-    const profilePreview = document.getElementById('profilePreview');
-  
-    // Trigger file input when container is clicked
-    profileContainer.addEventListener('click', function() {
-      fileInput.click();
-    });
-  
-    // Update preview after selecting a file
-    fileInput.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          profilePreview.src = e.target.result;
-        }
-        reader.readAsDataURL(file);
-      }
+<script type="module">
+  import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
+  document.addEventListener("DOMContentLoaded", () => {
+    initProfileUploader({
+      profileContainerSelector: '.profile-picture-container',
+      fileInputId: 'id_profile_photo',
+      profilePreviewId: 'profilePreview',
+      removePhotoIconId: 'removePhotoIcon',
+      plusIconSelector: '.profile-plus-icon',
+      defaultImage: "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}"
     });
   });
 </script>
+
+<style>
+  .remove-photo-icon {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+  }
+  /* Show the remove icon on hover only if the container has "has-image" */
+  .profile-picture-container.has-image:hover .remove-photo-icon {
+    opacity: 1;
+  }
+  .remove-photo-icon i {
+    color: #fff;
+    font-size: 1rem;
+  }
+</style>
 
 <style>
   /* Page background and typography */
