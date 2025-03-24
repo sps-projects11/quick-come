@@ -22,6 +22,15 @@
           <p class="service-spare-part">Spare Part: {{ service.spare_part }}</p>
           <p class="service-price">Price: ₹ {{ service.price }}</p>
         </div>
+        <!-- Overlay with edit and delete buttons -->
+        <div class="service-overlay">
+          <a href="{% url 'manage_service_update' service.id %}" class="overlay-btn" title="Edit">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'manage_service_delete' service.id %}" class="overlay-btn" title="Delete">
+            <i class="bi bi-trash"></i>
+          </a>
+        </div>
       </div>
     {% empty %}
       <p>No services available.</p>
@@ -62,13 +71,14 @@
     flex-direction: column;
     text-align: center;
     box-sizing: border-box;
+    position: relative;  /* Needed for overlay positioning */
   }
   
-  /* Fixed-size container using background-image */
+  /* Service image container */
   .service-image-container {
     width: 100%;
-    height: 250px; /* For larger screens; adjust as needed */
-    background-size: contain;  /* Scale image to show full image */
+    height: 250px;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -90,7 +100,42 @@
     margin: 5px 0;
   }
   
-  /* Adjustments for medium screens (e.g., tablets) */
+  /* Overlay styling */
+  .service-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity 0.3s ease;
+  }
+  
+  .service-item:hover .service-overlay {
+    opacity: 1;
+  }
+  
+  .overlay-btn {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    text-decoration: none;
+  }
+  
+  .overlay-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Responsive adjustments for medium screens */
   @media (max-width: 1024px) {
     #services-list {
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -104,13 +149,13 @@
     }
   }
   
-  /* Adjustments for small screens (e.g., 500px and below) */
+  /* Adjustments for small screens */
   @media (max-width: 500px) {
     #services-list {
       grid-template-columns: 1fr;
     }
     .service-image-container {
-      height: 180px; /* Reduced height for small screens */
+      height: 180px;
     }
     #services-container {
       padding: 10px;

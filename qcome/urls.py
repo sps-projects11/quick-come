@@ -44,9 +44,9 @@ urlpatterns = [
 
     # Admin-Service Management
     path('admin/service/', views.ManageServiceList.as_view(), name='manage_service_list'),
-    path('admin/service/create', views.ManageServiceListCreate.as_view(), name='manage_service_create'),
-    path('admin/service/<int:service_id>/update', views.ManageServiceListUpdate.as_view(), name='manage_service_update'),
-    path('admin/service/<int:service_id>/toggle', views.ManageServiceListDelete.as_view(), name='manage_service_delete'),
+    path('admin/service/create', views.ManageServiceCreate.as_view(), name='manage_service_create'),
+    path('admin/service/<int:service_id>/update', views.ManageServiceUpdate.as_view(), name='manage_service_update'),
+    path('admin/service/<int:service_id>/toggle', views.ManageServiceDelete.as_view(), name='manage_service_delete'),
 
     # Admin-Payment Management
     path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),

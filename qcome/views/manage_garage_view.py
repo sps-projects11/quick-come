@@ -5,11 +5,15 @@ from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.http import JsonResponse
-from qcome.constants.default_values import Vehicle_Type
+from qcome.constants.default_values import Vehicle_Type, Role
+from qcome.decorators.auth_decorator import auth_required, role_required
 from django.contrib import messages  # For user feedback
 from qcome.package.file_management import save_uploaded_file
 
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -28,7 +32,10 @@ class ManageGarageListView(View):
         # Pass the list of garage objects to the template.
         return render(request, 'adminuser/garage/garage_list.html', {'garages': garages, 'admin': admin_data})
 
-    
+
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -59,7 +66,10 @@ class ManageGarageCreateView(View):
         messages.success(request, SuccessMessage.S00008.value)
         return redirect('manage_garages_list')
 
-    
+
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageUpdateView(View):
     def get(self, request, garage_id):
         admin_data = user_service.get_user(request.user.id)
@@ -88,6 +98,9 @@ class ManageGarageUpdateView(View):
         return redirect('manage_garages_list')
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageToggleView(View):
     def post(self, request, garage_id):
         garage = garage_service.toggle_garage_status(garage_id)

@@ -7,10 +7,15 @@ from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
 import datetime
-from qcome.constants.default_values import Gender
+from qcome.constants.default_values import Gender, Role
 from django.contrib.auth.hashers import make_password
 from qcome.package.file_management import save_uploaded_file
+from qcome.decorators import auth_required, role_required
 
+
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageUsersListView(View):
     def get(self, request):
         users = user_service.get_all_user()
@@ -24,6 +29,9 @@ class ManageUsersListView(View):
         return render(request, 'adminuser/user/user_list.html',{'users':users, 'admin': admin_data})
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageUsersCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -50,6 +58,8 @@ class ManageUsersCreateView(View):
         return redirect('manage_users')
 
 
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageUserUpdateView(View):
     def get(self , request, user_id):
         user = user_service.get_user(user_id)
@@ -93,6 +103,9 @@ class ManageUserUpdateView(View):
         return redirect('manage_users')
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageUserToggleView(View):
     def post(self, request, user_id):
         # Toggle the user's status using the service function.
