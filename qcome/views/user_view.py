@@ -53,6 +53,7 @@ class EnduserProfileUpdate(View):
             mutable_post['profile_photo_url'] = profile_photo_path  # Add new profile photo path
 
             user_service.update_user_details(user, mutable_post)  # Pass the modified request data
+            messages.success(request, SuccessMessage.S00020.value)
             return redirect('user_profile')
         messages.success(request, SuccessMessage.S00020.value)
         return redirect('user_profile')

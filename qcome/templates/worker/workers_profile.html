@@ -21,11 +21,6 @@
         text-align: center;
         transition: all 0.3s ease-in-out;
     }
-
-    .profile-container:hover {
-        transform: translateY(-5px);
-    }
-
     .profile-img {
         width: 130px;
         height: 130px;
@@ -87,16 +82,12 @@
     <div class="profile-container">
         <h2>Worker Profile</h2>
         <div class="profile-details">
-            {% if user.profile_photo_url %}
-                <img src="{{ user.profile_photo_url }}" class="profile-img" alt="Garage Image">
-            {% else %}
-                <img src="https://via.placeholder.com/130" class="profile-img" alt="No Image">
-            {% endif %}
-            <p><strong>Name:</strong> {{ user.first_name }} {% if user.middle_name %} {{ user.middle_name }} {% endif %} {{ user.last_name }}</p>
-            <p><strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
+                <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" class="profile-img" alt="Garage Image">
+            <p><i class="fas fa-user-tie"></i><strong>Name:</strong> {{ user.first_name }} {% if user.middle_name %} {{ user.middle_name }} {% endif %} {{ user.last_name }}</p>
+            <p><i class="fas fa-phone"></i><strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
             <p><strong>Experience:</strong> {{ worker_details.experience }}</p>
             <p><strong>Expertise:</strong> {{ worker_details.expertise }}</p>
-            <p><strong>Garage:</strong> {% for garage in gargae_details %}{% if worker_details.garage.id == garage.id %}{{ garage.garage_name }}{% endif %}{% endfor %}</p>
+            <p><i class="fas fa-car"></i> <strong>Garage:</strong> {% for garage in gargae_details %}{% if worker_details.garage.id == garage.id %}{{ garage.garage_name }}{% endif %}{% endfor %}</p>
         </div>
         <div class="btn-group">
             <a href="{% url 'worker_update' worker_details.id %}" class="btn btn-primary" id="up">Update</a>
