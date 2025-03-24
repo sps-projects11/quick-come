@@ -7,7 +7,8 @@ from django.contrib import messages
 from ..constants.success_message import SuccessMessage
 from ..constants.error_message import ErrorMessage
 from ..decorators import auth_required, garage_required,worker_required
-
+from ..models import User
+from qcome.package.file_management import save_uploaded_file
 
 
 @auth_required(login_url='/sign-in/')
@@ -52,7 +53,6 @@ class WorkerCreateView(View):
             return redirect('worker')
         
 
-
 @auth_required(login_url='/sign-in/')
 @worker_required
 class WorkerUpdateView(View):
@@ -72,10 +72,15 @@ class WorkerUpdateView(View):
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         garage_id = request.POST.get('garage')
+        profile_picture = request.FILES.get('profile_picture') 
         user_id = request.user.id
-        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id,user_id)
-        messages.success(request,SuccessMessage.S00023.value)
-        return redirect('worker')  
+        profile_photo_path = workers_service.handle_profile_photo(user_id, profile_picture)
+        workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id, user_id, profile_photo_path)
+
+        messages.success(request, SuccessMessage.S00023.value)
+        return redirect('worker')
+
+
 
 @auth_required(login_url='/sign-in/')
 @worker_required

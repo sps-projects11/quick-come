@@ -9,111 +9,137 @@
             {% csrf_token %}
             <div class="image-card">
                 <div class="text-center mb-4">
-                    <div class="position-relative d-inline-block" style="width: 125px; height: 125px; background-color: black; border-radius: 50%;">
-                        <img id="profilePic" src="{{ user_details.profile_photo_url }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
-                        <button type="button" class="btn btn-primary position-absolute top-50 start-50 translate-middle rounded-circle" onclick="selectImage()">+</button>
-                        <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;" onchange="setImage(event)">
+                    <div class="position-relative d-inline-block" style="width: 120px; height: 120px; background-color: black; border-radius: 50%; border: 2px solid blue;">
+                        <img id="profilePic" src="{{ user_details.profile_photo_url |default:'\static\all-Pictures\user.jpg'}}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        <button type="button" id="uploadBtn" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle">+</button>
+                        <button type="button" id="removeButton" class="btn btn-danger position-absolute top-0 end-0 rounded-circle" style="display:none;">x</button>
+                        <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;">
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <input type="text" name="first_name" placeholder="First Name" value="{{ user_details.first_name }}">
+            <div class="form-group row">
+                <div class="col">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="First Name" value="{{ user_details.first_name }}">
+                </div>
+                <div class="col">
+                    <label for="middle_name">Middle Name</label>
+                    <input type="text" id="middle_name" name="middle_name" placeholder="Middle Name" value="{{ user_details.middle_name|default:'' }}">
+                </div>
             </div>
-            <div class="form-group">
-                <input type="text" name="middle_name" placeholder="Middle Name" value="{{ user_details.middle_name|default:'' }}">
+            <div class="form-group row">
+                <div class="col">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="{{ user_details.last_name }}">
+                </div>
+                <div class="col">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Email" value="{{ user_details.email|default:'' }}">
+                </div>
             </div>
-            <div class="form-group">
-                <input type="text" name="last_name" placeholder="Last Name" value="{{ user_details.last_name }}">
+            <div class="form-group row">
+                <div class="col">
+                    <label for="phone">Phone</label>
+                    <input type="text" id="phone" name="phone" placeholder="Phone" value="{{ user_details.phone|default:'' }}">
+                </div>
+                <div class="col">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="Male" {% if user_details.gender == 1 %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if user_details.gender == 2 %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if user_details.gender == 3 %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="email" name="email" placeholder="Email" value="{{ user_details.email|default:'' }}">
-            </div>
-            <div class="form-group">
-                <input type="text" name="phone" placeholder="Phone" value="{{ user_details.phone|default:'' }}">
-            </div>
-            <div class="form-group">
-                <select name="gender">
-                    <option value="Male" {% if user_details.gender == 1 %}selected{% endif %}>Male</option>
-                    <option value="Female" {% if user_details.gender == 2 %}selected{% endif %}>Female</option>
-                    <option value="Other" {% if user_details.gender == 3 %}selected{% endif %}>Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="date" name="dob" placeholder="Date of Birth" value="{{ user_details.dob|date:'Y-m-d'|default_if_none:'' }}">
+            <div class="form-group row">
+                <div class="col">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" placeholder="Date of Birth" value="{{ user_details.dob|date:'Y-m-d'|default_if_none:'' }}">
+                </div>
             </div>
 
-            <div class="d-flex justify-content-center gap-3">
-                <button type="submit" class="submit-button">Update</button>
-                <a href="javascript:history.back()" class="submit-button cancel-button">Cancel</a>
+            <div class="d-flex justify-content-center gap-3 action-buttons">
+                <button type="submit" class="btn-action">Update</button>
+                <a href="javascript:history.back()" class="btn-action cancel-button">Cancel</a>
             </div>
         </form>
     </div>
 </section>
 
 <style>
-    /* Profile Form Styles */
     .form-container {
         background-color: white;
-        padding: 2rem;
+        padding: 1.5rem;
         border-radius: 1rem;
         box-shadow: var(--shadow);
-        max-width: 600px;
-        margin: 40px auto;
-        text-align: center;
+        max-width: 500px;
+        margin: 20px auto;
     }
 
     .form-container h2 {
-        margin-bottom: 2rem;
-        color: #343a40;
-    }
-
-    .form-group {
         margin-bottom: 1.5rem;
+        color: #343a40;
+        text-align: center;
     }
 
-    .form-group input,
-    .form-group select {
+    .form-group.row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .form-group.row .col {
+        width: 48%;
+    }
+
+    .form-group input, .form-group select {
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.5rem;
         border: 1px solid #e5e7eb;
         border-radius: 0.5rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
-    .image-card {
-        margin-bottom: 1.5rem;
-    }
-
-    /* Buttons */
-    .submit-button {
+    .btn-action {
         background-color: var(--primary-color);
         color: var(--white);
-        padding: 1rem 2rem;
+        padding: 0.8rem 1.5rem;
         border: none;
         border-radius: 0.5rem;
-        font-size: 1.1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: background-color 0.3s ease;
-        width: 45%;
+        text-align: center;
+        text-decoration: none;
+        width: 100px;
     }
 
     .cancel-button {
         background-color: #dc3545;
-        color: white;
     }
 
-    .submit-button:hover {
-        background-color: var(--secondary-color);
-    }
+    @media (max-width: 768px) {
+        .form-group.row {
+            flex-direction: column;
+        }
 
-    .cancel-button:hover {
-        background-color: #c82333;
+        .form-group.row .col, .btn-action {
+            width: 100%;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
     }
 </style>
 
 <script>
+    document.getElementById("uploadBtn").addEventListener("click", selectImage);
+    document.getElementById("imageInput").addEventListener("change", setImage);
+    document.getElementById("removeButton").addEventListener("click", removeImage);
+
     function selectImage() {
         document.getElementById("imageInput").click();
     }
@@ -124,9 +150,18 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 document.getElementById("profilePic").src = e.target.result;
+                document.getElementById("removeButton").style.display = "block"; // Show remove button
             };
             reader.readAsDataURL(file);
         }
     }
+
+    function removeImage() {
+        document.getElementById("profilePic").src = ""; // Remove image preview
+        document.getElementById("imageInput").value = ""; // Clear input file value
+        document.getElementById("removeButton").style.display = "none"; // Hide remove button
+    }
 </script>
+
+
 {% endblock %}
