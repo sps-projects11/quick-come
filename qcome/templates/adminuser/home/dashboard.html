@@ -66,84 +66,111 @@
   </div>
   
   <!-- Charts Section -->
-  <div class="row mb-4">
-    <div class="col-md-6 mb-4">
-      <h2 class="mb-3">Weekly Bookings (Line Chart)</h2>
+  <div class="mb-4" style="display: flex; gap: 20px;">
+    <div class="col-md-6" style="background-color: rgb(255, 255, 255); flex: 1;">
+      <h2 class="mb-3">Weekly Booking Overview</h2>
       <canvas id="weeklyLineChart"></canvas>
     </div>
-    <div class="col-md-6 mb-4">
-      <h2 class="mb-3">Monthly Overview (Bar Chart)</h2>
+    <div class="col-md-6" style="background-color: rgb(255, 255, 255); flex: 1;">
+      <h2 class="mb-3">Monthly User Overview</h2>
       <canvas id="monthlyBarChart"></canvas>
     </div>
   </div>
   
-  <!-- Recent Bookings Section -->
-  <section class="mb-4">
-    <h2 class="mb-3">Recent Bookings</h2>
-    <div class="table-responsive">
-      <table class="table table-striped align-middle">
-        <thead class="table-dark">
+  
+<!-- Recent Bookings Section -->
+<section class="mb-4">
+  <h2 class="mb-3">Recent Bookings</h2>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Booking ID</th>
+          <th>Customer Name</th>
+          <th>Service</th>
+          <th>Vehicle Type</th>
+          <th>Status</th>
+          <th>Date/Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in data.recent_bookings %}
           <tr>
-            <th>Booking ID</th>
-            <th>Customer Name</th>
-            <th>Service</th>
-            <th>Status</th>
-            <th>Date/Time</th>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.customer_name }}</td>
+            <td>{{ booking.service_names }}</td>
+            <td>{{ booking.vehicle_type }}</td>
+            <td>
+              {% if booking.status == "PENDING" %}
+                <span class="badge bg-warning text-dark">{{ booking.status }}</span>
+              {% elif booking.status == "ACCEPTED" %}
+                <span class="badge bg-success">{{ booking.status }}</span>
+              {% elif booking.status == "WORKING" %}
+                <span class="badge bg-info text-dark">{{ booking.status }}</span>
+              {% elif booking.status == "COMPLETED" %}
+                <span class="badge bg-primary">{{ booking.status }}</span>
+              {% elif booking.status == "CANCELLED" %}
+                <span class="badge bg-danger">{{ booking.status }}</span>
+              {% elif booking.status == "FAILED" %}
+                <span class="badge bg-secondary">{{ booking.status }}</span>
+              {% else %}
+                {{ booking.status }}
+              {% endif %}
+            </td>
+            <td>{{ booking.created_at|date:"M d, Y H:i" }}</td>
           </tr>
-        </thead>
-        <tbody>
+        {% empty %}
           <tr>
-            <td>#101</td>
-            <td>John Doe</td>
-            <td>Oil Change</td>
-            <td><span class="badge bg-success">Completed</span></td>
-            <td>2025-03-20 10:30 AM</td>
+            <td colspan="6" class="text-center">No recent bookings found.</td>
           </tr>
-          <tr>
-            <td>#102</td>
-            <td>Jane Smith</td>
-            <td>Tire Replacement</td>
-            <td><span class="badge bg-warning">Pending</span></td>
-            <td>2025-03-20 11:00 AM</td>
-          </tr>
-          <tr>
-            <td>#103</td>
-            <td>Michael Johnson</td>
-            <td>Brake Repair</td>
-            <td><span class="badge bg-danger">Cancelled</span></td>
-            <td>2025-03-20 12:15 PM</td>
-          </tr>
-          <tr>
-            <td>#104</td>
-            <td>Emily Davis</td>
-            <td>Car Wash</td>
-            <td><span class="badge bg-primary">In Progress</span></td>
-            <td>2025-03-20 1:00 PM</td>
-          </tr>
-          <tr>
-            <td>#105</td>
-            <td>Chris Brown</td>
-            <td>Engine Check</td>
-            <td><span class="badge bg-success">Completed</span></td>
-            <td>2025-03-20 2:30 PM</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
 </div>
 
 <!-- Include Chart.js via CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  // WEEKLY LINE CHART with detailed booking data
-  var weeklyLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  var totalBookings = [30, 40, 35, 50, 45, 55, 60];
-  var confirmedBookings = [25, 30, 28, 42, 38, 48, 52];
-  var cancelledBookings = [5, 10, 7, 8, 7, 7, 8];
 
-  var ctxWeekly = document.getElementById('weeklyLineChart').getContext('2d');
-  var weeklyLineChart = new Chart(ctxWeekly, {
+<script>
+  // The JSON strings from your view are rendered as JavaScript objects.
+  const weeklyBookingData = {{ data.weekly_booking_data|safe }};
+  const monthlyUserData = {{ data.monthly_user_data|safe }};
+
+  console.log(weeklyBookingData);
+  console.log(monthlyUserData);
+
+  // --- WEEKLY LINE CHART ---
+
+  const weeklyLabels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const statuses = ["PENDING", "ACCEPTED", "WORKING", "COMPLETED", "CANCELLED", "FAILED"];
+
+  // Build arrays for each status and for total bookings.
+  const pendingBookings = [];
+  const acceptedBookings = [];
+  const workingBookings = [];
+  const completedBookings = [];
+  const cancelledBookings = [];
+  const failedBookings = [];
+  const totalBookings = [];
+
+  weeklyLabels.forEach(day => {
+    const dayData = weeklyBookingData[day];
+    const total = statuses.reduce((sum, stat) => sum + dayData[stat], 0);
+    totalBookings.push(total);
+
+    pendingBookings.push(dayData["PENDING"]);
+    acceptedBookings.push(dayData["ACCEPTED"]);
+    workingBookings.push(dayData["WORKING"]);
+    completedBookings.push(dayData["COMPLETED"]);
+    cancelledBookings.push(dayData["CANCELLED"]);
+    failedBookings.push(dayData["FAILED"]);
+  });
+
+  const ctxWeekly = document.getElementById('weeklyLineChart').getContext('2d');
+  const weeklyLineChart = new Chart(ctxWeekly, {
     type: 'line',
     data: {
       labels: weeklyLabels,
@@ -157,10 +184,34 @@
           tension: 0.3
         },
         {
-          label: 'Confirmed Bookings',
-          data: confirmedBookings,
+          label: 'Pending Bookings',
+          data: pendingBookings,
+          borderColor: 'rgba(200, 200, 200, 1)',
+          backgroundColor: 'rgba(200, 200, 200, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Accepted Bookings',
+          data: acceptedBookings,
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Working Bookings',
+          data: workingBookings,
+          borderColor: 'rgba(153, 102, 255, 1)',
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Completed Bookings',
+          data: completedBookings,
+          borderColor: 'rgba(255, 159, 64, 1)',
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
           fill: false,
           tension: 0.3
         },
@@ -169,6 +220,14 @@
           data: cancelledBookings,
           borderColor: 'rgba(255, 99, 132, 1)',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Failed Bookings',
+          data: failedBookings,
+          borderColor: 'rgba(255, 206, 86, 1)',
+          backgroundColor: 'rgba(255, 206, 86, 0.2)',
           fill: false,
           tension: 0.3
         }
@@ -210,21 +269,33 @@
     }
   });
 
-  // MONTHLY BAR CHART with static data
-  var monthlyLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  var monthlyUsers = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160];
-  var monthlyGarages = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-  var monthlyWorkers = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+  // --- MONTHLY BAR CHART ---
 
-  var ctxMonthly = document.getElementById('monthlyBarChart').getContext('2d');
-  var monthlyBarChart = new Chart(ctxMonthly, {
+  const monthlyLabels = ["January", "February", "March", "April", "May", "June", 
+                           "July", "August", "September", "October", "November", "December"];
+
+  const monthlyAdmins = [];
+  const monthlyGarages = [];
+  const monthlyWorkers = [];
+  const monthlyEndUsers = [];
+
+  monthlyLabels.forEach(month => {
+    const data = monthlyUserData[month];
+    monthlyAdmins.push(data["admin"]);
+    monthlyGarages.push(data["garage"]);
+    monthlyWorkers.push(data["worker"]);
+    monthlyEndUsers.push(data["end_user"]);
+  });
+
+  const ctxMonthly = document.getElementById('monthlyBarChart').getContext('2d');
+  const monthlyBarChart = new Chart(ctxMonthly, {
     type: 'bar',
     data: {
       labels: monthlyLabels,
       datasets: [
         {
-          label: 'Users',
-          data: monthlyUsers,
+          label: 'Admins',
+          data: monthlyAdmins,
           backgroundColor: 'rgba(54, 162, 235, 0.6)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1
@@ -241,6 +312,13 @@
           data: monthlyWorkers,
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'End Users',
+          data: monthlyEndUsers,
+          backgroundColor: 'rgba(153, 102, 255, 0.6)',
+          borderColor: 'rgba(153, 102, 255, 1)',
           borderWidth: 1
         }
       ]
@@ -259,6 +337,8 @@
     }
   });
 </script>
+
+
 
 {% endblock %}
 

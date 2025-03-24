@@ -64,6 +64,7 @@ urlpatterns = [
     path('garage/work_list/', views.AllWorkListView.as_view(), name='garage_work_list'),
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
     path('worker/asigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
+
     #Garage bills
     path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),
     path('garage/bills/<int:booking_id>/', views.GarageBillReceipeView.as_view(), name='garage_bill_reciepe'),
@@ -72,14 +73,17 @@ urlpatterns = [
  #WORKER ----------------------------------------------------------------------->
     # Work
     path('work/', views.WorkListView.as_view(), name='work'),
+
     # Billing
     path('billing/', views.BillingHomeView.as_view(), name='billing,'),
     path('billing/<int:booking_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
     path('billing/<int:booking_id>/delete', views.BillingDelete.as_view(), name='billing_update'),
+
     #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),
     path('payment/create/<int:booking_id>/',views.PaymentCreateView.as_view(), name='payment_create'),
     path('payment/receipt/<int:payment_id>/', views.PaymentReceipt.as_view(), name='payment_receipt'),
+
     # Workers
     path('worker/',views.WorkerView.as_view(),name='worker'),
     path('worker/<int:user_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
@@ -98,6 +102,7 @@ urlpatterns = [
     path('profile/', views.EnduserProfileView.as_view(), name='user_profile'),
     path('profile/<int:user_id>/update/', views.EnduserProfileUpdate.as_view(), name='profile_update' ),
     path('profile/<int:user_id>/delete/', views.EnduserProfileDelete.as_view(), name='profile_delete' ),
+    
     #Booking
     path('booking/',views.BookingListView.as_view(), name='booking_list'),
     path('booking/<int:booking_id>/',views.BookingDetailView.as_view(), name='booking_details'),

@@ -65,7 +65,7 @@ class WorkerUpdateView(View):
             'user': request.user,
         }
         return render(request, 'worker/worker_profile_update.html', context)
-
+    
     def post(self, request, worker_id):
         worker_name = request.POST.get('worker_name')
         worker_phone = request.POST.get('worker_phone')

@@ -1,8 +1,9 @@
 from ..models import Booking, ServiceCatalog, Work
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
-from qcome.constants.default_values import Vehicle_Type,PayStatus,Status
+from qcome.constants.default_values import Vehicle_Type, PayStatus, Status
 from qcome.services import payment_service,work_service
+from django.db.models.functions import ExtractWeekDay
 
 
 def get_booking_list(booking_id):
@@ -25,7 +26,6 @@ def get_booking_list(booking_id):
 
 def get_booking_status(booking_id):
     is_deleted=Booking.objects.filter(id=booking_id,is_active=False,assigned_worker=None).exists()
-    print("is_delete:", is_deleted)
     if is_deleted:
         status=Status.CANCELLED.value
         return status
@@ -238,15 +238,18 @@ def get_bookings(worker_id):
 
 
 def get_last_5_booking():
-    Bookings = Booking.objects.all().order_by('-created_at')[:5]
+    bookings = Booking.objects.all().order_by('-created_at')[:5]
 
-    for booking in Bookings:
+    for booking in bookings:
         booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
         booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
         service_ids = booking.service
         services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
         booking.service_names = ", ".join(services) if services else "No service"
         booking.vehicle_type = Vehicle_Type(booking.vehicle_type).name
+        booking.status = Status(get_booking_status(booking.id)).name
+
+    return bookings
 
 
 def get_all_booking_list(user):
@@ -264,6 +267,70 @@ def get_all_booking_list(user):
         booking.status= Status(get_booking_status(booking.id)).name
     return bookings
 
+
 def get_current_booking(user_id):
     return Booking.objects.filter(customer=user_id,is_active = True).first()
+
+
+def get_weekly_booking_data():
+    """
+    Returns a nested dictionary where each weekday maps to counts for every booking status.
+    For example:
+      {
+        'Monday': {
+            'PENDING': 3,
+            'ACCEPTED': 4,
+            'WORKING': 0,
+            'COMPLETED': 2,
+            'CANCELLED': 1,
+            'FAILED': 0
+        },
+        'Tuesday': {...},
+        ...
+      }
+    """
+    # Fetch all bookings and annotate each with its weekday (Sunday=1, Monday=2, ..., Saturday=7)
+    bookings_qs = Booking.objects.all().annotate(weekday=ExtractWeekDay('created_at')).order_by('weekday')
+
+    # Map database weekday numbers to day names
+    weekday_mapping = {
+        2: 'Monday',
+        3: 'Tuesday',
+        4: 'Wednesday',
+        5: 'Thursday',
+        6: 'Friday',
+        7: 'Saturday',
+        1: 'Sunday'
+    }
+
+    # Mapping from Status enum values to status names
+    status_mapping = {
+        Status.PENDING.value: Status.PENDING.name,
+        Status.ACCEPTED.value: Status.ACCEPTED.name,
+        Status.WORKING.value: Status.WORKING.name,
+        Status.COMPLETED.value: Status.COMPLETED.name,
+        Status.CANCELLED.value: Status.CANCELLED.name,
+        Status.FAILED.value: Status.FAILED.name
+    }
+
+    # Initialize the result nested dictionary with all weekdays and all statuses set to 0
+    result = { day: {status_name: 0 for status_name in status_mapping.values()}
+               for day in weekday_mapping.values() }
+
+    # Iterate over bookings and apply your custom status logic
+    for booking in bookings_qs:
+        booking_status = get_booking_status(booking.id)
+        day_name = weekday_mapping.get(booking.weekday, 'Unknown')        
         
+        if day_name == 'Unknown':
+            continue  # Skip bookings with unknown weekday annotation
+        
+        # Get the status name from our mapping
+        status_name = status_mapping.get(booking_status)
+        if status_name:
+            result[day_name][status_name] += 1
+        else:
+            # If you see this message, it means the computed status isn’t in your mapping.
+            print(f"Warning: Booking ID {booking.id} returned an unmapped status: {booking_status}")
+
+    return result
