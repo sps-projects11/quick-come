@@ -67,14 +67,14 @@ class WorkerUpdateView(View):
         return render(request, 'worker/worker_profile_update.html', context)
     
     def post(self, request, worker_id):
+        user_id = request.user.id
         worker_name = request.POST.get('worker_name')
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         garage_id = request.POST.get('garage')
         profile_picture = request.FILES.get('profile_picture') 
-        user_id = request.user.id
-        profile_photo_path = workers_service.handle_profile_photo(user_id, profile_picture)
+        profile_photo_path =  save_uploaded_file(profile_picture, subfolder="profile-images")
         workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id, user_id, profile_photo_path)
 
         messages.success(request, SuccessMessage.S00023.value)

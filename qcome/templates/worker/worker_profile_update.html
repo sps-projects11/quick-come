@@ -10,10 +10,12 @@
             {% csrf_token %}
             <div class="image-card">
                 <div class="text-center mb-4">
-                    <div class="position-relative d-inline-block" style="width: 140px; height: 140px; background-color: black; border-radius: 50%; border: 2px solid blue;">
-                        <img id="profilePic" src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
-                        <button type="button" id="uploadBtn" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle">+</button>
-                        <button type="button" id="removeButton" class="btn btn-danger position-absolute top-0 end-0 rounded-circle" style="display:none;">x</button>
+                    <div class="position-relative d-inline-block" style="width: 120px; height: 120px; background-color: black; border-radius: 50%; border: 2px solid blue;">
+                        <img id="profilePic" src="{{ user.profile_photo_url |default:'\static\all-Pictures\user.jpg'}}" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        <button type="button" id="uploadBtn" class="imageSelector btn btn-primary position-absolute bottom-0 end-0 rounded-circle">+</button>
+                        <div id="removePhotoIcon" class="remove-photo-icon">
+                            X
+                          </div>
                         <input type="file" id="imageInput" name="profile_picture" accept="image/*" style="display: none;">
                     </div>
                 </div>
@@ -128,34 +130,43 @@
     }
 </style>
 
-<script>
-    document.getElementById("uploadBtn").addEventListener("click", selectImage);
-    document.getElementById("imageInput").addEventListener("change", setImage);
-    document.getElementById("removeButton").addEventListener("click", removeImage);
-
-    function selectImage() {
-        document.getElementById("imageInput").click();
-    }
-
-    function setImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("profilePic").src = e.target.result;
-                document.getElementById("removeButton").style.display = "block"; // Show remove button
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function removeImage() {
-        document.getElementById("profilePic").src = ""; // Remove image preview
-        document.getElementById("imageInput").value = ""; // Clear input file value
-        document.getElementById("removeButton").style.display = "none"; 
-    }
+<script type="module">
+    import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
+    document.addEventListener("DOMContentLoaded", () => {
+      initProfileUploader({
+        profileContainerSelector: '.image-card',
+        fileInputId: 'imageInput',
+        profilePreviewId: 'profilePic',
+        removePhotoIconId: 'removePhotoIcon',
+        plusIconSelector: '.imageSelector',
+        defaultImage: "{{ '/static/all-Pictures/user.jpg' }}"
+      });
+    });
 </script>
+<style>
+    .remove-photo-icon {
+    position: absolute;
+    top: 17px;
+    right: 1px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+    color: #fff;
+    font-size: 1rem;
+}
 
+.image-card:hover .remove-photo-icon {
+    opacity: 1;
+}
 
+  </style>
 
 {% endblock %}
