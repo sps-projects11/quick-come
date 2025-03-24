@@ -4,7 +4,7 @@ from django.db.models import Count
 
 
 def get_user(user_id):
-    return User.objects.get(id=user_id)
+    return User.objects.get(id=user_id, is_active=True)
 
 
 def get_all_user():

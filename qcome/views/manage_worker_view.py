@@ -73,7 +73,7 @@ class ManageWorkerUpdateView(View):
         worker_garage = garage_service.get_garage(worker.garage.id)
         worker.garage_name = worker_garage.garage_name
 
-        all_garage = user_service.get_all_garages_exclude_worker_garage(worker.garage.id)
+        all_garage = garage_service.get_all_garages_exclude_worker_garage(worker.garage.id)
 
         return render(request, 'adminuser/worker/worker_update.html', {'worker': worker, 'all_garage':all_garage, 'admin': admin_data})
     
