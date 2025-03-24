@@ -44,9 +44,9 @@ class EnduserProfileUpdate(View):
 
             profile_photo_path = user.profile_photo_url  # Default to existing photo
                     
-            if profile_photo:
-                profile_photo_path = save_uploaded_file(profile_photo, subfolder="profile-images")
-                print("Updated profile photo path:", profile_photo_path)
+           
+            profile_photo_path = save_uploaded_file(profile_photo, subfolder="profile-images")
+            print("Updated profile photo path:", profile_photo_path)
 
             # ✅ Make a mutable copy of request.POST
             mutable_post = request.POST.copy()
