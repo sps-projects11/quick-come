@@ -67,12 +67,33 @@
     </div>
 </section>
 <script>
+    // Always start the booking update WebSocket
+    const bookingSocket = new WebSocket("ws://localhost:8000/ws/booking_updates/");
+
+    bookingSocket.onopen = function () {
+        console.log("✅ Booking WebSocket Connected!");
+    };
+
+    bookingSocket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        console.log("📩 Booking Update Message:", data);
+
+        if (data.message === "Booking updated") {
+            location.reload();  // Reload the page to show the new booking
+        }
+    };
+
+    bookingSocket.onerror = function (error) {
+        console.error("❌ Booking WebSocket Error: ", error);
+    };
+
+    // Function to assign a worker
     function create_assign_worker(selectElement, bookingId) {
         let selectedWorkerId = selectElement.value;
-    
+
         if (!selectedWorkerId) return; // Prevent assigning if no worker is selected
-    
-        fetch('/worker/asigned/', { 
+
+        fetch('/worker/assigned/', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,25 +106,50 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log("Server Response:", data); // Debugging output
-    
+            console.log("Server Response:", data);
+
             if (data.status === 'success') {
-                console.log("Redirecting in 1 second..."); // Debug log before redirection
-    
+                console.log("✅ Worker assigned successfully! Starting WebSocket for assigned workers...");
+                
+                // Start worker WebSocket only after a worker is assigned
+                startWorkerSocket();
+                
+                // Optional: Redirect or reload after a delay
                 setTimeout(() => {
-                    console.log("Now Redirecting...");
-                    window.location.href = '/garage/work_list/';
+                    location.reload();
                 }, 200);
             } else {
-                console.log("Error in Response:", data.message);
+                console.log("❌ Error in Response:", data.message);
             }
         })
         .catch(error => {
-            console.error("Error assigning worker:", error);
+            console.error("❌ Error assigning worker:", error);
         });
     }
-    
-    
+
+    // Function to start worker WebSocket after assignment
+    function startWorkerSocket() {
+        const workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
+
+        workerSocket.onopen = function () {
+            console.log("✅ Worker WebSocket Connected!");
+        };
+        
+        workerSocket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            console.log("📩 Worker Assigned Message:", data);
+        
+            if (data.message === "Worker assigned to booking") {
+                location.reload();  
+            }
+        };
+        
+        workerSocket.onerror = function (error) {
+            console.error("❌ Worker WebSocket Error: ", error);
+        };
+    }
+
+    // Function to get CSRF token
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -119,6 +165,7 @@
         return cookieValue;
     }
 </script>
+
 <style>
     #booking_details {
         background: #c8d6e2;

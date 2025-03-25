@@ -53,6 +53,40 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/booking_updates/");
+
+        socket.onopen = function () {
+            console.log("✅ Booking WebSocket Connected!");
+        };
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            console.log("📩 Booking Update Received:", data);
+
+            if (data.booking_id) {
+                alert(`Booking Updated: ${data.message}`);
+                location.reload();  // ✅ Reload page on update
+            }
+        };
+
+        socket.onerror = function (error) {
+            console.error("❌ WebSocket Error:", error);
+        };
+
+        socket.onclose = function () {
+            console.log("🔴 Booking WebSocket Disconnected");
+        };
+    });
+</script>
+
+
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {

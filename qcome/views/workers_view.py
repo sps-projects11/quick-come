@@ -11,6 +11,10 @@ from ..models import User
 from qcome.package.file_management import save_uploaded_file
 
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+
 @auth_required(login_url='/sign-in/')
 @worker_required
 class WorkerView(View):
@@ -138,12 +142,27 @@ class AssignedWorkerCreateView(View):
             booking.assigned_worker = worker
             booking.save()
 
-            work_service.work_create(booking,booking.assigned_worker,booking.customer)
+            work_service.work_create(booking, booking.assigned_worker, booking.customer)
+
+            # Emit WebSocket event
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "worker_updates",
+                {
+                    "type": "send_worker_update",
+                    "data": {
+                        "message": "Worker assigned to booking",
+                        "booking_id": booking.id,
+                        "worker": f"{worker.worker.first_name} {worker.worker.last_name}",
+                    },
+                },
+            )
+
             return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
-        
+
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)
-        
+
         
     
 @auth_required(login_url='/sign-in/')

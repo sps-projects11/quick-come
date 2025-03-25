@@ -63,7 +63,7 @@ urlpatterns = [
     path('garage/delete/<int:garage_id>/', views.GarageDeleteView.as_view(), name='garage_delete'),
     path('garage/work_list/', views.AllWorkListView.as_view(), name='garage_work_list'),
     path('garage/workers/', views.GarageWorkerListView.as_view(), name='garage_workers_list'),
-    path('worker/asigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
+    path('worker/assigned/', views.AssignedWorkerCreateView.as_view(), name='worker_assign_create'),
 
     #Garage bills
     path('garage/bills/', views.GarageBillsListView.as_view(), name='garage_bills'),

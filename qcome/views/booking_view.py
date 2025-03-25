@@ -9,6 +9,11 @@ from ..decorators import auth_required, role_required
 
 
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+
+
 # ✅ View to Show Booking History (List of Bookings)
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -32,6 +37,8 @@ class BookingDetailView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')    
+
+
 class BookingCreateView(View):
     def get(self, request):
         user = request.user
@@ -57,20 +64,28 @@ class BookingCreateView(View):
         vehicle_type = request.POST.get('vehicle_type')
         service_id = request.POST.get('service')
         description = request.POST.get('description')
-        phone =request.POST.get('customer_phone')
+        phone = request.POST.get('customer_phone')
 
-        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description,phone)
-
-        if booking == False:
-            messages.error(request, "You have already made a booking. You cannot book again.")
-            return redirect('home')  # Redirect user to home or booking page
-
-        if booking == "error":
-            messages.error(request, "Something went wrong. Please try again.")
-            return redirect('booking_create')
+        booking = booking_service.create_booking(user, current_location, vehicle_type, service_id, description, phone)
 
         if booking:
-            
+            # Emit WebSocket event correctly
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "booking_updates",
+                {
+                    "type": "send_booking_update",  # Matches method in BookingConsumer
+                    "booking": {  # ✅ Correct key
+                        "id": booking.id,
+                        "customer_name": f"{user.first_name} {user.last_name}",
+                        "phone": phone,
+                        "vehicle_type": vehicle_type,
+                        "location": current_location,
+                        "description": description
+                    },
+                },
+            )
+
             messages.success(request, "Booking created successfully!")
             return redirect('home')
 

@@ -142,4 +142,30 @@
     </div>
 </div>
 
+<script>
+const workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
+
+workerSocket.onopen = function () {
+    console.log("✅ Worker WebSocket Connected!");
+};
+
+workerSocket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    console.log("📩 Worker Assigned Message:", data);
+
+    if (data.message === "Worker assigned to booking") {
+        console.log(`Worker ${data.worker} assigned to Booking ID: ${data.booking_id}`);
+        
+        // ✅ Refresh the worker's work list in real time
+        location.reload();  
+    }
+};
+
+workerSocket.onerror = function (error) {
+    console.error("❌ Worker WebSocket Error: ", error);
+};
+
+</script>
+
+
 {% endblock %}
