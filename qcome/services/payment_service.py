@@ -4,6 +4,8 @@ from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from ..constants import PayType,PayStatus
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
     
 def get_all_payments_created_by(user_id):
@@ -21,51 +23,57 @@ def get_current_payment(booking_id):
 def create_payment(request, booking_id, user_id):
     """Create a new payment for a given booking and deactivate the booking"""
     try:
-        # Ensure it's a POST request
         if request.method != "POST":
             return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
 
         data = json.loads(request.body)
-        # Get the booking
         booking = Booking.objects.filter(id=booking_id, is_active=True).first()
-        created_by = booking.customer
+
         if not booking:
             return JsonResponse({"error": "❌ Booking not found or already inactive"}, status=400)
 
-        # Get the user
         try:
             user = User.objects.get(id=user_id)
         except ObjectDoesNotExist:
             return JsonResponse({"error": "❌ User not found"}, status=400)
 
-        # Validate required fields
-        required_fields = ['type', 'amount', 'pay_status']
+        required_fields = ["type", "amount", "pay_status"]
         if not all(field in data for field in required_fields):
             return JsonResponse({"error": "Missing required fields"}, status=400)
 
-        # Create payment
         payment = Payment.objects.create(
             booking_id=booking,
-            type=data.get('type'),
-            amount=data.get('amount'),
+            type=data["type"],
+            amount=data["amount"],
             pay_status=PayStatus.COMPLETED.value,
-            created_by=created_by,
+            created_by=booking.customer,
         )
 
-        # Deactivate the booking
         booking.is_active = False
         booking.save(update_fields=["is_active"])
 
-        response_data = {
-            "message": "✅ Payment created successfully",
-            "payment_id": payment.id
-        }
+        # Send real-time update
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "payments",
+            {
+                "type": "payment_update",
+                "payment": json.dumps({
+                    "message": "✅ Payment created successfully",
+                    "payment_id": payment.id,
+                    "booking_id": booking.id,
+                    "amount": payment.amount,
+                    "pay_status": payment.pay_status,
+                    "created_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
+                }),
+            }
+        )
 
-        return JsonResponse(response_data)
+        return JsonResponse({"message": "✅ Payment created successfully", "payment_id": payment.id})
 
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON data"}, status=400)
-    
+
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 

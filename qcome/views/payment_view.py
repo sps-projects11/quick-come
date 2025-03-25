@@ -40,22 +40,17 @@ class PaymentListView(View):
 @auth_required(login_url='/sign-in/')
 @worker_required
 class PaymentCreateView(View):
-    def get(self, request,booking_id):
-        booking_id=booking_id
-        services=booking_service.get_services_by_id(booking_id)
-        total_price=booking_service.total_price(services)
-        payment = payment_service.get_current_payment(booking_id)
-        return render(request, 'worker/payment.html', {"payment": payment,'booking_id':booking_id,'total_price':total_price})
-
     """Create a payment"""
+
+    def get(self, request, booking_id):
+        services = booking_service.get_services_by_id(booking_id)
+        total_price = booking_service.total_price(services)
+        payment = payment_service.get_current_payment(booking_id)
+        return render(request, 'worker/payment.html', {"payment": payment, "booking_id": booking_id, "total_price": total_price})
+
     def post(self, request, booking_id):
         user_id = request.user.id
-        booking = booking_service.get_booking_by_id(request.user.id)
-        if not booking:
-            return JsonResponse({"error": "❌ No booking found for user"}, status=400)
-
-        # ✅ Fix: Directly return response instead of wrapping it again
-        return payment_service.create_payment(request, booking.id, user_id)  
+        return payment_service.create_payment(request, booking_id, user_id)  # 
 
 
 @auth_required(login_url='/sign-in/')

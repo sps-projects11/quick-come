@@ -71,3 +71,33 @@ class BookingListAllConsumer(AsyncWebsocketConsumer):
             "booking_id": event["booking_id"],  # Updated key to booking_id
             "new_status": event["new_status"],
         }))
+
+class PaymentConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add("payments", self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard("payments", self.channel_name)
+
+    async def payment_update(self, event):
+        payment_data = json.loads(event["payment"])
+        await self.send(text_data=json.dumps({"type": "payment_update", "data": payment_data}))
+
+
+
+
+class WorkerUpdateConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add("worker_updates", self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard("worker_updates", self.channel_name)
+
+    async def send_worker_update(self, event):
+        await self.send(text_data=json.dumps(event["data"]))
+
+
+
+

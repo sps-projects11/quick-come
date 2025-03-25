@@ -7,22 +7,23 @@
 <div class="wrapper">
     <div class="container">
         <h3>Payment History</h3>
-        <div class="payment-list">
+        <div class="payment-list" id="payment-list">
             {% if payment_data %}
                 {% for payment in payment_data %}
-                <div class="payment-item" onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
+                <div class="payment-item" id="payment-{{ payment.payment_id }}" 
+                     onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
                     <div class="payment-avatar">
                         <img src="{% static 'images/user_avatar.png' %}" alt="User">
                     </div>
                     <div class="payment-details">
                         <div class="payment-name">{{ payment.payment_by }}</div>
                         <div class="payment-time">{{ payment.time }}</div>
-                        <div class="payment-type">{{payment.type}}</div>
-                        <div class="payment-paid-to ">
+                        <div class="payment-type">{{ payment.type }}</div>
+                        <div class="payment-paid-to">
                             <div>Paid To:</div> <div>{{ payment.paid_to }}</div>
                         </div>
                     </div>
-                    <div class="payment-amount {% if payment.amount > 0 %}negative{% else %}negativepositive{% endif %}">
+                    <div class="payment-amount {% if payment.amount > 0 %}positive{% else %}negative{% endif %}">
                         ₹{{ payment.amount }}
                     </div>
                 </div>
@@ -33,5 +34,51 @@
         </div>
     </div>
 </div>
+
+<script>
+    const socket = new WebSocket("ws://localhost:8000/ws/payments/");
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.type === "payment_update") {
+            console.log("New Payment Update:", data.data);
+
+            // Get payment list container
+            let paymentList = document.getElementById("payment-list");
+
+            // Create new payment item
+            let newPaymentItem = document.createElement("div");
+            newPaymentItem.classList.add("payment-item");
+            newPaymentItem.id = `payment-${data.data.payment_id}`;
+            newPaymentItem.onclick = function () {
+                window.location.href = `/payment/receipt/${data.data.payment_id}/`;
+            };
+
+            newPaymentItem.innerHTML = `
+                <div class="payment-avatar">
+                    <img src="{% static 'images/user_avatar.png' %}" alt="User">
+                </div>
+                <div class="payment-details">
+                    <div class="payment-name">New Payment</div>
+                    <div class="payment-time">${new Date().toLocaleString()}</div>
+                    <div class="payment-type">${data.data.pay_status === 2 ? "Completed" : "Pending"}</div>
+                    <div class="payment-paid-to">
+                        <div>Paid To:</div> <div>Quick-come Company</div>
+                    </div>
+                </div>
+                <div class="payment-amount positive">
+                    ₹${data.data.amount}
+                </div>
+            `;
+
+            // Insert new payment at the top
+            paymentList.prepend(newPaymentItem);
+        }
+    };
+    
+    socket.onclose = function (event) {
+        console.log("WebSocket closed", event);
+    };
+</script>
 
 {% endblock %}
