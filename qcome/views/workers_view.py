@@ -73,13 +73,19 @@ class WorkerUpdateView(View):
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
         garage_id = request.POST.get('garage')
-        profile_picture = request.FILES.get('profile_picture') 
-        profile_photo_path =  save_uploaded_file(profile_picture, subfolder="profile-images")
+        profile_picture = request.FILES.get('profile_picture')
+        profile_photo_path = user_service.get_user_profile_photo(user_id) 
+        if profile_picture:
+            profile_photo_path = save_uploaded_file(profile_picture, subfolder="profile-images")
+            print("Updated profile photo path:", profile_photo_path)
+        else:
+            profile_photo_path = "/static/all-Pictures/user.jpg"
+        # ✅ Make a mutable copy of request.POST
+        mutable_post = request.POST.copy() # Add new profile photo path
+        mutable_post['profile_photo_url'] = profile_photo_path # Pass the modified request data
         workers_service.update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id, user_id, profile_photo_path)
-
         messages.success(request, SuccessMessage.S00023.value)
         return redirect('worker')
-
 
 
 @auth_required(login_url='/sign-in/')

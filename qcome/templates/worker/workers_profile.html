@@ -82,7 +82,7 @@
     <div class="profile-container">
         <h2>Worker Profile</h2>
         <div class="profile-details">
-                <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" class="profile-img" alt="Garage Image">
+                <img src="{{ user.profile_photo_url }}" class="profile-img" alt="Worker Image">
             <p><i class="fas fa-user-tie"></i><strong>Name:</strong> {{ user.first_name }} {% if user.middle_name %} {{ user.middle_name }} {% endif %} {{ user.last_name }}</p>
             <p><i class="fas fa-phone"></i><strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
             <p><strong>Experience:</strong> {{ worker_details.experience }}</p>
