@@ -3,8 +3,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: #c8d6e2;
+    height: 90vh;
+    background-image: url('/static/all-Pictures/banners/con10.gif');
+    background-size: cover;
+    background-position: center;
     padding: 20px;
 }
 
