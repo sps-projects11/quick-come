@@ -137,41 +137,41 @@
         }
     }
 </style> 
-
-{% comment %} <script>
-    document.getElementById("uploadBtn").addEventListener("click", selectImage);
-    document.getElementById("imageInput").addEventListener("change", setImage);
-    document.getElementById("removeButton").addEventListener("click", removeImage);
-
-    function selectImage() {
-        document.getElementById("imageInput").click();
-    }
-
-    function setImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("profilePic").src = e.target.result;
-                document.getElementById("removeButton").style.display = "block"; // Show remove button
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-</script> {% endcomment %}
 <script type="module">
     import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
     document.addEventListener("DOMContentLoaded", () => {
-      initProfileUploader({
-        profileContainerSelector: '.image-card',
-        fileInputId: 'imageInput',
-        profilePreviewId: 'profilePic',
-        removePhotoIconId: 'removePhotoIcon',
-        plusIconSelector: '.imageSelector',
-        defaultImage: "{{ '/static/all-Pictures/user.jpg' }}"
-      });
+        const profileContainer = document.querySelector('.image-card');
+        const fileInput = document.getElementById('imageInput');
+        const profilePic = document.getElementById('profilePic');
+        const removePhotoIcon = document.getElementById('removePhotoIcon');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const defaultImage = "{{ '/static/all-Pictures/user.jpg' }}";
+
+        // Show file input when upload button is clicked
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Update profile picture preview when a new file is selected
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profilePic.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Remove photo and reset to default when the remove icon is clicked
+        removePhotoIcon.addEventListener('click', () => {
+            profilePic.src = defaultImage;
+            fileInput.value = "";
+        });
     });
 </script>
+
 <style>
     .remove-photo-icon {
     position: absolute;
