@@ -31,7 +31,10 @@ def update_work_status(work_id, work_status):
         # Ensure status is a valid choice, you might have a status enum
         work.status = work_status
         work.save()  # Save changes
+        print("true")
         return True
+    print("false")
+    
     return False
 
 

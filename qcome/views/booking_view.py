@@ -20,10 +20,25 @@ from asgiref.sync import async_to_sync
 class BookingListView(View):
     def get(self, request):
         booking_id = booking_service.get_current_booking(request.user.id)
-        if not booking_id:
-            bookings=[]
+        
+        # Ensure `bookings` is always defined
+        if booking_id:
+            bookings = booking_service.get_booking_list(booking_id.id)
         else:
-            bookings = booking_service.get_booking_list(booking_id.id)  # Fetch all bookings
+            bookings = []
+
+        # WebSocket event for real-time updates
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "booking_updates",
+            {
+                "type": "send_booking_update",
+                "data": {
+                    "message": "Booking updated",
+                }
+            }
+        )
+
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)

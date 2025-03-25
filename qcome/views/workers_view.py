@@ -166,24 +166,22 @@ class AssignedWorkerCreateView(View):
         
     
 @auth_required(login_url='/sign-in/')
-@worker_required
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
         work = work_service.get_work_by_id(work_id)
-        is_updatable=work_service.is_work_status_updatable(work_id)
+        print("work:",work)
+        is_updatable = work_service.is_work_status_updatable(work_id)
         statuss = work_service.get_statuss_work_id()
 
         if not work:
             return redirect('worker')
-        return render(request, 'worker/work/work_details.html', {'work_data': work, 'statuss': statuss, 'is_changable':is_updatable})
-    
+        return render(request, 'worker/work/work_details.html', {'work_data': work, 'statuss': statuss, 'is_changable': is_updatable})
 
-    def post(self, request, work_id):  # Include work_id here
+    def post(self, request, work_id):
         try:
             data = json.loads(request.body)
             work_id = data.get('work_id')
             status = data.get('status')
-            
             if not work_id or not status:
                 return JsonResponse({'message': 'Invalid data provided', 'status': 'error'}, status=400)
 
@@ -193,8 +191,24 @@ class WorkerWorkRecieptView(View):
 
             # Update work status
             work_service.update_work_status(work_id, status)
-            
+            booking=booking_service.get_booking_id(work_id)
+            print("booking_id:",booking.id)
+            status_value=booking_service.get_booking_status(booking.id)
+            status_name=booking_service.get_status_name(status_value)
+
+            # **Trigger WebSocket Event**
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "booking_updates",  # Group name
+                {
+                    "type": "send_booking_update",
+                    "message": "Booking status updated",
+                    "booking_id": booking.id,  # Updated key to booking_id
+                    "new_status": status_name,  # Ensure status is sent
+                }
+            )
+
             return JsonResponse({'message': 'Status updated successfully', 'status': 'success', 'updated_status': status})
-        
+
         except Exception as e:
             return JsonResponse({'message': f'Error: {str(e)}', 'status': 'error'}, status=500)

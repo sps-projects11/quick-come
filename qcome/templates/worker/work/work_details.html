@@ -42,6 +42,21 @@
 </div>
 
    <script>
+        // Establish WebSocket connection
+        const workSocket = new WebSocket("ws://localhost:8000/ws/bookings/");
+
+        workSocket.onopen = function () {
+            console.log("✅ WebSocket Connected for Work Status Updates");
+        };
+    
+        workSocket.onerror = function (error) {
+            console.error("❌ WebSocket Error:", error);
+        };
+    
+        workSocket.onclose = function () {
+            console.log("❌ WebSocket Disconnected");
+        };
+        
        function updateWorkStatus(workId) {
            const selectedStatus = document.getElementById(`workerDropdown_${workId}`).value;
            const workIdValue = document.getElementById('work_id').value;  

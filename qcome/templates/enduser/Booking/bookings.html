@@ -2,9 +2,9 @@
 {% block title %}Your Bookings{% endblock %}
 {% load static %}
 {% block content %}
+
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
 
 <section id="booking_section">
     <h2 class="section-title">Your Booking</h2>
@@ -12,13 +12,12 @@
         {% for booking in bookings %}
         <a href="{% url 'booking_details' booking_id=booking.id %}" class="booking-card">
             <div class="booking-info">
-                <!-- <h3>#{{ booking.id }}</h3> -->
                 <p class="name"><strong>Booked By: </strong> {{ booking.customer_name }}</p>
                 <p class="date-time"><i class="bi bi-calendar2-event-fill"></i> {{ booking.created_at|date:"Y-m-d H:i" }}</p>
                 <p class="location"><i class="bi bi-geo-alt-fill"></i> {{ booking.current_location }}</p>
             </div>
-            <div class="status">
-                {{booking.status}}
+            <div class="status" id="status_{{ booking.id }}" data-booking-id="{{ booking.id }}">
+                {{ booking.status }}
             </div>
         </a>
         {% empty %}
@@ -27,7 +26,74 @@
     </div>
 </section>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 Document Loaded. Initializing WebSocket...");
+    
+        function connectWebSocket() {
+            const bookingSocket = new WebSocket("ws://" + window.location.host + "/ws/bookings/");
+    
+            bookingSocket.onopen = function () {
+                console.log("✅ WebSocket Connected Successfully!");
+            };
+    
+            bookingSocket.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                console.log("📩 Booking Update:", data);
+    
+                if (data.booking_id && data.new_status) {  // ✅ Ensure correct field names
+                    console.log("🔄 Updating Booking ID:", data.booking_id, "New Status:", data.new_status);
+                    updateBookingStatus(data.booking_id, data.new_status);
+                } else {
+                    console.warn("⚠️ Missing booking_id or new_status in WebSocket message!", data);
+                }
+            };
+    
+            bookingSocket.onerror = function (error) {
+                console.error("❌ WebSocket Error:", error);
+            };
+    
+            bookingSocket.onclose = function () {
+                console.warn("⚠️ WebSocket Disconnected. Attempting to reconnect...");
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+    
+        connectWebSocket(); // Start WebSocket connection
+    });
+    
+    /**
+     * Function to update the booking status in the UI.
+     */
+    function updateBookingStatus(bookingId, newStatus) {
+        setTimeout(() => {
+            let statusElement = document.querySelector(`#status_${bookingId}`);
+            console.log("🔍 Checking status element for Booking ID:", bookingId, statusElement);
+    
+            if (!statusElement) {
+                console.warn(`⚠️ Status element not found for Booking ID: ${bookingId}`);
+                console.warn(`🛠️ Possible Fix: Ensure <div id='status_${bookingId}'> exists in HTML.`);
+                
+                // 🔹 Try fetching dynamically loaded elements
+                statusElement = document.querySelector(`[data-booking-id="${bookingId}"]`);
+                console.log("🔍 Checking alternative status element:", statusElement);
+            }
+    
+            if (statusElement) {
+                statusElement.innerText = newStatus;
+                console.log("✅ Status Updated Successfully!");
+            } else {
+                console.error(`🚨 Still no status element found for Booking ID: ${bookingId}`);
+            }
+        }, 500); // Reduce delay for faster updates
+    }
+    
+</script>
+
+
+
 <style>
+
 /* General Styling */
 #booking_section {
     padding: 20px;

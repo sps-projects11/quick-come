@@ -334,3 +334,13 @@ def get_weekly_booking_data():
             print(f"Warning: Booking ID {booking.id} returned an unmapped status: {booking_status}")
 
     return result
+
+
+def get_booking_id(work_id):
+    booking= Work.objects.filter(id=work_id,is_active=True).first()
+    booking_id=booking.booking
+    return booking_id
+
+def get_status_name(status_value):
+    name= Status(status_value).name
+    return name
