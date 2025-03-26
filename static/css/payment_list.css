@@ -25,7 +25,12 @@ h2 {
 }
 
 .payment-list {
+    scrollbar-width: none;
+    overflow-y: scroll;
+    height: 90%;
     display: flex;
+    flex-direction: column;
+    gap: 10px;display: flex;
     flex-direction: column;
     gap: 10px;
 }

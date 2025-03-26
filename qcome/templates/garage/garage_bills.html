@@ -8,27 +8,69 @@
 <div class="wrapper">
     <div class="container">
         <h2 class="billing-title">Billing Details</h2>
-
-        {% for bill in bills_data %}
-        <div class="bill-card" onclick="openBill({{ bill.booking_id }})">
-            <div class="bill-info">
-                <div class="bill-row">
-                    <span class="customer"><strong>Booking ID:</strong> {{ bill.booking_id }}</span>
-                    <span class="vehicle"><strong>Car Type:</strong> {{ bill.vehicle_type }}</span>
-                    <span>Payment Status:{{bill.status}}</span>
-                </div>
-                <div class="bill-date">
-                    <span><strong>Date:</strong> {{ bill.created_at|date:"d M Y, h:i A" }}</span>
-                    <span class="total"><strong>Total:</strong> ₹{{ bill.total }}</span>
+        <div id="bills-list">
+            {% for bill in bills_data %}
+            <div class="bill-card" id="bill-{{ bill.booking_id }}" onclick="openBill({{ bill.booking_id }})">
+                <div class="bill-info">
+                    <div class="bill-row">
+                        <span class="customer"><strong>Booking ID:</strong> {{ bill.booking_id }}</span>
+                        <span class="vehicle"><strong>Car Type:</strong> {{ bill.vehicle_type }}</span>
+                        <span><strong>Payment Status:</strong> {{ bill.status }}</span>
+                    </div>
+                    <div class="bill-date">
+                        <span><strong>Date:</strong> {{ bill.created_at|date:"d M Y, h:i A" }}</span>
+                        <span class="total"><strong>Total:</strong> ₹{{ bill.total }}</span>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>    
 </div>
+
 <script>
     function openBill(bookingId) {
         window.location.href = `/garage/bills/${bookingId}/`;
     }
-    </script>
+
+    // WebSocket for Real-time Bills Update
+    const socket = new WebSocket("ws://localhost:8000/ws/garage_bills/");
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "bill_update") {
+            console.log("New Bill Update:", data.data);
+
+            let billsList = document.getElementById("bills-list");
+
+            let newBill = document.createElement("div");
+            newBill.classList.add("bill-card");
+            newBill.id = `bill-${data.data.booking_id}`;
+            newBill.onclick = function () {
+                openBill(data.data.booking_id);
+            };
+
+            newBill.innerHTML = `
+                <div class="bill-info">
+                    <div class="bill-row">
+                        <span class="customer"><strong>Booking ID:</strong> ${data.data.booking_id}</span>
+                        <span class="vehicle"><strong>Car Type:</strong> ${data.data.vehicle_type}</span>
+                        <span><strong>Payment Status:</strong> ${data.data.status}</span>
+                    </div>
+                    <div class="bill-date">
+                        <span><strong>Date:</strong> ${new Date(data.data.created_at).toLocaleString()}</span>
+                        <span class="total"><strong>Total:</strong> ₹${data.data.total}</span>
+                    </div>
+                </div>
+            `;
+
+            billsList.prepend(newBill);
+        }
+    };
+
+    socket.onclose = function (event) {
+        console.log("WebSocket closed", event);
+    };
+</script>
 {% endblock %}

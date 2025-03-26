@@ -98,6 +98,20 @@ class WorkerUpdateConsumer(AsyncWebsocketConsumer):
     async def send_worker_update(self, event):
         await self.send(text_data=json.dumps(event["data"]))
 
+        
+
+class GarageBillConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add("garage_bills", self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard("garage_bills", self.channel_name)
+
+    async def bill_update(self, event):
+        bill_data = json.loads(event["bill"])
+        await self.send(text_data=json.dumps({"type": "bill_update", "data": bill_data}))
+
 
 
 
