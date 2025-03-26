@@ -348,3 +348,7 @@ def get_status_name(status_value):
 def get_vehicle_type(booking_id):
     booking = Booking.objects.filter(id=booking_id).first()
     return booking.vehicle_type
+
+def get_booking_service(services):
+    service=ServiceCatalog.objects.filter(id__in=services,is_active=True).values('service_name')
+    return list(service)

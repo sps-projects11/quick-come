@@ -9,7 +9,7 @@ from ..constants.error_message import ErrorMessage
 from ..decorators import auth_required, garage_required,worker_required
 from ..models import User
 from qcome.package.file_management import save_uploaded_file
-
+from qcome.constants.default_values import Vehicle_Type,Status
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -143,7 +143,7 @@ class AssignedWorkerCreateView(View):
             booking.save()
 
             work_service.work_create(booking, booking.assigned_worker, booking.customer)
-
+            work_id=work_service.get_work_id(booking_id)
             # Emit WebSocket event
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
@@ -153,7 +153,12 @@ class AssignedWorkerCreateView(View):
                     "data": {
                         "message": "Worker assigned to booking",
                         "booking_id": booking.id,
-                        "worker": f"{worker.worker.first_name} {worker.worker.last_name}",
+                        "customer_name": f"{booking.customer.first_name} {booking.customer.last_name}",
+                        "vehicle_type":Vehicle_Type(booking.vehicle_type).name,
+                        "location":booking.current_location,
+                        "services":booking_service.get_booking_service(booking.service),
+                        "work_id":work_id,
+                        "status":Status(booking_service.get_booking_status(booking.id)).name,
                     },
                 },
             )
