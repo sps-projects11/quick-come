@@ -252,25 +252,6 @@ def get_last_5_booking():
     return bookings
 
 
-def get_all_booking_list(user):
-    """Fetch all active bookings with service names."""
-    bookings = Booking.objects.filter(customer=user,is_active=False)
-
-    for booking in bookings:
-        # Add customer details
-        booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
-        booking.customer_phone = booking.customer.phone if booking.customer.phone else "No phone"
-
-        service_ids = booking.service  # List of service IDs
-        services = ServiceCatalog.objects.filter(id__in=service_ids).values_list("service_name", flat=True)
-        booking.service_names = ", ".join(services) if services else "No service"  # Store as a string
-        booking.status= Status(get_booking_status(booking.id)).name
-    return bookings
-
-
-def get_current_booking(user_id):
-    return Booking.objects.filter(customer=user_id,is_active = True).first()
-
 
 def get_weekly_booking_data():
     """
@@ -352,3 +333,31 @@ def get_vehicle_type(booking_id):
 def get_booking_service(services):
     service=ServiceCatalog.objects.filter(id__in=services,is_active=True).values('service_name')
     return list(service)
+
+def get_all_booking_list(user_id):
+    # Fetch all bookings for the user
+    bookings = Booking.objects.filter(customer=user_id)
+    
+    # Lists to hold current and old bookings
+    current_bookings = []
+    old_bookings = []
+    
+    if bookings:
+        for booking in bookings:
+            booking_details = {
+                'id': booking.id,
+                'customer_name': f"{booking.customer.first_name} {booking.customer.last_name}",
+                'created_at': booking.created_at,
+                'current_location': booking.current_location,
+                'status': Status(get_booking_status(booking.id)).name,
+            }
+            # Separate current and old bookings based on `is_active` status
+            if booking.is_active:
+                current_bookings.append(booking_details)
+            else:
+                old_bookings.append(booking_details)
+    
+    return {
+        'current_bookings': current_bookings,
+        'old_bookings': old_bookings,
+    }

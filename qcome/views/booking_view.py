@@ -18,13 +18,7 @@ from asgiref.sync import async_to_sync
 @role_required(Role.END_USER.value, page_type='enduser')
 class BookingListView(View):
     def get(self, request):
-        booking_id = booking_service.get_current_booking(request.user.id)
-        
-        # Ensure `bookings` is always defined
-        if booking_id:
-            bookings = booking_service.get_booking_list(booking_id.id)
-        else:
-            bookings = []
+        bookings = booking_service.get_all_booking_list(request.user.id)  # Fetch all bookings
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
@@ -161,9 +155,4 @@ class BookingDeleteView(View):
             messages.success(request, "Booking deleted successfully!")
 
         return redirect('home')
-    
-
-class AllBookingListView(View):
-    def get(self, request):
-        booking = booking_service.get_all_booking_list(request.user.id)  # Fetch a specific booking
-        return render(request, 'enduser/Booking/all_bookings.html', {'bookings': booking})
+       
