@@ -6,8 +6,7 @@ from django.contrib import messages
 from ..models import Booking,ServiceCatalog
 from ..services import booking_service 
 from ..decorators import auth_required, role_required
-
-
+from qcome.constants.default_values import Vehicle_Type,Status
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -26,19 +25,6 @@ class BookingListView(View):
             bookings = booking_service.get_booking_list(booking_id.id)
         else:
             bookings = []
-
-        # WebSocket event for real-time updates
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "booking_updates",
-            {
-                "type": "send_booking_update",
-                "data": {
-                    "message": "Booking updated",
-                }
-            }
-        )
-
         return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
@@ -93,10 +79,12 @@ class BookingCreateView(View):
                     "booking": {  # ✅ Correct key
                         "id": booking.id,
                         "customer_name": f"{user.first_name} {user.last_name}",
-                        "phone": phone,
-                        "vehicle_type": vehicle_type,
-                        "location": current_location,
-                        "description": description
+                        "customer_phone": booking.customer.phone,
+                        "vehicle_type": Vehicle_Type(int(booking.vehicle_type)).name,
+                        "current_location": booking.current_location,
+                        "services":booking_service.get_booking_service(booking.service),
+                        "description": booking.description,
+                        "status": "NOT_STARTED", 
                     },
                 },
             )
