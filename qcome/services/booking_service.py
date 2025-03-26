@@ -344,3 +344,7 @@ def get_booking_id(work_id):
 def get_status_name(status_value):
     name= Status(status_value).name
     return name
+
+def get_vehicle_type(booking_id):
+    booking = Booking.objects.filter(id=booking_id).first()
+    return booking.vehicle_type

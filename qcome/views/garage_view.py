@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
-from qcome.constants.default_values import Role, Vehicle_Type
+from qcome.constants.default_values import Role, Vehicle_Type,PayStatus
 from qcome.decorators import auth_required, role_required,garage_required
-from qcome.services import booking_service, garage_service,workers_service
+from qcome.services import booking_service, garage_service,workers_service,payment_service
 from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
@@ -189,40 +189,10 @@ class GarageDeleteView(View):
 @auth_required(login_url='/sign-in/')
 @garage_required
 class GarageBillsListView(View):
-    """Retrieve all bills for the garage"""
-
     def get(self, request):
         bills_data = booking_service.get_bills_garage(request.user.id)
         return render(request, 'garage/garage_bills.html', {'bills_data': bills_data})
 
-    def post(self, request):
-        """Send real-time update when a new bill is created"""
-        try:
-            data = json.loads(request.body)
-
-            # Extract required data
-            bill_data = {
-                "booking_id": data.get("booking_id"),
-                "vehicle_type": data.get("vehicle_type"),
-                "status": data.get("status"),
-                "created_at": data.get("created_at"),
-                "total": data.get("total"),
-            }
-
-            # Send update via WebSocket
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                "garage_bills",
-                {
-                    "type": "bill_update",
-                    "bill": json.dumps(bill_data)
-                }
-            )
-
-            return JsonResponse({"message": "✅ Bill updated successfully", "bill": bill_data}, status=200)
-
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
 
 
 @auth_required(login_url='/sign-in/')

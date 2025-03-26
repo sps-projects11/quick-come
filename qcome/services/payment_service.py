@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from ..constants import PayType,PayStatus
+from ..constants import PayType,PayStatus,Vehicle_Type
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
@@ -66,6 +66,23 @@ def create_payment(request, booking_id, user_id):
                     "pay_status": PayStatus(payment.pay_status).name,
                     "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
                     "paid_to":f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value== payment.type else "Quick-come Company",
+                }),
+            }
+        )
+
+         # Send real-time update to "garage_bills" WebSocket group
+        async_to_sync(channel_layer.group_send)(
+            "garage_bills",
+            {
+                "type": "bill_update",
+                "bill": json.dumps({
+                    "message": "✅ Payment created successfully",
+                    "booking_id": booking.id,
+                    "amount": payment.amount,
+                    "status": PayStatus(payment.pay_status).name,
+                    "vehicle_type": Vehicle_Type(booking.vehicle_type).name if booking.vehicle_type else "unknown",
+                    "created_at": payment.created_at.isoformat(),
+                    "total": payment.amount
                 }),
             }
         )
