@@ -89,7 +89,7 @@ class ManageWorkerUpdateView(View):
     
     def post(self, request, worker_id):
         worker_first_name = request.POST.get('worker_first_name')
-        worker_middle_name = request.POST.get('worker_middle_name') or None
+        worker_middle_name = request.POST.get('worker_middle_name', '')
         worker_last_name = request.POST.get('worker_last_name')
         garage = request.POST.get('worker_garage')
         worker_phone = request.POST.get('worker_phone')

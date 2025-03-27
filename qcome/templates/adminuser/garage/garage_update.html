@@ -21,7 +21,7 @@
         <!-- Profile Photo Section with Plus Icon -->
         <div class="text-center mb-4">
           <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-            <img src="{{ garage.garage_image|default:'/static/all-Pictures/Feature boxes/location.jpg' }}" 
+            <img src="{{ garage.garage_image|default:'/static/all-Pictures/pngtree-cartoon-auto-mechanic-icons-for-car-repair-service-vector-png-image_12735033.png' }}" 
                  alt="Profile Photo" id="profilePreview" 
                  class="rounded-circle" 
                  style="width:150px; height:150px; object-fit:cover; border: 3px solid #007bff;">
@@ -44,6 +44,28 @@
             <input type="text" name="garage_name" id="id_garage_name" class="form-control" value="{{ garage.garage_name }}" placeholder="Enter garage name" required>
           </div>
         </div>
+        
+        <div class="mb-3 row align-items-center">
+          <label for="id_garage_owner_first_name" class="col-12 col-md-4 col-form-label fw-bold">First Name</label>
+          <div class="col-12 col-md-8">
+            <input type="text" name="garage_owner_first_name" id="id_garage_owner_first_name" class="form-control" value="{{ garage_owner.first_name|default:'' }}" placeholder="Enter first name" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="id_garage_owner_middle_name" class="col-12 col-md-4 col-form-label fw-bold">Middle Name</label>
+          <div class="col-12 col-md-8">
+            <input type="text" name="garage_owner_middle_name" id="id_garage_owner_middle_name" class="form-control" value="{{ garage_owner.middle_name|default:'' }}" placeholder="Enter middle name">
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="id_garage_owner_last_name" class="col-12 col-md-4 col-form-label fw-bold">Last Name</label>
+          <div class="col-12 col-md-8">
+            <input type="text" name="garage_owner_last_name" id="id_garage_owner_last_name" class="form-control" value="{{ garage_owner.last_name|default:'' }}" placeholder="Enter last name" required>
+          </div>
+        </div>
+
         <div class="mb-3 row align-items-center">
           <label for="id_garage_address" class="col-12 col-md-4 col-form-label fw-bold">Address</label>
           <div class="col-12 col-md-8">

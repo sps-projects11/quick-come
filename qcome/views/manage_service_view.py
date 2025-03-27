@@ -29,7 +29,7 @@ class ManageServiceCreate(View):
     def post(self, request):
         user = request.user        
         service_name = request.POST.get('service_name', '')
-        spare_part = request.POST.get('spare_part') or None
+        spare_part = request.POST.get('spare_part', '')
         price = request.POST.get('price', '')
         
         service_image_file = request.FILES.get('service_image')
@@ -53,7 +53,7 @@ class ManageServiceUpdate(View):
         user = request.user
         service = service_service.get_service(service_id)
         service_name = request.POST.get('service_name')
-        spare_part = request.POST.get('spare_part') or None
+        spare_part = request.POST.get('spare_part', '')
         price = request.POST.get('price')
         
         service_image_file = request.FILES.get('service_image')
