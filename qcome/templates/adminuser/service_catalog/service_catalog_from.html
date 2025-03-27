@@ -11,7 +11,7 @@
 {% block content %}
 <div id="form-container">
     <h2 id="form-title">Service Catalog</h2>
-    <form id="service-form" method="post" action="{% url 'manage_service_create' %}" enctype="multipart/form-data">
+    <form id="service-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div id="service-name-field">
             <label for="id_service_name" id="service-name-label">Service Name</label>

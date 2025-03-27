@@ -9,8 +9,8 @@ def get_worker_details(worker_id):
 
 def worker_create(user, expertise, experience, worker_garage):
     return Worker.objects.create(
-        worker = User.objects.filter(id=user).first(),
-        garage = Garage.objects.filter(id=worker_garage).first(),
+        worker = user,
+        garage = worker_garage,
         experience = experience,
         expertise = expertise
     )

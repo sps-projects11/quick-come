@@ -53,7 +53,7 @@ class ManageServiceUpdate(View):
         user = request.user
         service = service_service.get_service(service_id)
         service_name = request.POST.get('service_name')
-        spare_part = request.POST.get('spare_part')
+        spare_part = request.POST.get('spare_part') or None
         price = request.POST.get('price')
         
         service_image_file = request.FILES.get('service_image')
@@ -68,7 +68,7 @@ class ManageServiceUpdate(View):
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageServiceDelete(View):
-    def get(self, request, service_id):
+    def post(self, request, service_id):
         service_service.remove_service(service_id, request.user)
         messages.success(request, SuccessMessage.S00013.value)
         return redirect('manage_service_list')

@@ -42,13 +42,16 @@ class WorkerCreateView(View):
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
-        worker_garage = request.POST.get('garage')
+        garage = request.POST.get('garage')
         worker_worker_id = request.POST.get('user_id')
         is_exists=workers_service.is_user_a_garage_worker(worker_worker_id)
         if is_exists:
             return redirect('worker')
-        worker = workers_service.worker_create(worker_worker_id, expertise, experience, worker_garage) 
-        worker_phone=user_service.user_phone_create(worker_worker_id,worker_phone)
+        worker_instance = user_service.get_user(worker_worker_id)
+        worker_garage = garage_service.get_garage(garage)
+        worker = workers_service.worker_create(worker_instance, expertise, experience, worker_garage)
+        
+        worker_phone=user_service.user_phone_create(worker_instance,worker_phone)
         if worker:
             return redirect('worker')
         

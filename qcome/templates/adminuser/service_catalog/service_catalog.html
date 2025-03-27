@@ -27,9 +27,12 @@
           <a href="{% url 'manage_service_update' service.id %}" class="overlay-btn" title="Edit">
             <i class="bi bi-pencil"></i>
           </a>
-          <a href="{% url 'manage_service_delete' service.id %}" class="overlay-btn" title="Delete">
-            <i class="bi bi-trash"></i>
-          </a>
+          <form action="{% url 'manage_service_delete' service.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="overlay-btn" title="Delete" style="background: none; border: none;">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
         </div>
       </div>
     {% empty %}
