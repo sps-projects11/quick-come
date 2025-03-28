@@ -378,6 +378,7 @@ footer .copyright {
         margin-top: 60px;
     }
     #feature{
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
         justify-content: space-between;
     }
     #feature .fe-box{
