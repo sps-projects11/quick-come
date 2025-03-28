@@ -1,19 +1,21 @@
 from django.views import View
 from django.shortcuts import render, redirect
-from ..services import service_service 
+from ..services import service_service, user_service
 from ..constants import Role
 from django.http import HttpResponse
 from qcome.package.file_management import save_uploaded_file
 
 class ManageServiceList(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         service = service_service.service_List()
-        return render(request, 'adminuser/service_catalog/service_catalog.html',{'services':service})
+        return render(request, 'adminuser/service_catalog/service_catalog.html',{'services':service, 'admin':admin_data})
     
 
 class ManageServiceListCreate(View):
     def get(self, request):
-        return render(request, 'adminuser/service_catalog/service_catalog_from.html')
+        admin_data = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/service_catalog/service_catalog_from.html', {'admin':admin_data})
     
     def post(self, request):
         user = request.user

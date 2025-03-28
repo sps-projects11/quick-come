@@ -11,6 +11,7 @@ from qcome.package.file_management import save_uploaded_file
 
 class ManageWorkerListView(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         workers = workers_service.get_all_workers()
         for worker in workers:
             worker_user_id = user_service.get_user(worker.worker.id)
@@ -23,14 +24,15 @@ class ManageWorkerListView(View):
             worker.phone = worker_user_id.phone
             worker_garage = garage_service.get_garage(worker.garage.id)
             worker.garage_name = worker_garage.garage_name
-        return render(request, 'adminuser/worker/worker_list.html', {'workers': workers})        
+        return render(request, 'adminuser/worker/worker_list.html', {'workers': workers, 'admin': admin_data})        
     
 
 class ManageWorkerCreateView(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         available_worker = user_service.get_non_garage_and_non_worker_users()
         all_garage = user_service.get_all_garages()
-        return render(request, 'adminuser/worker/worker_create.html', {'all_garage': all_garage, 'available_worker': available_worker})
+        return render(request, 'adminuser/worker/worker_create.html', {'all_garage': all_garage, 'available_worker': available_worker, 'admin': admin_data})
     
     def post(self, request):
         worker_user = request.POST.get('worker_user')
@@ -60,6 +62,7 @@ class ManageWorkerCreateView(View):
 
 class ManageWorkerUpdateView(View):
     def get(self, request, worker_id):
+        admin_data = user_service.get_user(request.user.id)
         worker = workers_service.get_worker_details(worker_id)
         worker_user = user_service.get_user(worker.worker.id)
         worker.worker_first_name = worker_user.first_name
@@ -70,9 +73,9 @@ class ManageWorkerUpdateView(View):
         worker_garage = garage_service.get_garage(worker.garage.id)
         worker.garage_name = worker_garage.garage_name
 
-        all_garage = user_service.get_all_garages_exclude_worker_garage(worker.garage.id)
+        all_garage = garage_service.get_all_garages_exclude_worker_garage(worker.garage.id)
 
-        return render(request, 'adminuser/worker/worker_update.html', {'worker': worker, 'all_garage':all_garage})
+        return render(request, 'adminuser/worker/worker_update.html', {'worker': worker, 'all_garage':all_garage, 'admin': admin_data})
     
     def post(self, request, worker_id):
         worker_first_name = request.POST.get('worker_first_name')

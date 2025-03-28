@@ -47,7 +47,7 @@ class LoginOutAdminView(View):
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminHomeView(View):
     def get(self, request):        
-        user = user_service.get_user(request.user.id)
+        admin_data = user_service.get_user(request.user.id)
         total_users = user_service.get_all_user().count()
         total_admins = user_service.get_all_admins().count()
         total_garages = user_service.get_all_garages().count()
@@ -66,25 +66,25 @@ class AdminHomeView(View):
             'total_garages': total_garages,
             'total_workers': total_workers,
             'total_revenue': total_revenue,
-            'admin': user,
             'recent_bookings': booking,
             'weekly_booking_data': json.dumps(weekly_booking_data),
             'monthly_user_data': json.dumps(monthly_user_data)
         }
 
-        return render(request, 'adminuser/home/dashboard.html', {'data':data})
+        return render(request, 'adminuser/home/dashboard.html', {'data':data, 'admin':admin_data})
     
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminProfileView(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         user = request.user    
         if user.gender:
             gender_name = Gender(user.gender).name.capitalize()  # e.g., "Male"
         else:
             gender_name = "Not provided"
-        return render(request, 'adminuser/profile/profile.html',{'user':user, 'gender': gender_name})
+        return render(request, 'adminuser/profile/profile.html',{'user':user, 'gender': gender_name, 'admin':admin_data,})
     
     
 
@@ -101,7 +101,8 @@ class AdminPasswordUpdateView(View):
 @role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class AdminProfileUpdateView(View):
     def get(self, request):
-        return render(request, 'adminuser/profile/update_profile.html')
+        admin_data = user_service.get_user(request.user.id)
+        return render(request, 'adminuser/profile/update_profile.html', {'admin': admin_data})
 
     def post(self, request):
         auth_user = request.user

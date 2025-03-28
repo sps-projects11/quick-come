@@ -4,7 +4,7 @@ from django.db.models import Count
 
 
 def get_user(user_id):
-    return User.objects.get(id=user_id)
+    return User.objects.get(id=user_id, is_active=True)
 
 
 def get_all_user():
@@ -211,3 +211,9 @@ def get_monthly_user_data():
     return result
 
 
+def get_user_profile_photo(user_id) :
+    try:
+        User.objects.get(id=user_id)
+        return User.profile_photo_url
+    except User.DoesNotExist:
+        return None

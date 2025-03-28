@@ -12,6 +12,7 @@ from qcome.package.file_management import save_uploaded_file
 
 class ManageGarageListView(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         garages = garage_service.get_garage_list()
 
         for garage in garages:
@@ -25,13 +26,14 @@ class ManageGarageListView(View):
             )
 
         # Pass the list of garage objects to the template.
-        return render(request, 'adminuser/garage/garage_list.html', {'garages': garages})
+        return render(request, 'adminuser/garage/garage_list.html', {'garages': garages, 'admin': admin_data})
 
     
 class ManageGarageCreateView(View):
     def get(self, request):
+        admin_data = user_service.get_user(request.user.id)
         available_users = user_service.get_non_garage_and_non_worker_users()
-        return render(request, 'adminuser/garage/garage_create.html', {'available_garage':available_users})
+        return render(request, 'adminuser/garage/garage_create.html', {'available_garage':available_users, 'admin':admin_data})
 
     def post(self, request):        
         user = user_service.get_user(request.user.id)      
@@ -60,9 +62,10 @@ class ManageGarageCreateView(View):
     
 class ManageGarageUpdateView(View):
     def get(self, request, garage_id):
+        admin_data = user_service.get_user(request.user.id)
         garage = garage_service.get_garage(garage_id)
 
-        return render(request, 'adminuser/garage/garage_update.html', {'garage':garage})
+        return render(request, 'adminuser/garage/garage_update.html', {'garage':garage, 'admin':admin_data})
     
     def post(self, request, garage_id):
         user = user_service.get_user(request.user.id)      

@@ -27,17 +27,6 @@ def worker_update(worker, expertise, experience, worker_garage, user):
     return None
 
 
-def worker_update(worker, expertise, experience, worker_garage, user):
-    if worker:
-        worker.experience = experience
-        worker.expertise = expertise
-        worker.garage = worker_garage
-        worker.updated_by = user
-        worker.save()
-        return worker
-    return None
-
-
 def update_worker_details(worker_id, worker_name, worker_phone, experience, expertise, garage_id, user_id, profile_picture):
     try:
         worker = Worker.objects.get(id=worker_id)

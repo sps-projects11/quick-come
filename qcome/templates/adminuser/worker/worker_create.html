@@ -157,58 +157,44 @@
   }
 </style>
 
-<script>
+<script type="module">
+  import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
   document.addEventListener("DOMContentLoaded", () => {
-    const profileContainer = document.querySelector('.profile-picture-container');
-    const fileInput = document.getElementById('id_worker_profile_photo');
-    const profilePreview = document.getElementById('profilePreview');
-    const removePhotoIcon = document.getElementById('removePhotoIcon');
-    const plusIcon = document.querySelector('.profile-plus-icon');
-    const defaultImage = "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}";
-
-    // Clicking the plus icon opens the file dialog
-    plusIcon.addEventListener('click', (e) => {
-      e.stopPropagation();
-      fileInput.click();
-    });
-
-    // When file is selected, update preview and add "has-image" class
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          profilePreview.src = e.target.result;
-          profileContainer.classList.add('has-image');
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Clicking the remove icon clears the file and resets the image
-    removePhotoIcon.addEventListener('click', (event) => {
-      event.stopPropagation();
-      fileInput.value = "";
-      profilePreview.src = defaultImage;
-      profileContainer.classList.remove('has-image');
-    });
-
-    // Form validation + interactive submit button
-    const form = document.getElementById('workerForm');
-    form.addEventListener('submit', (event) => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-        form.classList.add('was-validated');
-      } else {
-        const submitBtn = document.getElementById('submitBtn');
-        const submitBtnText = document.getElementById('submitBtnText');
-        const submitBtnSpinner = document.getElementById('submitBtnSpinner');
-        submitBtnSpinner.classList.remove('d-none');
-        submitBtnText.textContent = "Processing...";
-        submitBtn.disabled = true;
-      }
+    initProfileUploader({
+      profileContainerSelector: '.profile-picture-container',
+      fileInputId: 'id_worker_profile_photo',
+      profilePreviewId: 'profilePreview',
+      removePhotoIconId: 'removePhotoIcon',
+      plusIconSelector: '.profile-plus-icon',
+      defaultImage: "{{ '/static/all-Pictures/Feature boxes/location.jpg' }}"
     });
   });
 </script>
+
+<style>
+  .remove-photo-icon {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+  }
+  /* Show the remove icon on hover only if the container has "has-image" */
+  .profile-picture-container.has-image:hover .remove-photo-icon {
+    opacity: 1;
+  }
+  .remove-photo-icon i {
+    color: #fff;
+    font-size: 1rem;
+  }
+</style>
 {% endblock %}
