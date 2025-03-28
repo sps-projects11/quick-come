@@ -3,7 +3,7 @@
 {%load static %}
 {% block content %}
 <link rel="stylesheet" href="\static\css\services.css">
-<div class="wrapper"> 
+<div class="wrapper"style="background-color:aqua;margin-top:1.2%;margin-bottom:1.5%;border-radius:1.2%;padding: 20px;"> 
     <h2 style="text-align:center;font-size:35px; margin-bottom: 10px;">Our Services</h2>
     <div class="container">
         <div class="product-grid">
@@ -18,23 +18,20 @@
         </div>
     </div>
 </div>
-
-{% comment %} Add The Js {% endcomment %}
 <script>
-    const theSection = document.getElementById('bar')
-    const closeSection = document.getElementById('close')
-    const navberSection = document.getElementById('navber')
+    const theSection = document.getElementById('bar');
+    const closeSection = document.getElementById('close');
+    const navberSection = document.getElementById('navber');
   
-    if(theSection){
-      theSection.addEventListener( 'click',()=>{
-          navberSection.classList.add('active')
-      })
+    if (theSection) {
+        theSection.addEventListener('click', () => {
+            navberSection.classList.add('active');
+        });
     }
-    if(closeSection){
-      closeSection.addEventListener('click',()=>{
-          navberSection.classList.remove('active')
-      })
+    if (closeSection) {
+        closeSection.addEventListener('click', () => {
+            navberSection.classList.remove('active');
+        });
     }
-  
-  </script>
+</script>
 {% endblock %} 
