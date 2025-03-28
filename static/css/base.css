@@ -331,7 +331,13 @@ footer .copyright {
     .ride-image-grid img {
         width: 100px !important;
         height: 100px !important;
-    }    
+    } 
+    
+    
+    .join-us{
+        flex-wrap: wrap !important;
+        gap: 0 !important;
+    }
    
 }
 
@@ -381,6 +387,7 @@ footer .copyright {
         width: 100%;
     }
     #banner{
+        min-width: 0 !important;
         height: 30vh;
     }
     #banner h2 span {
@@ -417,6 +424,10 @@ footer .copyright {
 
     footer .col-install .pay{
         height: 140px;
+    }
+
+    .stats{
+        flex-wrap: wrap;
     }
 } 
 

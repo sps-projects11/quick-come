@@ -279,8 +279,9 @@
     align-items: center;
     text-align: center;
     background-image: url("https://okcredit-blog-images-prod.storage.googleapis.com/2021/02/automobilerepair1-1.jpg");
-    width: 100%;
-    height: 80vh;
+    height: 50vh;
+    margin-top: 26px;
+    border-radius: 10px;
     background-size: cover;
     background-position: center;
 }
