@@ -79,17 +79,47 @@ class BookingListAllConsumer(AsyncWebsocketConsumer):
             "services": event["services"],  # The updated services list
         }))
 
+import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+
 class PaymentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        await self.channel_layer.group_add("payments", self.channel_name)
+        # Get the user_id from the URL route (sent as a part of the WebSocket URL)
+        self.user_id = self.scope['url_route']['kwargs']['user_id']  # Extract user_id
+        
+        # Create a unique group for each user
+        self.group_name = f"user_{self.user_id}"
+
+        # Join the unique group
+        await self.channel_layer.group_add(
+            self.group_name,  # Group name is user-specific
+            self.channel_name  # The unique channel name of this connection
+        )
+
+        # Accept the WebSocket connection
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard("payments", self.channel_name)
+        # Leave the unique group when the WebSocket is closed
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
 
+    # Receive payment update from the server
     async def payment_update(self, event):
-        payment_data = json.loads(event["payment"])
-        await self.send(text_data=json.dumps({"type": "payment_update", "data": payment_data}))
+        # Log the event data to inspect its structure
+        print("Received event:", event)
+
+        # Use the payment data directly
+        payment_data = event["payment"]
+
+        # Send the payment update to the WebSocket client
+        await self.send(text_data=json.dumps({
+            "type": "payment_update",
+            "payment": payment_data
+        }))
+
 
 
 

@@ -3,63 +3,59 @@
 {% load static %}
 {% block content %}
 
+
 <section id="booking_details">
     <h2>Your Bookings</h2>
-    <div class="profile-container">
-        {% if error %}
-            <p class="alert alert-warning">{{ error }}</p>
-        {% elif bookings %}
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Customer</th>
-                        <th>Mobile No.</th>
-                        <th>Vehicle Type</th>
-                        <th>Location</th>
-                        <th>Service</th>
-                        <th>Description</th>
-                        <th>Worker</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for booking in bookings %}
-                    <tr>
+    <div class="profile-container" style="height:100%;margin:auto; width:90%;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Mobile No.</th>
+                    <th>Vehicle Type</th>
+                    <th>Location</th>
+                    <th>Service</th>
+                    <th>Description</th>
+                    <th>Worker</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody> <!-- This is where rows will be added dynamically -->
+                {% for booking in bookings %}
+                    <tr id="booking-row-{{ booking.id }}">
                         <td>{{ booking.id }}</td>
-                        <td>{{ booking.customer_name|default:"No Customer" }}</td>
-                        <td>{{ booking.customer_phone|default:"No Phone no." }}</td>
-                        <td>{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
-                        <td>{{ booking.current_location|default:"No Location Provided" }}</td>
-                        <td>{{ booking.service_names|default:"No Service Selected" }}</td>
-                        <td>{{ booking.description|default:"No description" }}</td>
-                        <td>
+                        <td class="customer">{{ booking.customer_name|default:"No Customer" }}</td>
+                        <td class="mobile">{{ booking.customer_phone|default:"No Phone no." }}</td>
+                        <td class="vehicle">{{ booking.get_vehicle_type_display|default:"Not Specified" }}</td>
+                        <td class="location">{{ booking.current_location|default:"No Location Provided" }}</td>
+                        <td class="service">
+                            {% if booking.service_names %}
+                                {{ booking.service_names }}
+                            {% else %}
+                                No Service Selected
+                            {% endif %}
+                        </td>
+                        <td class="description">{{ booking.description|default:"No description" }}</td>
+                        <td class="worker">
                             {% if booking.assigned_worker %}
                                 {{ booking.assigned_worker.name }}
                             {% else %}
-                            <select id="workerDropdown_{{ booking.id }}" class="dropdown" onchange="create_assign_worker(this, '{{ booking.id }}')">
-                                <option value="">Select a worker</option>
-                                {% for worker in workers %}
-                                    <option value="{{ worker.id }}">{{ worker.name }}</option>
-                                {% endfor %}
-                            </select>
+                                <select id="workerDropdown_{{ booking.id }}" onchange="create_assign_worker(this, '{{ booking.id }}')">
+                                    <option value="">Select a worker</option>
+                                    {% for worker in workers %}
+                                        <option value="{{ worker.id }}">{{ worker.name }}</option>
+                                    {% endfor %}
+                                </select>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="status {{ booking.status|lower }}">{{booking.status}}</span>
-                        </td>
+                        <td class="status">{{ booking.status }}</td>
                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-            <p class="no-bookings">No bookings found.</p>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
-
 <script>
  // WebSocket for booking updates
 const bookingSocket = new WebSocket("ws://localhost:8000/ws/booking_updates/");
@@ -158,7 +154,9 @@ function addNewBookingRow(booking) {
                 console.log("❌ Error in Response:", data.message);
             }
         })
-        .catch(error => console.error("❌ Error assigning worker:", error));
+        .catch(error => {
+            console.error("❌ Error assigning worker:", error);
+        });
     }
 
     // Function to start worker WebSocket after assignment
@@ -201,47 +199,33 @@ function addNewBookingRow(booking) {
 </script>
 
 <style>
-  
     #booking_details {
-        height: 85vh;
-        background: #fff;
-        border-radius: 12px;
-        max-width: 90%;
-        margin: 20px auto;
+        background: #c8d6e2;
+        height: 100vh;
         padding: 20px;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-        text-align: center;
-        color: #333;
-        font-size: 26px;
-        margin-bottom: 20px;
-    }
-
-    .table-container {
-        overflow-x: auto;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        background: white;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+        background-color: #ffffff;
         border-radius: 8px;
+        overflow: hidden;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
         padding: 12px 16px;
-        text-align: left;
         border-bottom: 1px solid #ddd;
     }
 
     th {
-        background: #007bff;
+        background-color: #007bff;
         color: white;
         font-weight: bold;
-        text-transform: uppercase;
     }
 
     tr:nth-child(even) {
@@ -249,8 +233,15 @@ function addNewBookingRow(booking) {
     }
 
     tr:hover {
-        background: #e3f2fd;
-        transition: background 0.3s;
+        background-color: #e9ecef;
+        transition: background-color 0.3s;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 24px;
     }
 
     .dropdown {
