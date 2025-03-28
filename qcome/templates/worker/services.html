@@ -1,11 +1,11 @@
 {% extends "worker/index.html" %}
 {% block title %}Service List{% endblock %}
-{%load static %}
+{% load static %}
 {% block content %}
 <link rel="stylesheet" href="\static\css\services.css">
-<div class="wrapper"> 
-    <h2 style="text-align:center;font-size:35px; margin-bottom: 10px;">Our Services</h2>
-    <div class="container">
+<div class="container" style="background-color:aqua;margin-top:1.2%;margin-bottom:1.5%;border-radius:1.2%;padding: 20px;">
+    <div class="wrapper"> 
+        <h2 style="text-align:center;font-size:35px; margin-bottom: 10px;">Our Services</h2>
         <div class="product-grid">
             {% for service in services %}
             <div class="product-card">
@@ -18,4 +18,20 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+<script>
+    const theSection = document.getElementById('bar');
+    const closeSection = document.getElementById('close');
+    const navberSection = document.getElementById('navber');
+  
+    if (theSection) {
+        theSection.addEventListener('click', () => {
+            navberSection.classList.add('active');
+        });
+    }
+    if (closeSection) {
+        closeSection.addEventListener('click', () => {
+            navberSection.classList.remove('active');
+        });
+    }
+</script>
+{% endblock %}

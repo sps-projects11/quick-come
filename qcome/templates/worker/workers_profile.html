@@ -11,7 +11,6 @@
     }
 
     .profile-container {
-        border: 2px solid black;
         max-width: 650px;
         margin: 50px auto;
         background: #ffffff;
@@ -76,6 +75,28 @@
             width: 100%;
         }
     }
+    @media(width:768px){
+        {% comment %} .btn-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+        }
+        #up{
+            width:10px;
+        }
+         #del{
+            width: auto;
+            flex: 1;
+        } {% endcomment %}
+          .btn-group{
+           display:flex;
+           flex-direction:column;
+           justify-content:center;
+           align-items:center;
+           width:100%;
+          }
+    }
 </style>
 
 <div class="container">
@@ -99,4 +120,20 @@
     </div>
 </div>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script>
+    const theSection = document.getElementById('bar')
+    const closeSection = document.getElementById('close')
+    const navberSection = document.getElementById('navber')
+  
+    if(theSection){
+      theSection.addEventListener( 'click',()=>{
+          navberSection.classList.add('active')
+      })
+    }
+    if(closeSection){
+      closeSection.addEventListener('click',()=>{
+          navberSection.classList.remove('active')
+      })
+    }
+</script>
 {% endblock %}
