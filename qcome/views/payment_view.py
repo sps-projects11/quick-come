@@ -16,6 +16,7 @@ class PaymentListView(View):
         payment_data = []
         for payment in payments:
             entry = {
+                'user_id':user_id,
                 'payment_id': payment['id'],
                 'amount': payment['amount'],
                 'type': PayType(payment['type']).name if payment['type'] else "N/A",

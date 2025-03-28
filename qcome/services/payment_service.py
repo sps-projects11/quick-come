@@ -60,6 +60,7 @@ def create_payment(request, booking_id, user_id):
                 "type": "payment_update",
                 "payment": json.dumps({
                     "message": "✅ Payment created successfully",
+                    "user_id":payment.created_by,
                     "payment_id": payment.id,
                     "booking_id": booking.id,
                     "amount": payment.amount,
