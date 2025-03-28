@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 let profileLink = document.getElementById('profile-link');
                 profileLink.innerHTML = `
                     <img id="profile-img" src="${data.profile_photo_url}" alt="Profile" 
-                        style="width:40px; height:40px; border-radius:50%; cursor:pointer;">
+                        style="width:40px; height:40px; border-radius:50%; cursor:pointer;margin-left: 18px;">
                 `;
 
                 // Show dropdown on click
@@ -51,3 +51,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
