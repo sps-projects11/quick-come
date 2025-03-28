@@ -12,7 +12,7 @@ def get_all_payments_created_by(user_id):
     """Retrieve all payments"""
     payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
         'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
-    )
+    ).order_by('-created_at')
     return list(payments)
 
 def get_current_payment(booking_id):
