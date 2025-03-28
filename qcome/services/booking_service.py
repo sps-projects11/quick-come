@@ -4,7 +4,9 @@ from django.shortcuts import get_object_or_404
 from qcome.constants.default_values import Vehicle_Type, PayStatus, Status
 from qcome.services import payment_service,work_service
 from django.db.models.functions import ExtractWeekDay
-
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+import json
 
 def get_booking_list(booking_id):
     """Fetch all active bookings with service names."""
@@ -142,11 +144,13 @@ def remove_service_from_booking(booking_id, service_name):
         booking.service.remove(service.id)
         booking.save(update_fields=["service"])
 
+        # Emit WebSocket update after removing the service
+        emit_service_update(booking)
+
         return {"success": True}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
-
 
 def add_service_to_booking(booking_id, service_id):
     """Adds a service to a booking without removing existing services."""
@@ -165,11 +169,36 @@ def add_service_to_booking(booking_id, service_id):
         booking.service.append(service.id)
         booking.save(update_fields=["service"])
 
+        # Emit WebSocket update after adding the service
+        emit_service_update(booking)
+
         return {"success": True, "message": "Service added successfully"}
 
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+def emit_service_update(booking):
+    """Emit updated booking details to WebSocket group."""
+    channel_layer = get_channel_layer()
+
+    # Get the updated service information
+    booking_service_data =  get_booking_service_names(booking.service)
+
+    # Send WebSocket event to 'booking_updates' group
+    async_to_sync(channel_layer.group_send)(
+        "booking_updates",  # Group name (ensure it matches the WebSocket consumer group)
+        {
+            "type": "booking_update",  # Handler for the event in consumer
+            "message": "Booking services updated",  # Message
+            "booking_id": booking.id,  # Booking ID
+            "services": booking_service_data,  # Updated services (list of service names)
+        }
+    )
+
+def get_booking_service_names(service_ids):
+    """Helper function to get service names from service IDs."""
+    services = ServiceCatalog.objects.filter(id__in=service_ids, is_active=True)
+    return [service.service_name for service in services]
 
 def total_price(services):
     return sum(service["price"] for service in services)

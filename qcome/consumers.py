@@ -53,13 +53,12 @@ class BookingListAllConsumer(AsyncWebsocketConsumer):
 
         if booking_id and new_status:
             print(f"🔄 Broadcasting Booking Update: {booking_id} -> {new_status}")
-
             await self.channel_layer.group_send(
                 "booking_updates",
                 {
                     "type": "send_booking_update",
                     "message": "Booking status updated",
-                    "booking_id": booking_id,  # Updated key to booking_id
+                    "booking_id": booking_id,
                     "new_status": new_status
                 }
             )
@@ -68,8 +67,16 @@ class BookingListAllConsumer(AsyncWebsocketConsumer):
         """Send real-time updates to all connected clients."""
         await self.send(text_data=json.dumps({
             "message": event["message"],
-            "booking_id": event["booking_id"],  # Updated key to booking_id
-            "new_status": event["new_status"],
+            "booking_id": event["booking_id"],  # The booking that was updated
+            "new_status": event["new_status"],  # The new status
+        }))
+    
+    async def booking_update(self, event):
+        """Receive and send the service update to all connected clients."""
+        await self.send(text_data=json.dumps({
+            "message": event["message"],
+            "booking_id": event["booking_id"],  # The booking that was updated
+            "services": event["services"],  # The updated services list
         }))
 
 class PaymentConsumer(AsyncWebsocketConsumer):

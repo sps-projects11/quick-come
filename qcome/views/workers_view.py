@@ -162,6 +162,16 @@ class AssignedWorkerCreateView(View):
                     },
                 },
             )
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "booking_updates",  # Group name
+                {
+                    "type": "send_booking_update",
+                    "message": "Booking status updated",
+                    "booking_id": booking.id,  # Updated key to booking_id
+                    "new_status": Status(booking_service.get_booking_status(booking.id)).name,  # Ensure status is sent
+                }
+            )
 
             return JsonResponse({'message': 'Worker assigned successfully', 'status': 'success'})
 

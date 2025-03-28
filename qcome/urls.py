@@ -77,7 +77,7 @@ urlpatterns = [
     # Billing
     path('billing/', views.BillingHomeView.as_view(), name='billing,'),
     path('billing/<int:booking_id>/update', views.BillingUpdate.as_view(), name='billing_update'),
-    path('billing/<int:booking_id>/delete', views.BillingDelete.as_view(), name='billing_update'),
+    path('billing/<int:booking_id>/delete', views.BillingDelete.as_view(), name='billing_delete'),
 
     #Payment
     path('payment/',views.PaymentListView.as_view(), name='payment_list'),

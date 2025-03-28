@@ -8,10 +8,10 @@
     <div class="booking-grid">
         {% for booking in bookings %}
         <div class="booking-card">
-            <div class="card-header">
+            <div class="card-header" data-booking-id="{{ booking.id }}">
                 <h3>Booking #{{ booking.id }}</h3>
-                <span class="status">
-                    {{ booking.status}}
+                <span id="status_{{ booking.id }}" class="status">
+                    {{ booking.status }}
                 </span>
             </div>
             <div class="card-body">
@@ -19,7 +19,7 @@
                 <p><strong>📞 Phone:</strong> {{ booking.customer_phone }}</p>
                 <p><strong>📍 Location:</strong> {{ booking.current_location }}</p>
                 <p><strong>🚗 Vehicle:</strong> {{ booking.get_vehicle_type_display }}</p>
-                <p><strong>🔧 Service:</strong> {{ booking.service_names }}</p>
+                <p><strong>🔧 Service:</strong> <span class="services"  id="services_{{ booking.id }}">{{ booking.service_names }}</span></p>
                 <p><strong>📝 Description:</strong> {{ booking.description|default:"No description" }}</p>
             </div>
             <div class="card-actions">
@@ -35,6 +35,71 @@
         {% endfor %}
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 Document Loaded. Initializing WebSocket...");
+
+        // Connect WebSocket and handle communication
+        function connectWebSocket() {
+            const bookingSocket = new WebSocket("ws://" + window.location.host + "/ws/bookings/");
+
+            bookingSocket.onopen = function () {
+                console.log("✅ WebSocket Connected Successfully!");
+            };
+
+            bookingSocket.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                console.log("📩 Booking Update:", data);
+
+                if (data.booking_id && data.new_status) {
+                    console.log("🔄 Updating Booking ID:", data.booking_id, "New Status:", data.new_status);
+                    updateBookingStatus(data.booking_id, data.new_status);
+                } else if (data.booking_id && data.services) {
+                    console.log("🔄 Updating Booking Services:", data.booking_id, "Services:", data.services);
+                    updateBookingServices(data.booking_id, data.services);
+                } else {
+                    console.warn("⚠️ Missing booking_id, new_status, or services in WebSocket message!", data);
+                }
+            };
+
+            bookingSocket.onerror = function (error) {
+                console.error("❌ WebSocket Error:", error);
+            };
+
+            bookingSocket.onclose = function () {
+                console.warn("⚠️ WebSocket Disconnected. Attempting to reconnect...");
+                setTimeout(connectWebSocket, 3000);  // Reconnect after 3 seconds
+            };
+        }
+
+        connectWebSocket(); // Start WebSocket connection
+    });
+
+    // Function to update the booking status in the UI
+    function updateBookingStatus(bookingId, newStatus) {
+        let statusElement = document.querySelector(`#status_${bookingId}`);
+        if (statusElement) {
+            statusElement.innerText = newStatus;
+            console.log("✅ Status Updated Successfully!");
+        } else {
+            console.warn(`⚠️ Status element not found for Booking ID: ${bookingId}`);
+        }
+    }
+
+    // Function to update the booking services in the UI
+    function updateBookingServices(bookingId, services) {
+        let servicesElement = document.querySelector(`#services_${bookingId}`);
+        if (servicesElement) {
+            servicesElement.innerText = services;
+            console.log("✅ services Updated Successfully!");
+        } else {
+            console.warn(`⚠️ services element not found for Booking ID: ${bookingId}`);
+        }
+    }
+</script>
+
+
 
 <style>
 

@@ -63,7 +63,7 @@ def create_payment(request, booking_id, user_id):
                     "payment_id": payment.id,
                     "booking_id": booking.id,
                     "amount": payment.amount,
-                    "pay_status": PayStatus(payment.pay_status).name,
+                    "type": PayType(payment.type).name,
                     "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
                     "paid_to":f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value== payment.type else "Quick-come Company",
                 }),
