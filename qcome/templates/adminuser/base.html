@@ -39,7 +39,104 @@
   <script src="{% static 'js/toast_message.js' %}"></script>
 <!-- End Toast -->
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Apply saved theme from localStorage if available
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-theme");
+      document.getElementById("themeIcon").classList.replace("bi-moon", "bi-sun");
+    }
+    
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    
+    if (themeToggle) {
+      themeToggle.addEventListener("click", function() {
+        // Toggle the dark theme class on body
+        document.body.classList.toggle("dark-theme");
+        
+        // Update icon and localStorage based on the new theme state
+        if (document.body.classList.contains("dark-theme")) {
+          themeIcon.classList.replace("bi-moon", "bi-sun");
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeIcon.classList.replace("bi-sun", "bi-moon");
+          localStorage.setItem("theme", "light");
+        }
+      });
+    }
+  });
+</script>
+
+
+
+<style>
+  /* Global dark theme styles */
+  .dark-theme {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+  }
+  .dark-theme a {
+    color: #f8f9fa !important;
+  }
+  
+  /* Navbar */
+  .dark-theme .navbar {
+    background-color: #212529 !important;
+  }
+  .dark-theme .btn-outline-light {
+    border-color: #f8f9fa;
+    color: #f8f9fa;
+  }
+  
+  /* Sidebar */
+  .dark-theme #sidebar {
+    background-color: #212529;
+    color: #f8f9fa;
+  }
+
+  .dark-theme {
+
+
+  }
+  
+  .dark-theme .list-group-item {
+    background-color: #343a40;
+    border-color: #495057;
+    color: #f8f9fa;
+  }
+  .dark-theme .list-group-item:hover, 
+  .dark-theme .list-group-item.active {
+    background-color: #495057;
+    color: #fff;
+  }
+  
+  /* Submenu */
+  .dark-theme .submenu {
+    background-color: #343a40;
+    color: #f8f9fa;
+  }
+  .dark-theme .submenu-header {
+    color: #f8f9fa;
+  }
+  
+  /* Main Content */
+  .dark-theme .center-bodycontent,
+  .dark-theme main.container {
+    background-color: #343a40;
+    color: #f8f9fa;
+  }
+  
+  /* Other common elements can be styled similarly */
+</style>
+
+
+
+
+
+
   <style>
+
     body {
       background-color: #CCFFFF;
     }
@@ -231,20 +328,18 @@
       <button class="btn btn-info me-3" id="sidebarToggle">
         <i class="bi bi-list"></i>
       </button>
-      {% comment %} <a class="navbar-brand position-absolute start-50 translate-middle-x" href="#">
-        Admin Dashboard
-      </a> {% endcomment %}
-
-       <!-- Extra navbar content goes here -->
-    {% block navbar_extra %}{% endblock %}
-
+      {% block navbar_extra %}{% endblock %}
       <div class="ms-auto">
+        <!-- Theme toggle button -->
+        <button id="themeToggle" class="btn btn-outline-light me-2">
+          <i id="themeIcon" class="bi bi-moon"></i>
+        </button>
         <!-- Logout button -->
         <a href="{% url 'logout_myadmin' %}" class="btn btn-outline-light me-2">Logout</a>
       </div>
-
     </div>
   </nav>
+  
 
   <!-- Sidebar -->
   <div id="sidebar">

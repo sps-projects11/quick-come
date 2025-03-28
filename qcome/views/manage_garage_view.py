@@ -5,11 +5,15 @@ from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.http import JsonResponse
-from qcome.constants.default_values import Vehicle_Type
+from qcome.constants.default_values import Vehicle_Type, Role
+from qcome.decorators.auth_decorator import auth_required, role_required
 from django.contrib import messages  # For user feedback
 from qcome.package.file_management import save_uploaded_file
 
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -28,7 +32,10 @@ class ManageGarageListView(View):
         # Pass the list of garage objects to the template.
         return render(request, 'adminuser/garage/garage_list.html', {'garages': garages, 'admin': admin_data})
 
-    
+
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -59,18 +66,25 @@ class ManageGarageCreateView(View):
         messages.success(request, SuccessMessage.S00008.value)
         return redirect('manage_garages_list')
 
-    
+
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageUpdateView(View):
     def get(self, request, garage_id):
         admin_data = user_service.get_user(request.user.id)
         garage = garage_service.get_garage(garage_id)
+        garage_owner = user_service.get_user(garage.garage_owner.id)
 
-        return render(request, 'adminuser/garage/garage_update.html', {'garage':garage, 'admin':admin_data})
+        return render(request, 'adminuser/garage/garage_update.html', {'garage':garage, 'admin':admin_data, 'garage_owner':garage_owner})
     
     def post(self, request, garage_id):
         user = user_service.get_user(request.user.id)      
 
         garage_name = request.POST.get('garage_name')
+        garage_owner_first_name = request.POST.get('garage_owner_first_name')
+        garage_owner_middle_name = request.POST.get('garage_owner_middle_name', '')
+        garage_owner_last_name = request.POST.get('garage_owner_last_name')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         garage_ac = request.POST.get('garage_ac')        
@@ -80,6 +94,8 @@ class ManageGarageUpdateView(View):
         garage_profile_photo_path = save_uploaded_file(garage_profile_photo, subfolder="garage-profile-photo")        
 
         garage = garage_service.garage_update(garage_id, user, garage_name, address, phone, garage_ac, garage_vehicle_type, garage_profile_photo_path)
+        garage_owner = user_service.get_user(garage.garage_owner.id)
+        user_service.user_name_update(garage_owner, garage_owner_first_name, garage_owner_middle_name, garage_owner_last_name)
         if garage is None:
             messages.error(request, ErrorMessage.E00014.value)
             return redirect('manage_garages_list')
@@ -88,6 +104,9 @@ class ManageGarageUpdateView(View):
         return redirect('manage_garages_list')
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageGarageToggleView(View):
     def post(self, request, garage_id):
         garage = garage_service.toggle_garage_status(garage_id)

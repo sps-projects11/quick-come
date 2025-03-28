@@ -7,8 +7,12 @@ from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from qcome.package.file_management import save_uploaded_file
+from qcome.constants.default_values import Role
+from qcome.decorators import auth_required, role_required
 
 
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageWorkerListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -27,6 +31,9 @@ class ManageWorkerListView(View):
         return render(request, 'adminuser/worker/worker_list.html', {'workers': workers, 'admin': admin_data})        
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageWorkerCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -60,6 +67,9 @@ class ManageWorkerCreateView(View):
             return redirect('manage_worker_create')
     
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageWorkerUpdateView(View):
     def get(self, request, worker_id):
         admin_data = user_service.get_user(request.user.id)
@@ -79,7 +89,7 @@ class ManageWorkerUpdateView(View):
     
     def post(self, request, worker_id):
         worker_first_name = request.POST.get('worker_first_name')
-        worker_middle_name = request.POST.get('worker_middle_name')
+        worker_middle_name = request.POST.get('worker_middle_name', '')
         worker_last_name = request.POST.get('worker_last_name')
         garage = request.POST.get('worker_garage')
         worker_phone = request.POST.get('worker_phone')
@@ -105,6 +115,9 @@ class ManageWorkerUpdateView(View):
             return redirect('manage_worker_list')
 
 
+
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
 class ManageWorkerToggleView(View):
     def post(self, request, worker_id):
         worker = workers_service.worker_toggle(worker_id)
