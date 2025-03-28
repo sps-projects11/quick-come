@@ -10,7 +10,7 @@
         <div class="payment-list" id="payment-list">
             {% if payment_data %}
                 {% for payment in payment_data %}
-                <div class="payment-item" id="payment-{{ payment.payment_id }}" 
+                <div class="payment-item" id="payment-{{ payment.payment_id}} " 
                      onclick="window.location.href='/payment/receipt/{{ payment.payment_id }}/'">
                     <div class="payment-avatar">
                         <img src="{% static 'images/user_avatar.png' %}" alt="User">
@@ -36,49 +36,60 @@
 </div>
 
 <script>
-    const socket = new WebSocket("ws://localhost:8000/ws/payments/");
+    // Assuming the user ID is available in a variable `user_id` (you can pass this from Django to the template)
+    const userId = {{ user.id }};  // Get logged-in user's ID from the Django template context
+
+    // Open WebSocket connection for the specific user group
+    const socket = new WebSocket(`ws://localhost:8000/ws/payments/user_${userId}/`);
 
     socket.onmessage = function (event) {
         const data = JSON.parse(event.data);
+        console.log("Received WebSocket data:", data);  // Log the entire data object to inspect it
+    
         if (data.type === "payment_update") {
-            console.log("New Payment Update:", data.data);
-
-            // Get payment list container
-            let paymentList = document.getElementById("payment-list");
-
-            // Create new payment item
-            let newPaymentItem = document.createElement("div");
-            newPaymentItem.classList.add("payment-item");
-            newPaymentItem.id = `payment-${data.data.payment_id}`;
-            newPaymentItem.onclick = function () {
-                window.location.href = `/payment/receipt/${data.data.payment_id}/`;
-            };
-
-            newPaymentItem.innerHTML = `
-                <div class="payment-avatar">
-                    <img src="{% static 'images/user_avatar.png' %}" alt="User">
-                </div>
-                <div class="payment-details">
-                    <div class="payment-name">${data.data.paid_by}</div>
-                    <div class="payment-time">${new Date().toLocaleString()}</div>
-                    <div class="payment-type">${data.data.type}</div>
-                    <div class="payment-paid-to">
-                        <div>Paid To:</div> <div>${data.data.paid_to}</div>
+            if (data.payment) {
+                console.log("Payment update:", data.payment);
+    
+                // Get payment list container
+                let paymentList = document.getElementById("payment-list");
+    
+                // Create new payment item
+                let newPaymentItem = document.createElement("div");
+                newPaymentItem.classList.add("payment-item");
+                newPaymentItem.id = `payment-${data.payment.payment_id}`;
+                newPaymentItem.onclick = function () {
+                    window.location.href = `/payment/receipt/${data.payment.payment_id}/`;
+                };
+    
+                newPaymentItem.innerHTML = `
+                    <div class="payment-avatar">
+                        <img src="{% static 'images/user_avatar.png' %}" alt="User">
                     </div>
-                </div>
-                <div class="payment-amount positive">
-                    ₹${data.data.amount}
-                </div>
-            `;
-
-            // Insert new payment at the top
-            paymentList.prepend(newPaymentItem);
+                    <div class="payment-details">
+                        <div class="payment-name">${data.payment.paid_by}</div>
+                        <div class="payment-time">${new Date().toLocaleString()}</div>
+                        <div class="payment-type">${data.payment.type}</div>
+                        <div class="payment-paid-to">
+                            <div>Paid To:</div> <div>${data.payment.paid_to}</div>
+                        </div>
+                    </div>
+                    <div class="payment-amount positive">
+                        ₹${data.payment.amount}
+                    </div>
+                `;
+    
+                // Insert new payment at the top
+                paymentList.prepend(newPaymentItem);
+            } else {
+                console.error("No payment data found in the WebSocket message.");
+            }
         }
-    };
+    };  
     
     socket.onclose = function (event) {
         console.log("WebSocket closed", event);
     };
 </script>
+
 
 {% endblock %}

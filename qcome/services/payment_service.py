@@ -12,7 +12,7 @@ def get_all_payments_created_by(user_id):
     """Retrieve all payments"""
     payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
         'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
-    )
+    ).order_by('-created_at')
     return list(payments)
 
 def get_current_payment(booking_id):
@@ -52,21 +52,27 @@ def create_payment(request, booking_id, user_id):
         booking.is_active = False
         booking.save(update_fields=["is_active"])
 
-        # Send real-time update
+        # Send real-time update to the specific user's WebSocket group
         channel_layer = get_channel_layer()
+        payment_data = {
+            "message": "✅ Payment created successfully",
+            "user_id": payment.created_by.id,
+            "payment_id": payment.id,
+            "booking_id": booking.id,
+            "amount": payment.amount,
+            "type": PayType(payment.type).name,
+            "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
+            "paid_to": f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value == payment.type else "Quick-come Company",
+        }
+
+        # Log the payment data to verify it
+        print("Sending payment data:", payment_data)
+
         async_to_sync(channel_layer.group_send)(
-            "payments",
+            f"user_{payment.created_by.id}",  # Send to the specific user's group
             {
                 "type": "payment_update",
-                "payment": json.dumps({
-                    "message": "✅ Payment created successfully",
-                    "payment_id": payment.id,
-                    "booking_id": booking.id,
-                    "amount": payment.amount,
-                    "type": PayType(payment.type).name,
-                    "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
-                    "paid_to":f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value== payment.type else "Quick-come Company",
-                }),
+                "payment": payment_data  # Sending the payment data as an object
             }
         )
 

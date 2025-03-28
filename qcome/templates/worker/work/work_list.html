@@ -209,6 +209,10 @@ function toggleNoBookingsMessage(isLoading) {
     workerSocket.onclose = function () {
         console.warn("⚠️ Worker WebSocket Disconnected.");
     };
+    workerSocket.onclose = function () {
+        console.warn("⚠️ WebSocket Disconnected. Attempting to reconnect...");
+        setTimeout(connectWebSocket, 3000);  // Reconnect after 3 seconds
+    };
     
 </script>
 
