@@ -113,99 +113,148 @@
 
 <style>
 
-/* General Styling */
-#booking_section {
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    /* Title */
+    .section-title {
+        margin-top: 20px;
+        font-weight: bold;
+        text-align: left;
+        width: 100%;
+        max-width: 900px; /* Match the booking list width */
+        color: #2563eb;
+        margin-bottom: 20px;
+        padding-left: 20px; /* Add some padding to align with card content */
+    }
+    
+    /* Rest of your existing CSS remains exactly the same */
+    #booking_section {
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .booking-list {
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .booking-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-decoration: none;
+        color: #333;
+        transition: 0.3s ease-in-out;
+    }
+    
+    .booking-card:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .booking-info {
+        gap: 94px;
+        align-items: baseline;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .booking-info h3 {
+        font-size: 18px;
+        margin: 0;
+        color: #007bff;
+    }
+    
+    .name {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .date-time,
+    .location {
+        font-size: 14px;
+        color: #777;
+    }
+    
+    .status {
+        font-weight: bold;
+        font-size: 14px;
+        padding: 5px 10px;
+        border-radius: 8px;
+    }
+    
+    .activee {
+        color: white;
+        background: #28a745;
+    }
+    
+    .cancelled {
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+    }
+    
+    .no-bookings {
+        text-align: center;
+        font-size: 18px;
+        color: #777;
+        margin-top: 20px;
+    }
+
+    /* Responsive Design */
+@media (min-width: 768px) {
+    .booking-card {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .booking-info {
+        flex-direction: row;
+        gap: 30px;
+        margin-bottom: 0;
+    }
+    
+    .status {
+        align-self: center;
+    }
 }
 
-/* Title */
-.section-title {
-    color: #2563eb;
-    margin-bottom: 20px;
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 18px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .booking-card {
+        padding: 12px 15px;
+    }
+    .booking-info{
+        gap:0;
+        display: block;
+    }
+    .name {
+        font-size: 15px;
+    }
+    
+    .date-time,
+    .location {
+        font-size: 13px;
+    }
+    
+    .status {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
 }
 
-/* Booking List */
-.booking-list {
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Booking Card */
-.booking-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    color: #333;
-    transition: 0.3s ease-in-out;
-}
-
-.booking-card:hover {
-    transform: translateY(-3px);
-}
-
-/* Booking Info */
-.booking-info {
-    gap: 94px;
-    align-items: baseline;
-    display: flex;
-    justify-content: center;
-}
-
-.booking-info h3 {
-    font-size: 18px;
-    margin: 0;
-    color: #007bff;
-}
-
-.name {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
-}
-
-.date-time,
-.location {
-    font-size: 14px;
-    color: #777;
-}
-
-/* Status */
-.status {
-    font-weight: bold;
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 8px;
-}
-
-.activee {
-    color: white;
-    background: #28a745;
-}
-
-.cancelled {
-    color: #dc3545;
-    background: rgba(220, 53, 69, 0.1);
-}
-
-/* No Bookings */
-.no-bookings {
-    text-align: center;
-    font-size: 18px;
-    color: #777;
-    margin-top: 20px;
-}
 </style>
 
 {% endblock %}
