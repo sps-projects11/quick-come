@@ -81,12 +81,11 @@
     // Function to update the booking status in the UI
     function updateBookingStatus(bookingId, newStatus) {
         let statusElement = document.querySelector(`#status_${bookingId}`);
-        let actionbtn = document.getElementById(`#action_${bookingId}`);
+        let actionbtn = document.getElementById(`action_${bookingId}`);
         if (statusElement) {
             statusElement.innerText = newStatus;
             if (status !== 'PENDING'){
-                console.log("holoe")
-                action.style.display="none";
+                actionbtn.style.display="none";
             }
 
             console.log("✅ Status Updated Successfully!");
