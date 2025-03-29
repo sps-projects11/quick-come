@@ -100,4 +100,6 @@ def get_worker_id(user):
 def get_check(user):
     return Worker.objects.filter(worker=user).exists()
 
+def get_all_worker_of_garage(garage):
+    return Worker.objects.filter(garage=garage, is_active=True)
 
