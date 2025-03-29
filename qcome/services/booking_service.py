@@ -365,7 +365,7 @@ def get_booking_service(services):
 
 def get_all_booking_list(user_id):
     # Fetch all bookings for the user
-    bookings = Booking.objects.filter(customer=user_id)
+    bookings = Booking.objects.filter(customer=user_id).order_by('-created_at')
     
     # Lists to hold current and old bookings
     current_bookings = []

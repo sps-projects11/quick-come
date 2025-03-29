@@ -117,7 +117,7 @@ class GarageWorkerListView(View):
         # Fetch garage ID for the current user
         garage_id = garage_service.get_garage_id(request.user.id)
         # Fetch workers in the garage
-        workers = workers_service.get_worker_of_garage(garage_id)
+        workers = workers_service.get_all_worker_of_garage(garage_id)
         # Initialize worker data list
         worker_data = []
 
