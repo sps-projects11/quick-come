@@ -122,6 +122,9 @@
     }
 
     @media (max-width: 768px) {
+        ..form-container{
+            margin:20px auto;
+        }
         .form-group.row {
             flex-direction: column;
         }
@@ -135,8 +138,18 @@
             gap: 0.5rem;
             align-items: stretch;
         }
+     @media (max-width: 579px) {
+        .container{
+            margin-left:40px;
+        }
+     }
+     @media(max-width:430px){
+        .container{
+            margin-left:64px;
+        }
+     }
     }
-</style> 
+</style>
 <script type="module">
     import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
     document.addEventListener("DOMContentLoaded", () => {
@@ -147,6 +160,7 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const defaultImage = "{{ '/static/all-Pictures/user.jpg' }}";
 
+        
         // Show file input when upload button is clicked
         uploadBtn.addEventListener('click', () => {
             fileInput.click();
@@ -170,6 +184,21 @@
             fileInput.value = "";
         });
     });
+    const theSection = document.getElementById('bar');
+    const closeSection = document.getElementById('close');
+    const navberSection = document.getElementById('navber');
+
+    if (theSection) {
+        theSection.addEventListener('click', () => {
+            navberSection.classList.add('active');
+        })
+    }
+
+    if (closeSection) {
+        closeSection.addEventListener('click', () => {
+            navberSection.classList.remove('active');
+        })
+    }
 </script>
 
 <style>

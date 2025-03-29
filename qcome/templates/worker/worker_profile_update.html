@@ -1,10 +1,10 @@
-{% extends "enduser/base.html" %}
+{% extends "worker/index.html" %}
 {% block title %}Worker_Profile_Update{% endblock %}
 {% load static %}
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <section id="emergency-form" class="container">
-    <div class="form-container" style="border:1px solid black;">
+    <div class="form-container">
         <h2>Update Worker Profile</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -191,6 +191,21 @@
             removePhotoIcon.style.display = 'none';
         });
     });
+
+    const theSection = document.getElementById('bar')
+    const closeSection = document.getElementById('close')
+    const navberSection = document.getElementById('navber')
+  
+    if(theSection){
+      theSection.addEventListener( 'click',()=>{
+          navberSection.classList.add('active')
+      })
+    }
+    if(closeSection){
+      closeSection.addEventListener('click',()=>{
+          navberSection.classList.remove('active')
+      })
+    }
 </script>
 
 

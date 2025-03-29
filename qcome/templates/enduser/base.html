@@ -34,12 +34,60 @@
   <script src="{% static 'js/toast_message.js' %}"></script>
 
   <!-- End Toast-->
-
+<style>
+    @media (max-width: 576px) {
+        #header {
+            padding: 1.5px 40px;
+        }
+        #header a img {
+            width: 70px;
+        }
+        #navber li {
+            padding: 0 15px;
+        }
+        #navber li a {
+            font-size: 14px;
+        }
+        .navber{
+            width: 120%;
+        }
+        .logo {
+            margin: 2px;
+        }
+        #mobile {
+            display: flex;
+        }
+    }
+    
+    @media (max-width: 430px) {
+        #header {
+            padding: 1.5px 20px;
+        }
+        #header a img {
+            width: 60px;
+        }
+        #navber li {
+            padding: 0 10px;
+        }
+        #navber li a {
+            font-size: 12px;
+        }
+        .navber{
+            width: 135%;
+        }
+        .logo {
+            margin: 1px;
+        }
+        #mobile {
+            display: flex;
+        }
+    }
+</style>
 </head>
 <body>
 
 <!-- Navbar Start -->
-<section id="header">
+<section id="header" class="navber">
     <div class="logo"><a href="/"><img src="\static\all-Pictures\logo.jpg"  alt="logo"></a></div>
     
     <div>
