@@ -98,13 +98,13 @@ h2 {
     font-size: 12px;
 }
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .wrapper{
-        height: 90vh;
+        height: 94vh !important;
         width: 100%;
     }
     .container {
-        width: 100%;
+        width: 100% !important;
         padding: 15px;
     }
 
