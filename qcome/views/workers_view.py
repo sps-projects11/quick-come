@@ -212,13 +212,13 @@ class WorkerWorkRecieptView(View):
             work = work_service.get_work_by_id(work_id)
             if not work:
                 return JsonResponse({'message': 'Work not found', 'status': 'error'}, status=404)
-
+            booking_service.update_booking_status(work_id,status)
             # Update work status
             work_service.update_work_status(work_id, status)
             booking=booking_service.get_booking_id(work_id)
-            print("booking_id:",booking.id)
             status_value=booking_service.get_booking_status(booking.id)
             status_name=booking_service.get_status_name(status_value)
+
 
             # **Trigger WebSocket Event**
             channel_layer = get_channel_layer()

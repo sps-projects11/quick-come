@@ -390,3 +390,20 @@ def get_all_booking_list(user_id):
         'current_bookings': current_bookings,
         'old_bookings': old_bookings,
     }
+
+
+def update_booking_status(work_id, status):
+    work = Work.objects.filter(id=work_id).values('booking').first()
+    if not work:
+        return
+    booking = Booking.objects.filter(id=work['booking']).first()
+    if not booking:
+        return
+    if int(status) == Status.CANCELLED.value or int(status) == Status.FAILED.value:
+        booking.is_active = False
+        booking.save()
+    else:
+        print(f"Status {status} does not require any action.")
+    return
+
+
