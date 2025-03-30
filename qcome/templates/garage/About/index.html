@@ -3,201 +3,203 @@
 {%load static %}
 {% block content %}
 
-    <!-- Section 1 -->
-
-<div class="container">
+<!-- Section 1 -->
+<div class="about-container">
     <div class="info-section">
-    <img src="/static/all-Pictures/banners/depositphotos_32387109-stock-photo-who.jpg" alt="">
-    <div class="info-content">
-        <h2>Who We Are?</h2>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi excepturi odit numquam iste dignissimos soluta illum qui ad quis quo, consequatur impedit ea earum, voluptas, maiores quasi. Nulla, eaque placeat! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo est dolorum blanditiis at adipisci voluptatibus dicta minima libero ratione, nihil nesciunt in ut ipsum consequatur ex facere, repellendus esse ducimus enim? Nam doloremque, saepe similique impedit ipsam sunt consectetur quaerat.</p>
-        <a href="#">Learn more</a>
+        <div class="image-container">
+            <img src="/static/all-Pictures/banners/depositphotos_32387109-stock-photo-who.jpg" alt="Who We Are">
+        </div>
+        <div class="info-content">
+            <h2>Who We Are?</h2>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi excepturi odit numquam iste dignissimos soluta illum qui ad quis quo, consequatur impedit ea earum, voluptas, maiores quasi. Nulla, eaque placeat! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo est dolorum blanditiis at adipisci voluptatibus dicta minima libero ratione, nihil nesciunt in ut ipsum consequatur ex facere, repellendus esse ducimus enim? Nam doloremque, saepe similique impedit ipsam sunt consectetur quaerat.</p>
+            <a href="#" class="learn-more-btn">Learn more <i class="fas fa-arrow-right"></i></a>
+        </div>
     </div>
-</div>
-
-
 
     <!-- Section 2 -->
-    <div class="info-section">
-        <img src="/static/all-Pictures/banners/about2.jpg" alt="Sustainability">
+    <div class="info-section reverse">
+        <div class="image-container">
+            <img src="/static/all-Pictures/banners/about2.jpg" alt="Sustainability">
+        </div>
         <div class="info-content">
             <h2>Sustainability</h2>
             <p>EXTEN is committed to using sustainable materials and eco-friendly practices in furniture manufacturing. Our goal is to reduce environmental impact while maintaining quality.</p>
-            <a href="#">Learn more</a>
+            <a href="#" class="learn-more-btn">Learn more <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
     <!-- Section 3 -->
     <div class="info-section">
-        <img src="/static/all-Pictures/banners/abou1.webp" alt="Rides and Beyond">
+        <div class="image-container">
+            <img src="/static/all-Pictures/banners/abou1.webp" alt="Innovation">
+        </div>
         <div class="info-content">
             <h2>Innovation</h2>
             <p>We focus on modern and functional furniture that complements contemporary lifestyles. Our pieces are designed with precision and aesthetic appeal to enhance your space.</p>
-            <a href="#">Our offerings</a>
+            <a href="#" class="learn-more-btn">Our offerings <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
+
     <!-- Section 4 -->
-    <div class="info-section">
-        <img src="/static/all-Pictures/banners/about3.svg" alt="Rides and Beyond">
+    <div class="info-section reverse">
+        <div class="image-container">
+            <img src="/static/all-Pictures/banners/about3.svg" alt="Safety">
+        </div>
         <div class="info-content">
             <h2>Your safety drives us</h2>
             <p>We focus on modern and functional furniture that complements contemporary lifestyles. Our pieces are designed with precision and aesthetic appeal to enhance your space.</p>
-            <a href="#">Our offerings</a>
+            <a href="#" class="learn-more-btn">Our offerings <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>
-
-
-<!-- the company page -->
-<div class="containerrr">
-    <h2 class="headinggg">Our Global mobility ecosystem</h2>
-
-    <div class="stats">
-        <!-- Box 1 -->
-        <div class="stat-box">
-            <img src="https://cdn-icons-png.flaticon.com/128/535/535239.png" alt="Cities Icon">
-            <h3>250+</h3>
-            <p><strong>Cities covered</strong></p>
-            <p>Across India, Australia, New Zealand, and the UK</p>
-        </div>
-
-        <!-- Box 2 -->
-        <div class="stat-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/5110/5110947.png" alt="Rides Icon">
-            <h3>1 cr+</h3>
-            <p><strong>Yearly Bookings</strong></p>
-            <p>Booked by our customers every year</p>
-        </div>
-        <!-- Box 3 -->
-        <div class="stat-box">
-            <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="Rides Icon">
-            <h3>10k+</h3>
-            <p><strong>Employees</strong></p>
-            <p>Employees work tirelessly to provide you with the best service</p>
-        </div>
-
-        <!-- Box 4 -->
-        <div class="stat-box">
-            <img src="https://www.olacabs.com/mediaimage/wysiwyg/city.svg" alt="Kilometers Icon">
-            <h3>1000+</h3>
-            <p><strong>Company</strong></p>
-            <p>Trusted by more than Thousands of Companies</p>
-        </div>
-    </div>
-</div>
-
-
-
 
 <style>
+    /* Base Styles */
+    :root {
+        --primary: #4361ee;
+        --dark: #2b2d42;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+    }
 
-.container {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 20px;
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        line-height: 1.6;
+        color: var(--dark);
+    }
+
+    /* About Container */
+    .about-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+
+    /* Info Section */
+    .info-section {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        padding: 1rem;
+    }
+
+    /* Image Container */
+    .image-container {
+        flex: 1 1 45%;
+        min-width: 300px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .image-container:hover img {
+        transform: scale(1.03);
+    }
+
+    /* Info Content */
+    .info-content {
+        flex: 1 1 45%;
+        min-width: 300px;
+        padding: 1rem;
+    }
+
+    .info-content h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+
+    .info-content p {
+        font-size: 1rem;
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    /* Learn More Button */
+    .learn-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        padding-bottom: 0.2rem;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    .learn-more-btn:hover {
+        color: var(--dark);
+        border-bottom-color: var(--dark);
+        gap: 0.8rem;
+    }
+
+    /* Reverse Layout for Alternate Sections */
+    .reverse {
+        flex-direction: row-reverse;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .info-section, .reverse {
+            flex-direction: column;
         }
 
-        .info-section {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .info-section img {
-            width: 400px;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .info-content {
-            max-width: 500px;
+        .image-container, .info-content {
+            flex: 1 1 100%;
+            min-width: 100%;
         }
 
         .info-content h2 {
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
         }
 
         .info-content p {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.5;
-            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .about-container {
+            padding: 0.5rem;
         }
 
-        .info-content a {
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-            border-bottom: 2px solid black;
-            padding-bottom: 2px;
+        .info-section {
+            margin-bottom: 2rem;
+            padding: 0.5rem;
         }
 
-        .info-content a:hover {
-            color: #777;
-            border-bottom: 2px solid #777;
+        .info-content h2 {
+            font-size: 1.3rem;
         }
 
-        /* Alternate row styling */
-        .info-section:nth-child(even) {
-            flex-direction: row-reverse;
+        .learn-more-btn {
+            font-size: 0.9rem;
         }
-
- 
-
-.containerrr {
-        text-align: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
     }
-
-    .headinggg {
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 40px;
-    }
-
-    .stats {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        /* flex-wrap: wrap; */
-    }
-
-    .stat-box {
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 280px;
-        text-align: center;
-    }
-
-    .stat-box img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .stat-box h3 {
-        font-size: 24px;
-        margin: 15px 0 5px;
-        font-weight: bold;
-    }
-
-    .stat-box p {
-        font-size: 16px;
-        margin: 5px 0;
-        color: #555;
-    }
-
-
-
 </style>
-{% comment %} Add The Js {% endcomment %}
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Your original JavaScript remains unchanged -->
 <script>
     const theSection = document.getElementById('bar')
     const closeSection = document.getElementById('close')
@@ -213,6 +215,6 @@
           navberSection.classList.remove('active')
       })
     }
-  
-  </script>
+</script>
+
 {% endblock %}

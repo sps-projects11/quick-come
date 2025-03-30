@@ -3,38 +3,95 @@
 {% block title %}Payment Receipt{% endblock %}
 
 {% block content %}
-   <link rel="stylesheet" href="{% static 'css/reciept.css' %}">
-   <div class="wrapper">
-      <div class="container">
-         <div class="receipt-header">
-            <i class="fas fa-arrow-left back-btn" onclick="goBack()"></i>
-            <h3 style="font-size: 30px;font-weight: bold;">Payment Receipt</h3>
+<link rel="stylesheet" href="{% static 'css/reciept.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="receipt-wrapper">
+   <div class="receipt-card">
+      <div class="receipt-header">
+         <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+         </button>
+         <h1 class="receipt-title">Payment Receipt</h1>
+      </div>
+      
+      <div class="receipt-body">
+         <div class="receipt-details">
+            <div class="detail-row">
+               <span class="detail-label">Transaction ID</span>
+               <span class="detail-value">{{ payment.id }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Amount Paid</span>
+               <span class="detail-value highlight">₹ {{ payment.amount }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Paid At</span>
+               <span class="detail-value">{{ payment.paid_at }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Paid By</span>
+               <span class="detail-value">{{ payment.paid_by }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Paid To</span>
+               <span class="detail-value">{{ payment.paid_to }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Payment Method</span>
+               <span class="detail-value">{{ payment.type }}</span>
+            </div>
+            <div class="detail-row">
+               <span class="detail-label">Payment Status</span>
+               <span class="detail-value status-badge status-{{ payment.status|lower }}">{{ payment.status }}</span>
+            </div>
          </div>
-         <div class="receipt-content">
-            <div class="item"><strong>Transaction ID:</strong> <span>{{ payment.id }}</span></div>
-            <div class="item"><strong>Amount Paid:</strong> <span>₹ {{ payment.amount }}</span></div>
-            <div class="item"><strong>Paid At:</strong> <span>{{ payment.paid_at }}</span></div>
-            <div class="item"><strong>Paid By:</strong> <span>{{ payment.paid_by }}</span></div>
-            <div class="item"><strong>Paid to:</strong> <span>{{ payment.paid_to }}</span></div>
-            <div class="item"><strong>payment method:</strong> <span>{{ payment.type }}</span></div>
-            <div class="item"><strong>payment Status:</strong> <span>{{ payment.status }}</span></div>
+         
+         <div class="receipt-footer">
+            <div class="success-icon" style="color: #403bcd;">
+               <i class="fas fa-check-circle"></i>
+            </div>
+            <p class="thank-you">Thank you for your payment!</p>
+            <a href="{% url 'home' %}" class="home-btn">
+               <i class="fas fa-home"></i> Back to Home
+            </a>
          </div>
-         <a href="{% url 'home' %}" class="btn">Back to Home</a>
       </div>
    </div>
-   <script>
-      function goBack() {
-         fetch("{% url 'check_worker_status' %}")
-         .then(response => response.json())
-         .then(data => {
-               if (data.is_worker) {
-                  window.location.href = "{% url 'worker_payments' %}";
-               } else {
-                  window.location.href = "{% url 'payment_list' %}";
-               }
-         })
-         .catch(error => console.error("Error checking worker status:", error));
-      }
-   </script>
-{% endblock %}
+</div>
 
+<!-- Your original JavaScript remains unchanged -->
+<script>
+   function goBack() {
+      fetch("{% url 'check_worker_status' %}")
+      .then(response => response.json())
+      .then(data => {
+            if (data.is_worker) {
+               window.location.href = "{% url 'worker_payments' %}";
+            } else {
+               window.location.href = "{% url 'payment_list' %}";
+            }
+      })
+      .catch(error => console.error("Error checking worker status:", error));
+   }
+
+
+
+   const theSection = document.getElementById('bar')
+    const closeSection = document.getElementById('close')
+    const navberSection = document.getElementById('navber')
+  
+    if(theSection){
+      theSection.addEventListener( 'click',()=>{
+          navberSection.classList.add('active')
+      })
+    }
+    if(closeSection){
+      closeSection.addEventListener('click',()=>{
+          navberSection.classList.remove('active')
+      })
+    }   
+</script>
+
+
+{% endblock %}

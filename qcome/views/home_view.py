@@ -20,10 +20,22 @@ class HomeView(View):
             works = booking_service.get_bookings(worker_id.id)
             return render(request, 'worker/work/work_list.html', {'bookings':works})
         else:
-            return render(request, 'enduser/home/index.html', {'user':user})
+            bookings = booking_service.get_booking_count()
+            booking_count = booking_service.count_formating(bookings)
+            all_worker = workers_service.get_all_workers().count()
+            worker_count = booking_service.count_formating(all_worker)
+            context = {
+                'user' : user,
+                'booking_count'  : booking_count,
+                'worker_count' : worker_count,
+            }
+            return render(request, 'enduser/home/index.html', context)
 
     
 class ChangeMyThemeView(View):
     def post(self, request):
         return
+    
+
+
         

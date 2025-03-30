@@ -407,3 +407,24 @@ def update_booking_status(work_id, status):
     return
 
 
+
+
+def get_booking_count():
+    return Booking.objects.count()
+    
+
+def count_formating(count):
+    if count >= 10_000_000:
+        return f"{count / 10_000_000:.2f}Cr"
+
+    elif count >= 100_000:
+        return f"{count / 100_000:.2f}Lac"
+
+    elif count >= 1_000:
+        return f"{count / 1_000:.2f}K"
+
+    return str(count)
+
+    
+
+

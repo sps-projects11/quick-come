@@ -3,48 +3,99 @@
 {% load static %}
 {% block content %}
 
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<!-- Design Assets -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <section id="booking_section">
-    <h3 class="section-title">Your Current Bookings</h3>
-    <div class="booking-list">
-        {% for booking in bookings.current_bookings %}
-        <a href="{% url 'booking_details' booking_id=booking.id %}" class="booking-card">
-            <div class="booking-info">
-                <p class="name"><strong>Booked By: </strong> {{ booking.customer_name }}</p>
-                <p class="date-time"><i class="bi bi-calendar2-event-fill"></i> {{ booking.created_at|date:"Y-m-d H:i" }}</p>
-                <p class="location"><i class="bi bi-geo-alt-fill"></i> {{ booking.current_location }}</p>
+    <div class="booking-container">
+        <!-- Current Bookings -->
+        <div class="booking-category">
+            <div class="category-header">
+                <h2 class="section-title">
+                    <i class="bi bi-clock-history"></i> Current Bookings
+                    <span class="badge">{{ bookings.current_bookings|length }}</span>
+                </h2>
             </div>
-            <div class="status" id="status_{{ booking.id }}">
-                {{ booking.status }}
+            
+            <div class="booking-cards">
+                {% for booking in bookings.current_bookings %}
+                <div class="booking-card" onclick="window.location='{% url 'booking_details' booking_id=booking.id %}'">
+                    <div class="card-content">
+                        <div class="customer-info">
+                            <div class="avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div>
+                                <h3>{{ booking.customer_name }}</h3>
+                                <p class="meta">
+                                    <span><i class="bi bi-calendar2-event"></i> {{ booking.created_at|date:"M d, Y" }}</span>
+                                    <span><i class="bi bi-geo-alt"></i> {{ booking.current_location|truncatechars:20 }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="status-badge status-{{ booking.status|lower }}" id="status_{{ booking.id }}">
+                            {{ booking.status }}
+                        </div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-calendar-x"></i>
+                    <p>No current bookings found</p>
+                </div>
+                {% endfor %}
             </div>
-        </a>
-        {% empty %}
-        <p class="no-bookings">No current bookings found.</p>
-        {% endfor %}
-    </div>
+        </div>
 
-    <h3 class="section-title">Your Old Bookings</h3>
-    <div class="booking-list">
-        {% for booking in bookings.old_bookings %}
-        <a href="{% url 'booking_details' booking_id=booking.id %}" class="booking-card">
-            <div class="booking-info">
-                <p class="name"><strong>Booked By: </strong> {{ booking.customer_name }}</p>
-                <p class="date-time"><i class="bi bi-calendar2-event-fill"></i> {{ booking.created_at|date:"Y-m-d H:i" }}</p>
-                <p class="location"><i class="bi bi-geo-alt-fill"></i> {{ booking.current_location }}</p>
+        <!-- Old Bookings -->
+        <div class="booking-category">
+            <div class="category-header">
+                <h2 class="section-title">
+                    <i class="bi bi-archive"></i> Past Bookings
+                    <span class="badge">{{ bookings.old_bookings|length }}</span>
+                </h2>
             </div>
-            <div class="status" id="status_{{ booking.id }}">
-                {{ booking.status }}
+            
+            <div class="booking-cards">
+                {% for booking in bookings.old_bookings %}
+                <div class="booking-card" onclick="window.location='{% url 'booking_details' booking_id=booking.id %}'">
+                    <div class="card-content">
+                        <div class="customer-info">
+                            <div class="avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div>
+                                <h3>{{ booking.customer_name }}</h3>
+                                <p class="meta">
+                                    <span><i class="bi bi-calendar2-event"></i> {{ booking.created_at|date:"M d, Y" }}</span>
+                                    <span><i class="bi bi-geo-alt"></i> {{ booking.current_location|truncatechars:20 }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="status-badge status-{{ booking.status|lower }}" id="status_{{ booking.id }}">
+                            {{ booking.status }}
+                        </div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="bi bi-chevron-right"></i>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-archive"></i>
+                    <p>No past bookings found</p>
+                </div>
+                {% endfor %}
             </div>
-        </a>
-        {% empty %}
-        <p class="no-bookings">No old bookings found.</p>
-        {% endfor %}
+        </div>
     </div>
 </section>
 
-
+<!-- Your original JavaScript remains unchanged -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         console.log("🚀 Document Loaded. Initializing WebSocket...");
@@ -81,9 +132,6 @@
         connectWebSocket(); // Start WebSocket connection
     });
     
-    /**
-     * Function to update the booking status in the UI.
-     */
     function updateBookingStatus(bookingId, newStatus) {
         setTimeout(() => {
             let statusElement = document.querySelector(`#status_${bookingId}`);
@@ -100,13 +148,14 @@
     
             if (statusElement) {
                 statusElement.innerText = newStatus;
+                // Update status class
+                statusElement.className = `status-badge status-${newStatus.toLowerCase()}`;
                 console.log("✅ Status Updated Successfully!");
             } else {
                 console.error(`🚨 Still no status element found for Booking ID: ${bookingId}`);
             }
         }, 500); // Reduce delay for faster updates
     }
-
 
     const theSection = document.getElementById('bar');
     const closeSection = document.getElementById('close');
@@ -123,156 +172,223 @@
             navberSection.classList.remove('active');
         })
     }
-    
 </script>
 
-
-
 <style>
+    :root {
+        --primary: #4361ee;
+        --primary-light: #4cc9f0;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --warning: #f8961e;
+        --danger: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+    }
 
-    /* Title */
-    .section-title {
-        margin-top: 20px;
-        font-weight: bold;
-        text-align: left;
-        width: 100%;
-        max-width: 900px; /* Match the booking list width */
-        color: #2563eb;
-        margin-bottom: 20px;
-        padding-left: 20px; /* Add some padding to align with card content */
-    }
-    
-    /* Rest of your existing CSS remains exactly the same */
-    #booking_section {
-        padding: 20px;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .booking-list {
-        width: 100%;
-        max-width: 900px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .booking-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: white;
-        padding: 15px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-decoration: none;
-        color: #333;
-        transition: 0.3s ease-in-out;
-    }
-    
-    .booking-card:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    .booking-info {
-        width: 80%;
-        gap: 94px;
-        align-items: baseline;
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .booking-info h3 {
-        font-size: 18px;
+    * {
+        box-sizing: border-box;
         margin: 0;
-        color: #007bff;
+        padding: 0;
     }
-    
-    .name {
-        font-size: 16px;
-        font-weight: 500;
-        color: #333;
+
+
+
+    #booking_section {
+        overflow-y: scroll;
+        scrollbar-width: none;
+        padding: 20px;
+        height: 100vh;
     }
-    
-    .date-time,
-    .location {
-        font-size: 14px;
-        color: #777;
+
+    .booking-container {
+        max-width: 900px;
+        margin: 0 auto;
     }
-    
-    .status {
-        font-weight: bold;
-        font-size: 14px;
-        padding: 5px 10px;
-        border-radius: 8px;
+
+    .booking-category {
+        margin-bottom: 30px;
     }
-    
-    .activee {
+
+    .category-header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .section-title .badge {
+        background: var(--primary);
         color: white;
-        background: #28a745;
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
     }
-    
-    .cancelled {
-        color: #dc3545;
-        background: rgba(220, 53, 69, 0.1);
+
+    .booking-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
-    
-    .no-bookings {
+
+    .booking-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .booking-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+    }
+
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        background: rgba(67, 97, 238, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.25rem;
+    }
+
+    .customer-info h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .meta {
+        display: flex;
+        gap: 12px;
+        font-size: 0.8rem;
+        color: var(--gray);
+    }
+
+    .meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        margin-left: 15px;
+    }
+
+    .status-pending {
+        background: rgba(248, 150, 30, 0.1);
+        color: var(--warning);
+    }
+
+    .status-completed {
+        background: rgba(76, 201, 240, 0.1);
+        color: var(--success);
+    }
+
+    .status-cancelled {
+        background: rgba(247, 37, 133, 0.1);
+        color: var(--danger);
+    }
+
+    .card-arrow {
+        color: var(--gray);
+        margin-left: 10px;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        color: var(--gray);
         text-align: center;
-        font-size: 18px;
-        color: #777;
-        margin-top: 20px;
+    }
+
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
     }
 
     /* Responsive Design */
-@media (min-width: 768px) {
-    .booking-card {
-        flex-direction: row;
-        align-items: center;
+    @media (max-width: 768px) {
+        .booking-container {
+            padding: 0 10px;
+        }
+        
+        .booking-card {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 15px;
+        }
+        
+        .card-content {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            margin: 10px 0 0;
+            align-self: flex-end;
+        }
+        
+        .card-arrow {
+            align-self: flex-end;
+        }
     }
-    
-    .booking-info {
-        flex-direction: row;
-        gap: 30px;
-        margin-bottom: 0;
-    }
-    
-    .status {
-        align-self: center;
-    }
-}
 
-@media (max-width: 480px) {
-    .section-title {
-        font-size: 18px;
-        margin-top: 15px;
-        margin-bottom: 15px;
+    @media (max-width: 480px) {
+        .meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
     }
-    
-    .booking-card {
-        padding: 12px 15px;
-    }
-    .booking-info{
-        gap:0;
-        display: block;
-    }
-    .name {
-        font-size: 15px;
-    }
-    
-    .date-time,
-    .location {
-        font-size: 13px;
-    }
-    
-    .status {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
-}
-
 </style>
 
 {% endblock %}
