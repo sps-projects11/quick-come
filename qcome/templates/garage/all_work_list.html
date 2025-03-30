@@ -5,8 +5,9 @@
 
 
 <section id="booking_details">
+    <div class="card" style="height: 85vh;">
     <h2>Your Works</h2>
-    <div class="profile-container" style="height:100%;margin:auto; width:90%;">
+    <div class="profile-container" style="scrollbar-width: none;overflow-y: scroll;height: 100%;margin: auto;width: 100%;">
 
     {% if error %}
         <p class="alert alert-warning">{{ error }}</p>
@@ -56,6 +57,7 @@
         <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No Works found.</p>
     {% endif %}
     </div>
+    </div>
 </section>
 <style>
     #booking_details {
@@ -99,7 +101,7 @@
     h2 {
         text-align: center;
         color: #333;
-        margin-bottom: 20px;
+        margin-top: 20px;
         font-size: 24px;
     }
 </style>
