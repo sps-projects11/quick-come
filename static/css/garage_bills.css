@@ -1,25 +1,40 @@
 /* Wrapper */
 .wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
-    background-image: url('/static/all-Pictures/banners/con10.gif');
+    background-image: url(/static/all-Pictures/banners/con10.gif);
     background-size: cover;
     background-position: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
     padding: 20px;
+    width: 100%;
+    margin: auto;
+    height: 92vh;
 }
 
 /* Container */
 .container {
+    margin: auto;
     height: 100%;
     width: 50%;
-    background:#e6f1fb;
+    background: #00fff6db;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
+}
+
+#bills-list{
+    cursor: pointer;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 /* Billing Title */
