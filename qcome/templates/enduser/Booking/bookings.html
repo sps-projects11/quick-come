@@ -311,6 +311,83 @@
         margin-left: 15px;
     }    
 
+    .status-pending {
+        background: rgba(248, 150, 30, 0.1);
+        color: var(--warning);
+    }
+
+    .status-completed {
+        background: rgba(76, 201, 240, 0.1);
+        color: var(--success);
+    }
+
+    .status-cancelled {
+        background: rgba(247, 37, 133, 0.1);
+        color: var(--danger);
+    }
+
+    .card-arrow {
+        color: var(--gray);
+        margin-left: 10px;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        color: var(--gray);
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .booking-container {
+            padding: 0 10px;
+        }
+        
+        .booking-card {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 15px;
+        }
+        
+        .card-content {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            margin: 10px 0 0;
+            align-self: flex-end;
+        }
+        
+        .card-arrow {
+            align-self: flex-end;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
+    }
+
 </style>
 
 {% endblock %}
