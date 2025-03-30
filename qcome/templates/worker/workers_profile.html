@@ -11,7 +11,7 @@
     }
 
     .profile-container {
-        max-width: 650px;
+        max-width: 500px;
         margin: 50px auto;
         background: #ffffff;
         border-radius: 12px;
@@ -26,7 +26,7 @@
         object-fit: cover;
         border-radius: 50%;
         margin-bottom: 15px;
-        border: 5px solid #007bff;
+        border: 2px solid #007bff;
     }
 
     h2 {
@@ -41,18 +41,20 @@
     }
     @media (min-width:768px) {
         .btn-group{
-            gap:25px;
+            gap:2em;
         }
         #up{
-            width: 190px;
+            width: 140px;
             padding-top:10px;
             height:50px;
             border-radius:10px;
+            margin-top:2em;
         }
         #del{
             border-radius:10px;
-            width: 190px;
+            width: 140px;
             height:50px;
+            margin-top:2em;
         }
     }
     .btn-primary:hover {
@@ -76,19 +78,6 @@
         }
     }
     @media(width:768px){
-        {% comment %} .btn-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 15px;
-        }
-        #up{
-            width:10px;
-        }
-         #del{
-            width: auto;
-            flex: 1;
-        } {% endcomment %}
           .btn-group{
            display:flex;
            flex-direction:column;
@@ -103,7 +92,7 @@
     <div class="profile-container">
         <h2>Worker Profile</h2>
         <div class="profile-details">
-                <img src="{{ user.profile_photo_url }}" class="profile-img" alt="Worker Image">
+                <img src="{{ user.profile_photo_url |default:'/static/all-Pictures/user.jpg'}}" class="profile-img" alt="Worker Image">
             <p><i class="fas fa-user-tie"></i><strong>Name:</strong> {{ user.first_name }} {% if user.middle_name %} {{ user.middle_name }} {% endif %} {{ user.last_name }}</p>
             <p><i class="fas fa-phone"></i><strong>Phone:</strong> {% if user.phone %} {{ user.phone }} {% endif %}</p>
             <p><strong>Experience:</strong> {{ worker_details.experience }}</p>

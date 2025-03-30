@@ -119,19 +119,22 @@
 </div>
     <div class="col">
         <h4>About</h4>
-        <a href="#">About Us</a>
-        <a href="#">Booking Information</a>
+        <a href="/about/">About Us</a>
+        <a href="/">Booking Information</a>
         <a href="#">Privacy Policy</a>
         <a href="#">Terms & Conditions</a>
-        <a href="#">Contact Us</a>
+        <a href="/contact/">Contact Us</a>
     </div>
 
     <div class="col">
         <h4>My Account</h4>
         <a href="#">Sign In</a>
-        <a href="#">My Profile</a>
-        <a href="#">View Payment</a>
-        <a href="#">Track My Booking</a>
+        <a href="{% url 'garage_profile' %}">My Profile</a>
+        <a href="/services/">Services</a>
+        <a href="/garage/bills/">Bills</a>
+        <a href="/garage/work_list/">Worked List</a></li>
+        <a href="/services/">Services</a></li>
+        <a href="/garage/workers/">Worker</a></li>
         <a href="#">Help</a>
     </div>
 
