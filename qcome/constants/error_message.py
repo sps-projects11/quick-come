@@ -20,7 +20,7 @@ class ErrorMessage(Enum):
     E00016 = "Error Creating Garage"
     E00017 = "Error Creating Worker"
     E00018 = "Error updating worker status. Please try again."
-    E00019 = ""
+    E00019 = "Registration failed! Please try again"
     E00020 = ""
     E00021 = ""
     E00022 = ""

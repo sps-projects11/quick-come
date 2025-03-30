@@ -13,7 +13,7 @@ from qcome.package.file_management import save_uploaded_file
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageGarageListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -35,7 +35,7 @@ class ManageGarageListView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageGarageCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -69,7 +69,7 @@ class ManageGarageCreateView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageGarageUpdateView(View):
     def get(self, request, garage_id):
         admin_data = user_service.get_user(request.user.id)
@@ -106,7 +106,7 @@ class ManageGarageUpdateView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageGarageToggleView(View):
     def post(self, request, garage_id):
         garage = garage_service.toggle_garage_status(garage_id)

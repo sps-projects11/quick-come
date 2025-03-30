@@ -4,6 +4,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Toast Message Implemention-->
+   
+    <script>
+      window.djangoMessages = [
+        {% for message in messages %}
+          {
+            "tags": "{{ message.tags }}",
+            "message": "{{ message|escapejs }}"
+          }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+      console.log("djangoMessages:", window.djangoMessages);  // Debug output
+    </script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js" integrity="sha256-lCHT/LfuZjRp+PdpWns/vKrnSn367D/g1E6Ju18wiH0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css" integrity="sha256-SCRy3fXoOamBaidKByHs9iJVLYJ65R/v6ycZNN4JhmE=" crossorigin="anonymous">
+    
+    <!-- Include external toast script -->
+    <script src="{% static 'js/toast_message.js' %}"></script>
+  <!-- End Toast -->
+   
   <title>Admin Login Page</title>
   <style>
     /* Ensure padding and borders are included in total width */

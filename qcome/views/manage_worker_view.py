@@ -12,7 +12,7 @@ from qcome.decorators import auth_required, role_required
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageWorkerListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -33,7 +33,7 @@ class ManageWorkerListView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageWorkerCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -69,7 +69,7 @@ class ManageWorkerCreateView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageWorkerUpdateView(View):
     def get(self, request, worker_id):
         admin_data = user_service.get_user(request.user.id)
@@ -117,7 +117,7 @@ class ManageWorkerUpdateView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value,  page_type='admin')
 class ManageWorkerToggleView(View):
     def post(self, request, worker_id):
         worker = workers_service.worker_toggle(worker_id)
