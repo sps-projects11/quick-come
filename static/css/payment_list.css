@@ -1,10 +1,13 @@
 .wrapper {
+    background-image: url(/static/all-Pictures/banners/con10.gif);
+    background-size: cover;
+    background-position: center;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     display: flex;
     padding: 20px;
-    width: 80%;
+    width: 100%;
     margin: auto;
     height: 92vh;
 }
@@ -100,7 +103,7 @@ h2 {
 /* Responsive */
 @media (max-width: 768px) {
     .wrapper{
-        height: 94vh !important;
+        height: 95vh !important;
         width: 100%;
     }
     .container {
@@ -114,7 +117,13 @@ h2 {
 
     .payment-amount {
         font-size: 18px;
-    }
+    }  
 }
 
+@media (max-width: 480px) {
+    .wrapper{
+        height: 96vh !important;
+        width: 100%;
+    }
+}
 
