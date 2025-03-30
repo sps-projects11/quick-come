@@ -5,6 +5,7 @@
 
 <script src="{% static 'js/profile.js' %}"></script>
 <section id="booking_details">
+<div class="card" style="height: 85vh;">   
 <div class="profile-container" style="height:100%;margin:auto; width:90%;">
     {% if workers %}
     <table>
@@ -32,6 +33,7 @@
     {% else %}
         <p style="height: 20vh;justify-content: center;display: flex; align-items: center;">No workers found.</p>
         {% endif %}
+</div>
 </div>
 </section>
 <style>
@@ -75,7 +77,7 @@
     h2 {
         text-align: center;
         color: #333;
-        margin-bottom: 20px;
+        margin-top: 20px;
         font-size: 24px;
     }
 </style>
