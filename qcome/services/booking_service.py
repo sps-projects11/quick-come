@@ -365,7 +365,7 @@ def get_booking_service(services):
 
 def get_all_booking_list(user_id):
     # Fetch all bookings for the user
-    bookings = Booking.objects.filter(customer=user_id)
+    bookings = Booking.objects.filter(customer=user_id).order_by('-created_at')
     
     # Lists to hold current and old bookings
     current_bookings = []
@@ -390,3 +390,41 @@ def get_all_booking_list(user_id):
         'current_bookings': current_bookings,
         'old_bookings': old_bookings,
     }
+
+
+def update_booking_status(work_id, status):
+    work = Work.objects.filter(id=work_id).values('booking').first()
+    if not work:
+        return
+    booking = Booking.objects.filter(id=work['booking']).first()
+    if not booking:
+        return
+    if int(status) == Status.CANCELLED.value or int(status) == Status.FAILED.value:
+        booking.is_active = False
+        booking.save()
+    else:
+        print(f"Status {status} does not require any action.")
+    return
+
+
+
+
+def get_booking_count():
+    return Booking.objects.count()
+    
+
+def count_formating(count):
+    if count >= 10_000_000:
+        return f"{count / 10_000_000:.2f}Cr"
+
+    elif count >= 100_000:
+        return f"{count / 100_000:.2f}Lac"
+
+    elif count >= 1_000:
+        return f"{count / 1_000:.2f}K"
+
+    return str(count)
+
+    
+
+

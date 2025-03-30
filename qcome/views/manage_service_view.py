@@ -11,7 +11,7 @@ from ..constants.success_message import SuccessMessage
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class ManageServiceList(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -20,7 +20,7 @@ class ManageServiceList(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class ManageServiceCreate(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -42,7 +42,7 @@ class ManageServiceCreate(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class ManageServiceUpdate(View):
     def get(self, request, service_id):
         admin_data = user_service.get_user(request.user.id)
@@ -66,7 +66,7 @@ class ManageServiceUpdate(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class ManageServiceDelete(View):
     def post(self, request, service_id):
         service_service.remove_service(service_id, request.user)

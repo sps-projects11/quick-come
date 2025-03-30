@@ -33,7 +33,6 @@
 .receipt-container {
     flex: 1;
     padding: 20px;
-    max-width: 60%;
 }
 
 .receipt-header {
@@ -147,6 +146,7 @@
 @media (max-width: 768px) {
     .bill-container {
         flex-direction: column;
+        height: 90vh !important;
     }
 
     .bill-image {
@@ -155,6 +155,12 @@
     }
 
     .receipt-container {
-        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .bill-container {
+        height: 100% !important;
     }
 }

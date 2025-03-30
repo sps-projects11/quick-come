@@ -15,7 +15,7 @@ class SuccessMessage(Enum):
     S00011 = "Service created successfully."
     S00012 = "Service updated successfully."
     S00013 = "Service deleted successfully."
-    S00014 = ""
+    S00014 = "Successfully logged out"
     S00015 = ""
     S00016 = ""
     S00017 = ""

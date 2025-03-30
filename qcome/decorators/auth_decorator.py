@@ -135,7 +135,7 @@ def role_required(*allowed_roles, interface=None, page_type='default'):
                     else:
                         return redirect('/sign-up/')
                 elif page_type == 'enduser':
-                    if user_role in (Role.ADMIN.value, Role.SUPER_ADMIN.value):
+                    if user_role == Role.ADMIN.value:
                         logout(request)
                         return redirect('home')  # Named URL for home.
                     else:

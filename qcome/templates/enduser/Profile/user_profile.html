@@ -95,12 +95,7 @@
                 window.location.href = "/garage/create/";
 
             } else if (value === '2') {
-                const workerID = "{{ worker_id|default:user.id }}"; 
-                if (workerID) {
-                    window.location.href = `/worker/${workerID}/create/`;
-                } else {
-                    console.log("Worker ID is not active");
-                }
+                window.location.href = `/worker/create/`;
             }
         }
     

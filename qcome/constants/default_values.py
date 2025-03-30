@@ -3,7 +3,6 @@ from enum import Enum
 class Role(Enum):
     ADMIN = 1
     END_USER = 2
-    SUPER_ADMIN = 3
 
 
 class Gender(Enum):

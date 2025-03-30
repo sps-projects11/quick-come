@@ -146,17 +146,19 @@
 </section>
 
 
+<section id="join-us-card">
 <section class="join-us section-p1">
 <!-- Banner2 section -->
 <section id="banner" class="section-m1">
     <h1>Flexible Hours & 💰High Earnings</h1>
-    <a href=""><button class="normal">Join as a Machanic</button></a>
+    <a href="{% url 'worker_create' %}"><button class="normal">Join as a Machanic</button></a>
 </section>
 
 <!-- Banner3 section -->
 <section id="banner" class="section-m1" style="background-image: url('static/all-Pictures/banners/con21.jpg');background-size: cover;background-position: center;">
     <h1>List Your Garage & 💵Earn More</h1>
     <a href="/garage/create/"><button class="normal">Join as a Garage</button></a>
+</section>
 </section>
 </section>
 
@@ -166,36 +168,24 @@
     <h2 class="headinggg">Our Global mobility ecosystem</h2>
 
     <div class="stats">
-        <!-- Box 1 -->
-        <div class="stat-box">
-            <img src="https://cdn-icons-png.flaticon.com/128/535/535239.png" alt="Cities Icon">
-            <h3>250+</h3>
-            <p><strong>Cities covered</strong></p>
-            <p>Across India, Australia, New Zealand, and the UK</p>
-        </div>
+
 
         <!-- Box 2 -->
         <div class="stat-box">
             <img src="https://cdn-icons-png.flaticon.com/512/5110/5110947.png" alt="Rides Icon">
-            <h3>1 cr+</h3>
-            <p><strong>Yearly Bookings</strong></p>
+            <h3>{{ booking_count }}</h3>
+            <p><strong>Monthly Bookings</strong></p>
             <p>Booked by our customers every year</p>
         </div>
         <!-- Box 3 -->
         <div class="stat-box">
             <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="Rides Icon">
-            <h3>10k+</h3>
+            <h3>{{ worker_count }}</h3>
             <p><strong>Employees</strong></p>
             <p>Employees work tirelessly to provide you with the best service</p>
         </div>
 
-        <!-- Box 4 -->
-        <div class="stat-box">
-            <img src="https://www.olacabs.com/mediaimage/wysiwyg/city.svg" alt="Kilometers Icon">
-            <h3>1000+</h3>
-            <p><strong>Company</strong></p>
-            <p>Trusted by more than Thousands of Companies</p>
-        </div>
+
     </div>
 </div>
 

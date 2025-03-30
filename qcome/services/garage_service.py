@@ -105,9 +105,8 @@ def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garag
     return garage
 
 def get_all_garage_works(garage):
-    workers = workers_service.get_worker_of_garage(garage)
+    workers = workers_service.get_all_worker_of_garage(garage)
     queryset = Booking.objects.filter(assigned_worker__in=workers).order_by('-created_at')
-
     bookings = []
 
     if queryset:

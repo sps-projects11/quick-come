@@ -1,13 +1,13 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from ..decorators import auth_required, role_required
-from ..constants import Role,Gender
+from ..constants import Role, Gender
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages  # For user feedback
 import datetime
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
-from ..services import user_service, admin_service, garage_service, workers_service, payment_service, booking_service, service_service
+from ..services import user_service, admin_service, workers_service, payment_service, booking_service
 from qcome.package.file_management import save_uploaded_file
 import json
 
@@ -23,28 +23,28 @@ class LoginAdminView(View):
         # Authenticate the user. Adjust keyword if you're using email as username.
         user = authenticate(request, username=email, password=password)
         if user is not None:
-            if user.roles in (Role.ADMIN.value, Role.SUPER_ADMIN.value):
+            if user.roles == Role.ADMIN.value:
                 login(request, user)
                 messages.success(request, SuccessMessage.S00001.value)
                 return redirect('myadmin')  # Redirect to your admin home view; using named URL
-                
             else:
-                messages.error(request, ErrorMessage.E00001.value)
+                messages.error(request, ErrorMessage.E00011.value)
+                return redirect('login_myadmin')
         else:
-            messages.error(request, "Invalid email or password.")
-        return redirect('login_myadmin')
+            messages.error(request, ErrorMessage.E00009.value)
+            return redirect('login_myadmin')
 
 
-        
 class LoginOutAdminView(View):
     def get(self, request):
         logout(request)
         request.session.flush()  # Destroy session
+        messages.success(request, SuccessMessage.S00014.value)
         return redirect("/login/admin/")
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class AdminHomeView(View):
     def get(self, request):        
         admin_data = user_service.get_user(request.user.id)
@@ -75,7 +75,7 @@ class AdminHomeView(View):
     
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class AdminProfileView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -89,7 +89,7 @@ class AdminProfileView(View):
     
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class AdminPasswordUpdateView(View):
     def get(self, request):
         return render(request, 'adminuser/login/forgot_password.html')
@@ -98,7 +98,7 @@ class AdminPasswordUpdateView(View):
 
 
 @auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, Role.SUPER_ADMIN.value, page_type='admin')
+@role_required(Role.ADMIN.value, page_type='admin')
 class AdminProfileUpdateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)

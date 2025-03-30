@@ -1,93 +1,231 @@
-.wrapper {
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: column;
-    display: flex;
-    padding: 20px;
-    width: 80%;
-    margin: auto;
-    height: 85vh;
-}
 
-.container {
-    margin: auto;
-    height: 100%;
-    width: 50%;
-    background:#cbc6c6;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
+   :root {
+      --primary: #4361ee;
+      --success: #28a745;
+      --warning: #f8961e;
+      --danger: #dc3545;
+      --dark: #2b2d42;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+   }
 
-.receipt-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
+   .receipt-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+   }
 
-.back-btn {
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
-    transition: 0.3s;
-}
+   .receipt-card {
+      background-image: url(/static/all-Pictures/banners/con13.gif);
+      background-size: cover;
+      background-position: center;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 1400px;
+      overflow: hidden;
+   }
 
-.back-btn:hover {
-    color: #3de288;
-}
+   .receipt-header {
+      background: linear-gradient(135deg, var(--primary), #3f37c9);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      position: relative;
+   }
 
-h2 {
-    margin: 0;
-    font-size: 22px;
-    text-align: center;
-    flex-grow: 1;
-}
+   .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
 
-.receipt-content {
-    text-align: left;
-    flex-grow: 1;
-}
+   .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-3px);
+   }
 
-.item {
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 8px 0;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.btn {
-    width: 100%;
-    text-align: center;
-    background: #3de288;
+   .receipt-title {
     color: #fff;
-    padding: 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    transition: 0.3s;
-    margin-top: 20px;
-}
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 auto;
+   }
 
-.btn:hover {
-    background: #32c377;
-}
+   .receipt-body {
+      padding: 25px;
+   }
 
-@media (max-width: 600px) {
-    .receipt-container {
-        padding: 20px;
+   .receipt-details {
+      margin-bottom: 25px;
+   }
+
+   .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--light-gray);
+   }
+
+   .detail-row:last-child {
+      border-bottom: none;
+   }
+
+   .detail-label {
+      color: var(--gray);
+      font-weight: 500;
+   }
+
+   .detail-value {
+      color: var(--dark);
+      font-weight: 400;
+      text-align: right;
+   }
+
+   .highlight {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+   }
+
+   .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+   }
+
+   .status-success {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+   }
+
+   .status-pending {
+      background: rgba(248, 150, 30, 0.1);
+      color: var(--warning);
+   }
+
+   .status-failed {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+   }
+
+   .receipt-footer {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px dashed var(--light-gray);
+   }
+
+   .success-icon {
+      font-size: 3.5rem;
+      color: var(--success);
+      margin-bottom: 15px;
+   }
+
+   .thank-you {
+    border-radius: 10px;
+    background: aqua;
+    color: var(--gray);
+    margin-bottom: 20px;
+    font-size: 1rem;
+   }
+
+   .home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 250px;
+   }
+
+   .home-btn:hover {
+      background: #3a56c8;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+   }
+
+   @media (max-width: 600px) {
+      .receipt-wrapper {
+         padding: 15px;
+      }
+      
+      .receipt-card {
+         border-radius: 12px;
+      }
+      
+      .receipt-header {
+         padding: 15px;
+      }
+      
+      .receipt-title {
+         font-size: 1.3rem;
+      }
+      
+      .receipt-body {
+         padding: 20px;
+      }
+      
+      .detail-row {
+         flex-direction: column;
+         gap: 4px;
+         padding: 10px 0;
+      }
+      
+      .detail-value {
+         text-align: left;
+      }
+   }
+
+
+   @media (max-width: 768px) {
+    .receipt-wrapper{
+        display: block; 
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
-
-    .item {
-        font-size: 14px;
+    .receipt-card{
+        height: 94% !important;
     }
-
-    h2 {
-        font-size: 20px;
+    .receipt-footer {
+        padding-top: 205px !important;
     }
-}
+}  
+   @media (max-width: 480px) {
+    .receipt-wrapper{
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100% !important;
+        padding: 20px !important;
+    }
+    .receipt-card{
+        height: 100% !important;
+    }
+    .receipt-footer {
+        padding-top: 20px !important;
+    }
+}  

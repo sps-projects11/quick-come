@@ -17,6 +17,5 @@ document.getElementById("signin-form").addEventListener("submit", function (even
             window.location.href = data.redirect;  // Redirect to home page
         }
     })
-    .catch(error => console.error("Error:", error));
 });
 

@@ -95,6 +95,16 @@ def user_create(first_name, middle_name, last_name, dob, email, phone, gender, p
     )
 
 
+def create_user_initially(first_name, last_name, dob, email, password):
+    return User.objects.create(
+       first_name = first_name,
+       last_name = last_name,
+       dob = dob,
+       email = email,
+       password = password
+    )
+
+
 def toggle_user_status(user_id):
     try:
         # Use the primary key field "id" to get the user.
@@ -216,3 +226,7 @@ def get_user_profile_photo(user_id) :
         return User.profile_photo_url
     except User.DoesNotExist:
         return None
+    
+
+def check_user_exist(email):
+     return User.objects.get(email=email, is_active=True)
