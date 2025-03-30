@@ -82,7 +82,7 @@ body{
 
 /*header*/
 .logo{
-    margin: 4px;
+    margin: 4px 0 0 18px;
     display: flex;
     justify-content: center;
     align-items: center;
