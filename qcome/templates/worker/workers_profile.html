@@ -41,18 +41,20 @@
     }
     @media (min-width:768px) {
         .btn-group{
-            gap:25px;
+            gap:2em;
         }
         #up{
-            width: 190px;
+            width: 150px;
             padding-top:10px;
             height:50px;
             border-radius:10px;
+            margin-top:2em;
         }
         #del{
             border-radius:10px;
-            width: 190px;
+            width: 150px;
             height:50px;
+            margin-top:2em;
         }
     }
     .btn-primary:hover {
@@ -76,19 +78,6 @@
         }
     }
     @media(width:768px){
-        {% comment %} .btn-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 15px;
-        }
-        #up{
-            width:10px;
-        }
-         #del{
-            width: auto;
-            flex: 1;
-        } {% endcomment %}
           .btn-group{
            display:flex;
            flex-direction:column;
