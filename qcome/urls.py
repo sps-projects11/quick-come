@@ -86,7 +86,7 @@ urlpatterns = [
 
     # Workers
     path('worker/',views.WorkerView.as_view(),name='worker'),
-    path('worker/<int:user_id>/create/',views.WorkerCreateView.as_view(),name='worker_create'),
+    path('worker/create/',views.WorkerCreateView.as_view(),name='worker_create'),
     path('worker/<int:worker_id>/update/',views.WorkerUpdateView.as_view(),name='worker_update'),
     path('worker/<int:worker_id>/delete/',views.WorkerDeleteView.as_view(),name='worker_delete'),
     path('worker/payments/', views.WorkerPaymentListView.as_view(), name='worker_payments'),

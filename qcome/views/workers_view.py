@@ -33,7 +33,7 @@ class WorkerView(View):
 
 @auth_required(login_url='/sign-in/')
 class WorkerCreateView(View):
-    def get(self, request, user_id):  
+    def get(self, request):  
         garage_details = user_service.get_all_garages()
 
         context = {
@@ -42,7 +42,7 @@ class WorkerCreateView(View):
         }
         return render(request, 'enduser/profile/garage_worker/worker_profile_create.html', context)
 
-    def post(self, request, user_id):
+    def post(self, request):
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')

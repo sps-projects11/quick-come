@@ -62,7 +62,8 @@ class RequestOTPView(View):
         if not email:
             return JsonResponse(error_response(ErrorMessage.E00003.value))
         
-        if User.objects.filter(email=email).exists():
+        user = user_service.check_user_exist(email)
+        if user:
             return JsonResponse(error_response(ErrorMessage.E00004.value))
 
         otp = random.randint(100000, 999999)
@@ -104,6 +105,7 @@ class VerifyOTPView(View):
         return JsonResponse(error_response(ErrorMessage.E00006.value))
 
 
+
 class UserSigninView(View):
     def get(self, request):
         return render(request, "enduser/home/signin.html")
@@ -114,14 +116,14 @@ class UserSigninView(View):
         print("email:", email, "password:", password)
 
         try:
-            user = User.objects.get(email=email)  # Get user by email
+            user = user_service.check_user_exist(email)
             if check_password(password, user.password):  # Check hashed password
                 login(request, user)  # Log in user
                 request.session["email"] = user.email  # Store email in session
                 return JsonResponse(success_response(SuccessMessage.S00001.value, redirect="/"), status=200)
             else:
                 return JsonResponse(error_response(ErrorMessage.E00009.value))
-        except User.DoesNotExist:
+        except:
             return JsonResponse(error_response(ErrorMessage.E00010.value))
 
 
