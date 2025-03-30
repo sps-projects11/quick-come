@@ -1,4 +1,4 @@
-from ..models import Worker,User,Garage,Work
+from ..models import Worker,User,Booking
 from qcome.package.file_management import save_uploaded_file
 from qcome.constants.default_values import Status
 
@@ -65,11 +65,14 @@ def is_user_a_garage_worker(user):
     return Worker.objects.filter(worker=user, is_active=True).exists()
 
 def get_worker_of_garage(garage_id):
+    print("hello")
     # Get a list of workers for the given garage and who are active
     workers_in_garage = Worker.objects.filter(garage=garage_id, is_active=True)
-    
+    print(workers_in_garage)
     # Get the list of worker IDs who have active work assigned
-    workers_with_active_work = Work.objects.filter(work_by__in=workers_in_garage, is_active=True).exclude(status=Status.COMPLETED.value).values_list('work_by', flat=True)
+    workers_with_active_work = Booking.objects.exclude(assigned_worker__in = workers_in_garage,is_active=False)
+    print(workers_with_active_work)
+
 
     # Filter out the workers who are already assigned active work
     available_workers = workers_in_garage.exclude(id__in=workers_with_active_work)
@@ -100,4 +103,6 @@ def get_worker_id(user):
 def get_check(user):
     return Worker.objects.filter(worker=user).exists()
 
+def get_all_worker_of_garage(garage):
+    return Worker.objects.filter(garage=garage, is_active=True)
 
