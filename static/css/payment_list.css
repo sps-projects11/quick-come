@@ -28,6 +28,7 @@ h2 {
 }
 
 .payment-list {
+    cursor: pointer;
     scrollbar-width: none;
     overflow-y: scroll;
     height: 90%;
