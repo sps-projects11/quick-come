@@ -3,42 +3,24 @@
 {%load static %}
 {% block content %}
 <link rel="stylesheet" href="\static\css\services.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<div class="services-wrapper">
-    <div class="services-header">
-        <h1 class="services-title">Our Premium Services</h1>
-        <p class="services-subtitle">Quality services tailored to your needs</p>
-    </div>
-    
-    <div class="services-container">
-        <div class="services-grid">
+<div class="wrapper"> 
+    <h2 style="text-align:center;font-size:35px; margin-bottom: 10px;">Our Services</h2>
+    <div class="container">
+        <div class="product-grid">
             {% for service in services %}
-            <div class="service-card">
-                <div class="service-image-container">
-                    <img class="service-image" src="{{ service.service_image }}" alt="{{ service.service_name }}">
-                    <div class="service-badge">Popular</div>
-                </div>
-                <div class="service-content">
-                    <h3 class="service-name">{{ service.service_name }}</h3>
-                    <div class="service-price">₹{{ service.price }}</div>
-                    <p class="service-description">Professional service with guaranteed satisfaction</p>
-                    <div class="service-features">
-                        <span><i class="fas fa-check-circle"></i> Expert technicians</span>
-                        <span><i class="fas fa-check-circle"></i> Quality parts</span>
-                    </div>
-                    <a href="{% url 'booking_create' %}?service_id={{ service.id }}" class="service-btn">
-                        Book Now <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
+            <div class="product-card">
+                <img class="product-image" src="{{ service.service_image }}" alt="{{ service.service_name }}">
+                <div class="product-name">{{ service.service_name }}</div>
+                <div class="product-price">₹{{ service.price }}</div>
+                <p class="product-description">High-quality service with great features.</p>
+                <a href="{% url 'booking_create' %}?service_id={{ service.id }}" class="buy-btn">Book Now</a>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
 
-<!-- Your original JavaScript remains unchanged -->
+{% comment %} Add The Js {% endcomment %}
 <script>
   const theSection = document.getElementById('bar')
   const closeSection = document.getElementById('close')
@@ -54,7 +36,6 @@
         navberSection.classList.remove('active')
     })
   }
+
 </script>
-
-
-{% endblock %}
+{% endblock %} 
