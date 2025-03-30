@@ -186,13 +186,13 @@ footer h4{
 }
 
 footer p{
-    font-style: 13px;
+    font-size: 13px;
     margin: 0 0 8px 0;
     color: #088178;
 }
 
 footer a{
-    font-style: 13px;
+    font-size: 13px;
     text-decoration: none;
     color: #222;
     margin-bottom: 10px;
