@@ -11,6 +11,7 @@
             background-color: aqua;
             padding: 20px;
         }
+    
         .profile-card {
             width: 85%;
             max-width: 440px;
@@ -18,38 +19,68 @@
             border: 1px solid black;
             padding: 20px;
         }
+    
         .profile-pic {
             width: 120px;
             height: 120px;
             object-fit: cover;
             border: 3px solid #007bff;
         }
-        @media(min-width:768px){
-            #drop{
-            width:70%;
-            margin-left:70px;
-            }
-        }
         @media (max-width: 768px) {
+            .profile-container {
+                padding: 10px;
+                margin: 0 10px;
+            }
+    
             .profile-buttons {
                 flex-direction: column;
             }
+    
             .profile-buttons .btn, select.form-select {
                 width: 100%;
                 max-width: 100%;
             }
         }
-        @media(max-width:576px){
-            .profile-container{
-            margin-left: 7%;
-            margin-right: -11%;
-            }
-        @media(max-width:429px){
-            .profile-container{
-                margin-left: 8%;
-                margin-right: -24%
+    
+        @media (max-width: 576px) {
+            .profile-container {
+                padding: 5px;
+                margin-left: 5%;
+                margin-right: 5%;
             }
         }
+    
+        @media (max-width: 429px) {
+            .profile-container {
+                padding: 2px;
+                margin-left: 3%;
+                margin-right: 3%;
+            }
+        }
+            /* General Styles for Dropdown */
+            #drop {
+                border: 2px solid black;
+                margin: 0 auto; 
+            }
+        
+            /* Mobile View: Keep the dropdown full width */
+            @media (max-width: 768px) {
+                #drop {
+                    width: 100%;
+                }
+            }
+        
+            /* Laptop View: Decrease size and center the dropdown */
+            @media (min-width: 769px) and (max-width: 1200px) {
+                #drop {
+                    width: 60%;
+                }
+            }
+            @media (min-width: 1201px) {
+                #drop {
+                    width: 70%;
+                }
+            }
     </style>
 
     <div class="profile-container">
