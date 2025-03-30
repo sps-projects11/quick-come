@@ -20,7 +20,7 @@
                {% if is_changable %}
                <div class="item"><i class="fas fa-sync-alt"></i> <strong>Change Status:</strong>
                    <select id="workerDropdown_{{ work_data.id }}" onchange="updateWorkStatus('{{ work_data.id }}')">
-                       <option value="">Select a status</option>
+                       <option class="status">{{ work_data.status }}</option>
                        {% for status in statuss %}
                            <option value="{{ status.id }}" {% if status.id == work_data.status %}selected{% endif %}>{{ status.name }}</option>
                        {% endfor %}
@@ -80,7 +80,7 @@
                })
                .then(response => response.json())
                .then(result => {
-                    if (result.status === 'success' && result.updated_status === '3') {
+                    if (result.status === 'success' && (result.updated_status === '5' || result.updated_status === '6' || result.updated_status === '3')) {
                         window.location.href = '/';
                     }
                    if (result.status === 'success' && result.updated_status === '4') {

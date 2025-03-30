@@ -20,6 +20,9 @@
             <div class="modern-booking-card" data-booking-id="{{ booking.id }}">
                 <div class="modern-card-header">
                     <div class="booking-badge">
+                        <div class="back_btn" onclick="back()">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
                         <i class="bi bi-ticket-detailed"></i>
                         <span>#{{ booking.id }}</span>
                     </div>
@@ -93,7 +96,7 @@
                 </div>
                 
                 {% if booking.status == 'PENDING' %}
-                <div class="modern-card-footer">
+                <div class="modern-card-footer" id="action_{{ booking.id }}">
                     <a href="{% url 'booking_update' booking.id %}" class="modern-action-btn edit-btn">
                         <i class="bi bi-pencil-square"></i> Edit Booking
                     </a>
@@ -190,6 +193,12 @@
         } else {
             console.warn(`⚠️ services element not found for Booking ID: ${bookingId}`);
         }
+    }
+
+
+    function back(){
+        console.log("go back");
+        window.location.href="/booking/";
     }
 </script>
 
