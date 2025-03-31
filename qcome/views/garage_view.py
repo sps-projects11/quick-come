@@ -142,6 +142,7 @@ class GarageUpdateView(View):
         return render(request, 'garage/profile/garage_profile_update.html', {'garage': garage, 'vehicle_types': vehicle_types})
 
     def post(self, request, garage_id):
+        print(request.POST)
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
 
         garage.garage_name = request.POST.get('garage_name')

@@ -221,4 +221,47 @@
     background: #0056b3;
 }
 </style>
+
+<script type="module">
+    import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
+    document.addEventListener("DOMContentLoaded", () => {
+      initProfileUploader({
+        profileContainerSelector: '.profile-picture-container',
+        fileInputId: 'id_garage_owner_profile_photo',
+        profilePreviewId: 'profilePreview',
+        removePhotoIconId: 'removePhotoIcon',
+        plusIconSelector: '.profile-plus-icon',
+        defaultImage: "{{ '/static/all-Pictures/user.jpg' }}"
+      });
+    });
+  </script>
+  
+  <style>
+    .remove-photo-icon {
+      position: absolute;
+      top: 17px;
+      right: 20px;
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 0, 0, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 11;
+    }
+    /* Show the remove icon on hover only if the container has "has-image" */
+    .profile-picture-container.has-image:hover .remove-photo-icon {
+      opacity: 1;
+    }
+    .remove-photo-icon i {
+      color: #fff;
+      font-size: 1rem;
+    }
+  </style>
+
+  
 {% endblock %}
