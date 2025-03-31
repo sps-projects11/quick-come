@@ -57,12 +57,12 @@
 <script>
   $(document).ready(function(){
     $('.user-toggle').change(function(){
-      var checkbox = $(this);
-      var userId = checkbox.data('user-id');
-      var isActive = checkbox.is(':checked');
-      var td = checkbox.closest('td');
-      var labelActive = td.find('.toggle-label-active');
-      var labelDeactivate = td.find('.toggle-label-deactivate');
+      const checkbox = $(this);
+      const userId = checkbox.data('user-id');
+      const isActive = checkbox.is(':checked');
+      const td = checkbox.closest('td');
+      const labelActive = td.find('.toggle-label-active');
+      const labelDeactivate = td.find('.toggle-label-deactivate');
       
       // Update label styling immediately
       if(isActive){
@@ -74,7 +74,7 @@
       }
 
       // Construct the URL using the user ID.
-      var toggleUrl = '{% url "manage_user_toggle" 0 %}'.replace("0", userId);
+      const toggleUrl = '{% url "manage_user_toggle" 0 %}'.replace("0", userId);
 
       $.ajax({
         url: toggleUrl,
@@ -87,7 +87,6 @@
           console.log("User status toggled successfully");
         },
         error: function(xhr, status, error){
-          alert("Error toggling user status");
           // Revert the checkbox state if there is an error
           checkbox.prop('checked', !isActive);
           if(isActive){
@@ -102,6 +101,7 @@
     });
   });
 </script>
+
 
 <!-- Optional CSS for the switch and label styling plus improved spacing -->
 <style>

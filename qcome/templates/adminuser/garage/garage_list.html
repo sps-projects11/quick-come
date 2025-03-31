@@ -94,7 +94,6 @@
           console.log("Garage status toggled successfully");
         },
         error: function(xhr, status, error){
-          alert("Error toggling garage status");
           // Revert the checkbox state if there is an error
           checkbox.prop('checked', !isActive);
           if(isActive){

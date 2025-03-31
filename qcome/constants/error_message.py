@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ErrorMessage(Enum):
-    E00001 = "Login failed, please try again"
+    E00001 = "Login failed, please try again."
     E00002 = "Invalid date format for DOB. Please use YYYY-MM-DD."
     E00003 = "Please enter your email address first."
     E00004 = "Email is already registered."
@@ -17,11 +17,11 @@ class ErrorMessage(Enum):
     E00013 = "Error updating garage status. Please try again."
     E00014 = "Error updating garage! Please try again."
     E00015 = "You can only create one garage."
-    E00016 = "Error Creating Garage"
-    E00017 = "Error Creating Worker"
+    E00016 = "Error Creating Garage."
+    E00017 = "Error Creating Worker."
     E00018 = "Error updating worker status. Please try again."
-    E00019 = "Registration failed! Please try again"
-    E00020 = ""
+    E00019 = "Registration failed! Please try again."
+    E00020 = "Failed to sent Email! Please try again."
     E00021 = ""
     E00022 = ""
     E00023 = ""
