@@ -21,23 +21,13 @@ function login(event) {
             setTimeout(() => {
                 // Redirect to home page or wherever specified
                 window.location.href = data.redirect; 
-            }, 3000);
-        } else {
-            // Show error message if login fails
-            Swal.fire({
-                icon: 'error',
-                title: 'Login failed',
-                text: data.message || 'Something went wrong. Please try again.'
-            });
-        }
+
+            },2000);
+        } 
+        loader.style.display = "none";  // Hide loading spinner
     })
     .catch(error => {
         loader.style.display = "none";  // Hide loading spinner
         console.error("Error during login:", error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An unexpected error occurred. Please try again later.'
-        });
     });
 }
