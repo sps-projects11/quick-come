@@ -231,4 +231,4 @@ def check_user_exist(email):
     try:
         return User.objects.get(email=email, is_active=True)
     except User.DoesNotExist:
-        return None  # Return None if no user found
+        return None   # Return None if no user found
