@@ -1,5 +1,5 @@
 {% extends "enduser/base.html" %}
-{% block title %}Quick-Come Booking{% endblock %}
+{% block title %}Quick-Come | Booking Create {% endblock %}
 {%load static %}
 {% block content %}
 <!-- SwiperJS CDN -->
@@ -18,9 +18,7 @@
                 <input type="tel" name="customer_phone" value="{{ user_phone }}" placeholder="Phone Number" required>
             </div>
             <div class="form-group">
-                <input type="text" name="current_location" id="current_location" 
-                       value="{% if booking %}{{ booking.current_location }}{% endif %}" 
-                       placeholder="Current Location" required>
+                <input type="text" name="current_location" id="current_location" placeholder=" fetch Current Location" required>
             </div>
             <div class="form-group">
                 <select name="vehicle_type" required>
@@ -90,8 +88,38 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {
-                    document.getElementById("current_location").value =
-                        position.coords.latitude + ", " + position.coords.longitude;
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    console.log("Latitude:", latitude, "Longitude:", longitude);  // Debugging
+
+                    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("API Response:", data);  // Print full API response
+
+                            if (data.address) {
+                                const address = data.address;
+
+                                // Extract only village, district, and pin code
+                                const village = address.village || address.town || address.hamlet || "Unknown Village";
+                                const district = address.county || address.district || "Unknown District";
+                                const pin = address.postcode || "No PIN";
+
+                                const simplifiedAddress = `${village}, ${district}, ${pin}`;
+                                
+                                console.log("Simplified Address:", simplifiedAddress);  // ✅ This should print
+                                
+                                document.getElementById("current_location").value = simplifiedAddress;
+                            } else {
+                                console.error("No address data found:", data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching address:", error);
+                        });
                 },
                 function (error) {
                     console.error("Error getting location:", error);
@@ -101,7 +129,8 @@
             alert("Geolocation is not supported by this browser.");
         }
     });
-    </script>
+</script>
+
     
 <style>
     /* Emergency Form */

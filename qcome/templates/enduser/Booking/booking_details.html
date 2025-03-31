@@ -1,0 +1,512 @@
+{% extends "enduser/base.html" %}
+{% block title %}Booking Detail{% endblock %}
+{% load static %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<section id="booking_section">
+    <div class="modern-booking-container">
+        <div class="modern-header">
+            <h1 class="modern-title">
+                <i class="bi bi-calendar2-check"></i> Booking Details
+            </h1>
+            <div class="modern-divider"></div>
+        </div>
+        
+        <div class="modern-booking-grid">
+            {% for booking in bookings %}
+            <div class="modern-booking-card" data-booking-id="{{ booking.id }}">
+                <div class="modern-card-header">
+                    <div class="booking-badge">
+                        <div class="back_btn" onclick="back()">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
+                        <i class="bi bi-ticket-detailed"></i>
+                        <span>#{{ booking.id }}</span>
+                    </div>
+                    <div id="status_{{ booking.id }}" class="modern-status status-{{ booking.status|lower }}">
+                        {{ booking.status }}
+                    </div>
+                </div>
+                
+                <div class="modern-card-body">
+                    <div class="modern-detail-group">
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Customer</span>
+                                <span class="detail-value">{{ booking.customer_name }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Phone</span>
+                                <span class="detail-value">{{ booking.customer_phone }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Location</span>
+                                <span class="detail-value">{{ booking.current_location }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-car-front"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Vehicle</span>
+                                <span class="detail-value">{{ booking.get_vehicle_type_display }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Services</span>
+                                <span id="services_{{ booking.id }}" class="detail-value services">{{ booking.service_names }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-detail-item">
+                            <div class="detail-icon">
+                                <i class="bi bi-card-text"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Description</span>
+                                <span class="detail-value">{{ booking.description|default:"No description provided" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if booking.status == 'PENDING' %}
+                <div class="modern-card-footer" id="action_{{ booking.id }}">
+                    <a href="{% url 'booking_update' booking.id %}" class="modern-action-btn edit-btn">
+                        <i class="bi bi-pencil-square"></i> Edit Booking
+                    </a>
+                    <form action="{% url 'booking_delete' booking.id %}" method="post" class="action-form">
+                        {% csrf_token %}
+                        <button type="submit" class="modern-action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this booking?');">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="modern-empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+                <h3>No Bookings Found</h3>
+                <p>When you have active bookings, they'll appear here</p>
+                <a href="#" class="modern-action-btn primary-btn">
+                    <i class="bi bi-plus-circle"></i> Create New Booking
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Your original JavaScript remains completely unchanged -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 Document Loaded. Initializing WebSocket...");
+
+        // Connect WebSocket and handle communication
+        function connectWebSocket() {
+            const bookingSocket = new WebSocket("ws://" + window.location.host + "/ws/bookings/");
+
+            bookingSocket.onopen = function () {
+                console.log("✅ WebSocket Connected Successfully!");
+            };
+
+            bookingSocket.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                console.log("📩 Booking Update:", data);
+
+                if (data.booking_id && data.new_status) {
+                    console.log("🔄 Updating Booking ID:", data.booking_id, "New Status:", data.new_status);
+                    updateBookingStatus(data.booking_id, data.new_status);
+                } else if (data.booking_id && data.services) {
+                    console.log("🔄 Updating Booking Services:", data.booking_id, "Services:", data.services);
+                    updateBookingServices(data.booking_id, data.services);
+                } else {
+                    console.warn("⚠️ Missing booking_id, new_status, or services in WebSocket message!", data);
+                }
+            };
+
+            bookingSocket.onerror = function (error) {
+                console.error("❌ WebSocket Error:", error);
+            };
+
+            bookingSocket.onclose = function () {
+                console.warn("⚠️ WebSocket Disconnected. Attempting to reconnect...");
+                setTimeout(connectWebSocket, 3000);  // Reconnect after 3 seconds
+            };
+        }
+
+        connectWebSocket(); // Start WebSocket connection
+    });
+
+    // Function to update the booking status in the UI
+    function updateBookingStatus(bookingId, newStatus) {
+        let statusElement = document.querySelector(`#status_${bookingId}`);
+        let actionbtn = document.getElementById(`action_${bookingId}`);
+        if (statusElement) {
+            statusElement.innerText = newStatus;
+            if (status !== 'PENDING'){
+                actionbtn.style.display="none";
+            }
+
+            // Update status class while keeping the base 'status' class
+            statusElement.className = `modern-status status-${newStatus.toLowerCase()}`;
+            console.log("✅ Status Updated Successfully!");
+        } else {
+            console.warn(`⚠️ Status element not found for Booking ID: ${bookingId}`);
+        }
+    }
+
+    // Function to update the booking services in the UI
+    function updateBookingServices(bookingId, services) {
+        let servicesElement = document.querySelector(`#services_${bookingId}`);
+        if (servicesElement) {
+            servicesElement.innerText = services;
+            console.log("✅ services Updated Successfully!");
+        } else {
+            console.warn(`⚠️ services element not found for Booking ID: ${bookingId}`);
+        }
+    }
+
+
+    function back(){
+        console.log("go back");
+        window.location.href="/booking/";
+    }
+</script>
+
+<style>
+    :root {
+        --primary: #4361ee;
+        --primary-light: #4cc9f0;
+        --secondary: #3f37c9;
+        --success: #28a745;
+        --warning: #f8961e;
+        --danger: #dc3545;
+        --dark: #1a1a2e;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+
+    #booking_section {
+        padding: 2rem;
+        min-height: 100vh;
+    }
+
+    .modern-booking-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .modern-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+    }
+
+    .modern-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .modern-title i {
+        color: var(--primary);
+    }
+
+    .booking-count {
+        background: var(--primary);
+        color: white;
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        margin-left: 0.75rem;
+    }
+
+    .modern-divider {
+        height: 3px;
+        width: 80px;
+        background: var(--primary);
+        margin: 0 auto;
+        border-radius: 3px;
+    }
+
+    .modern-booking-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .modern-booking-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modern-booking-card:hover {
+        /* transform: translateY(-5px); */
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .modern-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    .booking-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .booking-badge i {
+        font-size: 1.2rem;
+    }
+
+    .modern-status {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background: rgba(248, 150, 30, 0.1);
+        color: var(--warning);
+    }
+
+    .status-completed {
+        background: rgba(40, 167, 69, 0.1);
+        color: var(--success);
+    }
+
+    .status-cancelled {
+        background: rgba(220, 53, 69, 0.1);
+        color: var(--danger);
+    }
+
+    .modern-card-body {
+        padding: 1.5rem;
+    }
+
+    .modern-detail-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .modern-detail-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(67, 97, 238, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .detail-content {
+        flex: 1;
+    }
+
+    .detail-label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--gray);
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        display: block;
+        font-size: 0.95rem;
+        color: var(--dark);
+        font-weight: 400;
+    }
+
+    .services {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    .modern-card-footer {
+        display: flex;
+        padding: 1rem;
+        border-top: 1px solid var(--light-gray);
+        background: #f9fafb;
+        gap: 0.75rem;
+    }
+
+    .modern-action-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        border: none;
+    }
+
+    .edit-btn {
+        background: var(--primary);
+        color: white;
+    }
+
+    .edit-btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .delete-btn {
+        background: var(--danger);
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+    .primary-btn {
+        background: var(--primary);
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background: var(--secondary);
+    }
+
+    .modern-empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .empty-icon {
+        font-size: 3.5rem;
+        color: var(--primary);
+        opacity: 0.2;
+        margin-bottom: 1.5rem;
+    }
+
+    .modern-empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .modern-empty-state p {
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        #booking_section {
+            padding: 1.5rem;
+        }
+        
+        .modern-title {
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .booking-count {
+            margin-left: 0;
+            margin-top: 0.5rem;
+        }
+        
+        .modern-booking-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #booking_section {
+            padding: 1rem;
+        }
+        
+        .modern-card-footer {
+            flex-direction: column;
+        }
+        
+        .modern-detail-item {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .detail-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
