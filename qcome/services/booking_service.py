@@ -216,6 +216,7 @@ def get_bills_garage(user_id):
             {   "booking_id":booking.id,
                 "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
                 "created_at":booking.created_at,
+                "work_status":Status(get_booking_status(booking.id)).name,
                 "status":PayStatus(payment_service.get_payment_status(booking.id)).name,
                 "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),
             }
@@ -237,6 +238,8 @@ def get_bill_details_by_booking_id(booking_id):
         "services": list(ServiceCatalog.objects.filter(id__in=booking.service).values(
             'service_name', 'service_image', 'price'
         )), 
+        "status":PayStatus(payment_service.get_payment_status(booking.id)).name,
+        "work_status":Status(get_booking_status(booking.id)).name,
         "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
         "created_at": booking.created_at.strftime("%d %b %Y, %I:%M %p"),
         "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),  

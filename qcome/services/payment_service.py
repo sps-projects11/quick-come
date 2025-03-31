@@ -3,9 +3,11 @@ from django.shortcuts import get_object_or_404
 from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from ..constants import PayType,PayStatus,Vehicle_Type
+from ..constants import PayType,PayStatus,Vehicle_Type,Status
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from qcome.services import booking_service
+
 
     
 def get_all_payments_created_by(user_id):
@@ -60,6 +62,7 @@ def create_payment(request, booking_id, user_id):
             "payment_id": payment.id,
             "booking_id": booking.id,
             "amount": payment.amount,
+            "work_status":Status(booking_service.get_booking_status(booking.id)).name,
             "type": PayType(payment.type).name,
             "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
             "paid_to": f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value == payment.type else "Quick-come Company",
@@ -85,6 +88,7 @@ def create_payment(request, booking_id, user_id):
                     "message": "✅ Payment created successfully",
                     "booking_id": booking.id,
                     "amount": payment.amount,
+
                     "status": PayStatus(payment.pay_status).name,
                     "vehicle_type": Vehicle_Type(booking.vehicle_type).name if booking.vehicle_type else "unknown",
                     "created_at": payment.created_at.isoformat(),
