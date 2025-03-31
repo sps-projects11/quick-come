@@ -205,7 +205,9 @@ workerSocket.onclose = function () {
         workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
     }, 3000);  // Reconnect after 3 seconds
 };
- 
+
+
+    
     const theSection = document.getElementById('bar')
     const closeSection = document.getElementById('close')
     const navberSection = document.getElementById('navber')
