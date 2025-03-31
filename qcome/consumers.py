@@ -10,12 +10,35 @@ class BookingConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("booking_updates", self.channel_name)
 
+    async def receive(self, text_data):
+        # Handle incoming WebSocket message
+        text_data_json = json.loads(text_data)
+        message_type = text_data_json.get("type")
+
+        if message_type == "send_booking_update":
+            # If the message type is 'send_booking_update', handle it
+            await self.send_booking_update(text_data_json)
+        else:
+            # Handle other types of messages, if any
+            await self.send(text_data=json.dumps({
+                "message": "Unknown message type"
+            }))
+
     async def send_booking_update(self, event):
-        """ Handle the event sent from BookingCreateView """
-        await self.send(text_data=json.dumps({
-            "message": "Booking updated",
-            "booking": event["booking"]  # ✅ Correct key
-        }))
+        # Extract booking data from the event
+        booking_data = event.get("booking")  # Use get() to avoid KeyError
+        if booking_data:
+            # Send the booking update to the WebSocket
+            await self.send(text_data=json.dumps({
+                "message": "Booking updated",
+                "booking": booking_data
+            }))
+        else:
+            # Handle the case where 'booking' is missing, if needed
+            await self.send(text_data=json.dumps({
+                "message": "Booking update failed, no booking data available"
+            }))
+
 
 
 class WorkerAssignmentConsumer(AsyncWebsocketConsumer):
@@ -79,8 +102,6 @@ class BookingListAllConsumer(AsyncWebsocketConsumer):
             "services": event["services"],  # The updated services list
         }))
 
-import json
-from channels.generic.websocket import AsyncWebsocketConsumer
 
 class PaymentConsumer(AsyncWebsocketConsumer):
     async def connect(self):

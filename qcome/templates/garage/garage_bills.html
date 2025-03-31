@@ -29,99 +29,10 @@
 </div>
 
 <script>
-function connectWebSocket() {
-    const socket = new WebSocket("ws://localhost:8000/ws/garage_bills/");
-
-    socket.onopen = function () {
-        console.log("✅ WebSocket connected successfully.");
-    };
-
-    socket.onmessage = function (event) {
-        try {
-            console.log("🔹 Raw WebSocket Data:", event.data);
-
-            const data = JSON.parse(event.data);
-
-            if (data.type === "bill_update") {
-                console.log("📌 New Bill Update Received:", data);
-
-                // Ensure bill data is correctly parsed
-                const billData = typeof data.data === "string" ? JSON.parse(data.data) : data.data;
-
-                // Validate and update UI
-                if (!billData || !billData.booking_id) {
-                    console.error("❌ Invalid bill data received:", billData);
-                    return;
-                }
-                updateBillUI(billData);
-            }
-        } catch (error) {
-            console.error("❌ WebSocket JSON Parsing Error:", error);
-        }
-    };
-
-    socket.onclose = function (event) {
-        console.warn("⚠️ WebSocket closed. Reconnecting in 3 seconds...", event);
-        setTimeout(connectWebSocket, 3000);
-    };
-
-    socket.onerror = function (error) {
-        console.error("🚨 WebSocket Error:", error);
-    };
-}
-
-// Function to update or add bill entry
-function updateBillUI(billData) {
-    const billsList = document.getElementById("bills-list");
-    if (!billsList) {
-        console.error("❌ Element with ID 'bills-list' not found!");
-        return;
-    }
-
-    let existingBill = document.getElementById(`bill-${billData.booking_id}`);
-
-    if (existingBill) {
-        console.log("🔄 Updating existing bill entry:", billData);
-        existingBill.innerHTML = generateBillHTML(billData);
-    } else {
-        console.log("➕ Adding new bill entry:", billData);
-        let newBill = document.createElement("div");
-        newBill.classList.add("bill-card");
-        newBill.id = `bill-${billData.booking_id}`;
-        newBill.onclick = function () {
-            openBill(billData.booking_id);
-        };
-        newBill.innerHTML = generateBillHTML(billData);
-        billsList.prepend(newBill);
-    }
-}
-
-// Function to generate bill card HTML
-function generateBillHTML(billData) {
-    return `
-        <div class="bill-info">
-            <div class="bill-row">
-                <span class="customer"><strong>Booking ID:</strong> ${billData.booking_id}</span>
-                <span class="vehicle"><strong>Car Type:</strong> ${billData.vehicle_type}</span>
-                <span><strong>Payment Status:</strong> ${billData.status}</span>
-            </div>
-            <div class="bill-date">
-                <span><strong>Date:</strong> ${new Date(billData.created_at).toLocaleString()}</span>
-                <span class="total"><strong>Total:</strong> ₹${billData.total}</span>
-            </div>
-        </div>
-    `;
-}
-
 // Open bill details
 function openBill(bookingId) {
     window.location.href = `/garage/bills/${bookingId}/`;
 }
-
-// Initialize WebSocket connection
-connectWebSocket();
-
-{% comment %} adding the js  {% endcomment %}
 
 const theSection = document.getElementById('bar')
 const closeSection = document.getElementById('close')
