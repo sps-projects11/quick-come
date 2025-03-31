@@ -164,4 +164,7 @@
     .bill-container {
         height: 100% !important;
     }
+    .wrapper {
+        height: 90vh !important;
+    }
 }
