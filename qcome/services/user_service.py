@@ -227,6 +227,8 @@ def get_user_profile_photo(user_id) :
     except User.DoesNotExist:
         return None
     
-
 def check_user_exist(email):
-     return User.objects.get(email=email, is_active=True)
+    try:
+        return User.objects.get(email=email, is_active=True)
+    except User.DoesNotExist:
+        return None  # Return None if no user found
