@@ -208,23 +208,33 @@ def get_booking(booking_id):
     return Booking.objects.filter(id=booking_id).first()
 
 def get_bills_garage(user_id):
+    # Fetch bookings for the garage owner
     bookings = Booking.objects.filter(assigned_worker__garage__garage_owner=user_id).order_by('-created_at')
-    work_done = Work.objects.filter(status=Status.COMPLETED.value,is_active=True).exists()
+    
+    # Initialize an empty list to store bills data
     bills_data = []
-    if not work_done:
-        return    
-    if bookings.exists():
-        bills_data = [
-            {   "booking_id":booking.id,
-                "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
-                "created_at":booking.created_at,
-                "status":PayStatus(payment_service.get_payment_status(booking.id)).name,
-                "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),
-            }
-            for booking in bookings
-        ]
+
+    # Loop through bookings to filter only those with completed work
+    for booking in bookings:
+        # Check if the work for this booking is completed
+        work_done = Work.objects.filter(booking=booking, status=Status.COMPLETED.value, is_active=True).exists()
+
+        if not work_done:
+            continue  # Skip if work isn't done
+
+        # Collect bill data for bookings with completed work
+        total_price = sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True))
+        
+        bills_data.append({
+            "booking_id": booking.id,
+            "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
+            "created_at": booking.created_at,
+            "status": PayStatus(payment_service.get_payment_status(booking.id)).name,
+            "total": total_price,
+        })
     
     return bills_data
+
 
 def get_bill_details_by_booking_id(booking_id):
     try:
