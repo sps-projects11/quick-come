@@ -30,25 +30,11 @@ def get_booking_details(booking_id):
     """ Get a single booking """
     return Booking.objects.get(id=booking_id)
 
-def get_garage_details(garage_id):
-    """ Get details of a specific garage """
-    return Garage.objects.filter(id=garage_id).first()
 
 def get_garage_list():
     """ Get all garages """
-    return Garage.objects.all()
+    return Garage.objects.filter(is_active = True)
 
-def create_garage(garage_owner, garage_data):
-    """ Create a new garage for a user """
-    return Garage.objects.create(garage_owner=garage_owner, **garage_data)
-
-def update_garage(garage_id, garage_data):
-    """ Update an existing garage """
-    Garage.objects.filter(id=garage_id).update(**garage_data)
-
-def delete_garage(garage_id):
-    """ Delete a garage """
-    Garage.objects.filter(id=garage_id).delete()
 
 def is_user_a_garage_owner(user):
     """ Check if the user owns a garage """
@@ -56,11 +42,12 @@ def is_user_a_garage_owner(user):
 
 
 def get_garage(worker_garage):
-
     return Garage.objects.get(id=worker_garage, is_active = True)
+
 
 def get_garage_id(user_id):
     return Garage.objects.get(garage_owner=user_id)
+
 
 def toggle_garage_status(garage):
     try:
@@ -72,6 +59,7 @@ def toggle_garage_status(garage):
     garage.save()
 
     return garage
+
 
 def garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, created_by):
     return Garage.objects.create(
@@ -103,6 +91,7 @@ def garage_update(garage_id, user, garage_name, address, phone, garage_ac, garag
 
     garage.save()
     return garage
+
 
 def get_all_garage_works(garage):
     workers = workers_service.get_all_worker_of_garage(garage)
