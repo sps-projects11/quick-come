@@ -8,6 +8,7 @@ def success_response(message: str, data: dict = None, redirect: str = None,
     if data is None:
         data = {}
     response = {
+        "success": True,
         "status": "success",
         "data": data,
         "message_type": message_type,
@@ -25,6 +26,7 @@ def error_response(message: str, data: dict = None, redirect: str = None,
     if data is None:
         data = {}
     response = {
+        "error": True,
         "status": "error",
         "data": data,
         "message": message,
