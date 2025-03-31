@@ -127,6 +127,7 @@ class GarageWorkerListView(View):
                 {
                     'id': worker.id,
                     'worker_name': f"{worker.worker.first_name} {worker.worker.last_name}",
+                    'worker_phone': worker.worker.phone,
                     'garage_name': worker.garage.garage_name,
                     'experience': worker.experience,
                     'expertise': worker.expertise,
