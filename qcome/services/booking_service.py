@@ -209,14 +209,15 @@ def get_booking(booking_id):
 
 def get_bills_garage(user_id):
     bookings = Booking.objects.filter(assigned_worker__garage__garage_owner=user_id).order_by('-created_at')
+    work_done = Work.objects.filter(status=Status.COMPLETED.value,is_active=True).exists()
     bills_data = []
-    
+    if not work_done:
+        return    
     if bookings.exists():
         bills_data = [
             {   "booking_id":booking.id,
                 "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
                 "created_at":booking.created_at,
-                "work_status":Status(get_booking_status(booking.id)).name,
                 "status":PayStatus(payment_service.get_payment_status(booking.id)).name,
                 "total": sum(ServiceCatalog.objects.filter(id__in=booking.service).values_list('price', flat=True)),
             }
@@ -427,6 +428,13 @@ def count_formating(count):
         return f"{count / 1_000:.2f}K"
 
     return str(count)
+
+
+
+def get_service_price(booking_id):
+    services =get_services_by_id(booking_id)
+    total = total_price(services)
+    return total
 
     
 
