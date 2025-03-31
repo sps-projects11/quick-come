@@ -1,10 +1,14 @@
-document.getElementById("signin-form").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent normal form submission
+function login(event) {
+    event.preventDefault();  // Prevent form submission
 
-    let formData = new FormData(this);
-    let signInUrl = this.action; // Get the form's action URL
+    let formData = new FormData(event.target);  // Get form data from the form
+    let loader = document.getElementById("modal");
+    console.log("print");
+    loader.style.display = "block";  // Show loading spinner
 
-    fetch(signInUrl, {  // Use the correct URL from the form
+    const url = '/sign-in/'  // Direct URL to which data will be sent
+
+    fetch(url, {  // Send data to the correct URL
         method: "POST",
         body: formData,
         headers: {
@@ -14,8 +18,26 @@ document.getElementById("signin-form").addEventListener("submit", function (even
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
-            window.location.href = data.redirect;  // Redirect to home page
+            setTimeout(() => {
+                // Redirect to home page or wherever specified
+                window.location.href = data.redirect; 
+            }, 3000);
+        } else {
+            // Show error message if login fails
+            Swal.fire({
+                icon: 'error',
+                title: 'Login failed',
+                text: data.message || 'Something went wrong. Please try again.'
+            });
         }
     })
-});
-
+    .catch(error => {
+        loader.style.display = "none";  // Hide loading spinner
+        console.error("Error during login:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An unexpected error occurred. Please try again later.'
+        });
+    });
+}
