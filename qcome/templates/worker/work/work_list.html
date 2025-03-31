@@ -121,7 +121,7 @@
         <div class="work-list">
             {% if bookings %}
                 {% for work in bookings %}
-                    <div class="work-card" onclick="window.location.href='{% url 'worker_work_details' work_id=work.id %}'">
+                    <div class="work-card" id="work-{{ work.id }}" onclick="window.location.href='{% url 'worker_work_details' work_id=work.id %}'">
                         <div class="work-details">
                             <h3>{{ work.customer_name }}</h3>
                             <p><strong>Vehicle:</strong> {{ work.vehicle_type }}</p>
@@ -136,84 +136,77 @@
                     </div>
                 {% endfor %}
             {% else %}
-            <p class="no-data" id="noBookingsMessage">No bookings available.</p>
+                <p class="no-data" id="noBookingsMessage">No bookings available.</p>
             {% endif %}
         </div>
     </div>
 </div>
 
 <script>
+// WebSocket setup
+const workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
 
-    // Assuming you're handling WebSocket events in JavaScript
-const noBookingsMessage = document.getElementById('noBookingsMessage');
+workerSocket.onopen = function () {
+    console.log("✅ Worker WebSocket Connected!");
+};
 
-// Function to show or hide the message based on data loading status
-function toggleNoBookingsMessage(isLoading) {
-    if (isLoading) {
-        noBookingsMessage.style.display = 'none'; // Hide the message when loading
-    } else {
-        noBookingsMessage.style.display = 'block'; // Show the message when no data
-    }
-}
+workerSocket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    console.log("📩 Worker Assigned Message:", data);
 
-    const workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
+    if (data.message === "Worker assigned to booking") {
+        console.log(`Worker assigned to Booking ID: ${data.booking_id}`);
 
-    workerSocket.onopen = function () {
-        console.log("✅ Worker WebSocket Connected!");
-    };
-    
-    workerSocket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        console.log("📩 Worker Assigned Message:", data);
-    
-        if (data.message === "Worker assigned to booking") {
-            console.log(`Worker assigned to Booking ID: ${data.booking_id}`);
-    
-            const workListContainer = document.querySelector(".work-list");
-    
-            // Check if work card already exists
-            let workCard = document.getElementById(`work-${data.work_id}`);
-            if (!workCard) {
-                workCard = document.createElement("div");
-                workCard.classList.add("work-card");
-                workCard.id = `work-${data.work_id}`;
-                workCard.onclick = function () {
-                    window.location.href = `/work/${data.work_id}/`;
-                };
-                workListContainer.appendChild(workCard);
-            }
-    
-            // Ensure services are formatted correctly
-            const servicesFormatted = (Array.isArray(data.services) && data.services.length > 0)
-                ? data.services.map(service => service.service_name || service).join(", ")
-                : "No services available";
-    
-            // Update work card content
-            workCard.innerHTML = `
-                <div class="work-details">
-                    <h3>${data.customer_name}</h3>
-                    <p><strong>Vehicle:</strong> ${data.vehicle_type}</p>
-                    <p><strong>Location:</strong> ${data.location}</p>
-                    <p><strong>Services:</strong> ${servicesFormatted}</p>
-                </div>
-                <div class="status">${data.status.toUpperCase()}</div>
-            `;
+        const workListContainer = document.querySelector(".work-list");
+        let noBookingsMessage = document.getElementById("noBookingsMessage");
+        
+        // Hide the "No bookings available" message if it's there
+        if (noBookingsMessage) {
+            noBookingsMessage.style.display = "none";
         }
-    };
-    
-    
-    workerSocket.onerror = function (error) {
-        console.error("❌ Worker WebSocket Error: ", error);
-    };
-    
-    workerSocket.onclose = function () {
-        console.warn("⚠️ Worker WebSocket Disconnected.");
-    };
-    workerSocket.onclose = function () {
-        console.warn("⚠️ WebSocket Disconnected. Attempting to reconnect...");
-        setTimeout(connectWebSocket, 3000);  // Reconnect after 3 seconds
-    };
-    
+
+        // Check if work card already exists for the work_id
+        let workCard = document.getElementById(`work-${data.work_id}`);
+        if (!workCard) {
+            workCard = document.createElement("div");
+            workCard.classList.add("work-card");
+            workCard.id = `work-${data.work_id}`;
+            workCard.onclick = function () {
+                window.location.href = `/work/${data.work_id}/`;
+            };
+            workListContainer.appendChild(workCard);
+        }
+
+        // Ensure services are formatted correctly
+        const servicesFormatted = (Array.isArray(data.services) && data.services.length > 0)
+            ? data.services.map(service => service.service_name || service).join(", ")
+            : "No services available";
+
+        // Update the content of the work card
+        workCard.innerHTML = `
+            <div class="work-details">
+                <h3>${data.customer_name}</h3>
+                <p><strong>Vehicle:</strong> ${data.vehicle_type}</p>
+                <p><strong>Location:</strong> ${data.location}</p>
+                <p><strong>Services:</strong> ${servicesFormatted}</p>
+            </div>
+            <div class="status">${data.status.toUpperCase()}</div>
+        `;
+    }
+};
+
+workerSocket.onerror = function (error) {
+    console.error("❌ Worker WebSocket Error: ", error);
+};
+
+workerSocket.onclose = function () {
+    console.warn("⚠️ Worker WebSocket Disconnected. Attempting to reconnect...");
+    setTimeout(function() {
+        workerSocket = new WebSocket("ws://localhost:8000/ws/worker-assignments/");
+    }, 3000);  // Reconnect after 3 seconds
+};
+</script>
+
     
     const theSection = document.getElementById('bar')
     const closeSection = document.getElementById('close')
