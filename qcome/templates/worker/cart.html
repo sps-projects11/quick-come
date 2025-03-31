@@ -4,6 +4,13 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}"> 
         <div class="wrapper">
+            <div class="delete_modal" style="display:none;">
+                <p id="warn">Are you want to remove the service ?</p>
+                <div style="padding: 20px;height: 70%;">
+                <div class="cancel" onclick="close_modal()">cancel</div>
+                <div class="delete-btn">delete</div>
+                </div>
+            </div>
             <div class="cart-container">
                 <h3>Shopping Cart</h3>
                 <div class="cart-items">
@@ -19,7 +26,7 @@
                         <div class="item-details">
                             <h5>{{ service.service_name }}</h5>
                             <p>₹{{ service.price }}</p>
-                            <button class="remove-btn">Remove</button>
+                            <button class="remove-btn" onclick="open_modal()">Remove</button>
                         </div>
                     </div>
                     {% endfor %}
@@ -54,6 +61,17 @@
         </div>
 
       <script>  
+
+        function open_modal(){
+            let modal = document.querySelector('.delete_modal');
+            modal.style.display="block";
+        }
+        function close_modal(){
+            let modal = document.querySelector('.delete_modal');
+            modal.style.display="none";
+        }
+
+
         function openServiceModal() {
             console.log("Opening service modal...");
             
@@ -63,7 +81,7 @@
                 console.log("Fetched service data:", data);
     
                 if (!data.services || data.services.length === 0) {
-                    alert("No services available to add.");
+                    console.log("No services available to add.");
                     return;
                 }
     
@@ -96,7 +114,7 @@
         
             if (!bookingId) {
                 console.error("Booking ID is missing.");
-                alert("Error: No active booking found.");
+                console.log("Error: No active booking found.");
                 return;
             }
         
@@ -115,10 +133,10 @@
                 console.log("Add service response:", data);
         
                 if (data.success) {
-                    alert("Service added successfully!");
+                    console.log("Service added successfully!");
                     location.reload(); // Refresh to update the cart
                 } else {
-                    alert("Error: " + data.error);
+                    console.log("Error: " + data.error);
                 }
             })
             .catch(error => console.error("Error adding service:", error));
@@ -129,16 +147,11 @@
             document.addEventListener("DOMContentLoaded", function () {
                 console.log("Page loaded. Initializing event listeners...");
         
-                document.querySelectorAll(".remove-btn").forEach(button => {
+                document.querySelectorAll(".delete-btn").forEach(button => {
                     button.addEventListener("click", function () {
                         let cartItem = this.closest(".cart-item");
                         let serviceName = cartItem.querySelector("h5").textContent.trim();
-        
-                        if (!confirm(`Are you sure you want to remove "${serviceName}"?`)) {
-                            console.log("Removal canceled for", serviceName);
-                            return;
-                        }
-        
+                
                         let bookingId = "{{ booking_id }}";
                         let csrfToken = "{{ csrf_token }}";
         
@@ -161,7 +174,7 @@
                                 console.log(`${serviceName} removed successfully.`);
                                 window.location.href = "/billing/";
                             } else {
-                                alert("Failed to remove item. Try again.");
+                                console.log("Failed to remove item. Try again.");
                             }
                         })
                         .catch(error => console.error("Error removing service:", error));
