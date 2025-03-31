@@ -19,7 +19,7 @@ from asgiref.sync import async_to_sync
 class BookingListView(View):
     def get(self, request):
         bookings = booking_service.get_all_booking_list(request.user.id)  # Fetch all bookings
-        return render(request, 'enduser/Booking/bookings.html', {'bookings': bookings})
+        return render(request, 'enduser/Booking/booking_list.html', {'bookings': bookings})
 
 # ✅ View to Show Booking Details (Specific Booking)
 @auth_required(login_url='/sign-in/')
@@ -27,7 +27,7 @@ class BookingListView(View):
 class BookingDetailView(View):
     def get(self, request, booking_id):
         booking = booking_service.get_booking_list(booking_id)  # Fetch a specific booking
-        return render(request, 'enduser/Booking/booking_list.html', {'bookings': booking})
+        return render(request, 'enduser/Booking/booking_details.html', {'bookings': booking})
 
 
 @auth_required(login_url='/sign-in/')
@@ -46,7 +46,7 @@ class BookingCreateView(View):
         if service_id:
             selected_service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
 
-        return render(request, 'enduser/Booking/booking.html', {
+        return render(request, 'enduser/Booking/booking_create.html', {
             'user_name': f"{user.first_name} {user.last_name}",
             'user_phone': user.phone if user.phone else "",  # Default text
             'services': services,  # Pass services to template
@@ -102,7 +102,7 @@ class BookingUpdateView(View):
             booking = Booking.objects.get(id=booking_id, customer=user)  # Ensure user owns it
             services = ServiceCatalog.objects.filter(is_active=True)  # Get active services
 
-            return render(request, 'enduser/Booking/booking.html', {  # Reuse booking.html
+            return render(request, 'enduser/Booking/booking_create.html', {  # Reuse booking_create.html
                 'user_name': f"{user.first_name} {user.last_name}",
                 'user_phone': user.phone if user.phone else "",
                 'services': services,
