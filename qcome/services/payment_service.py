@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from qcome.models import Payment, Booking,User,Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from ..constants import PayType,PayStatus,Vehicle_Type,Status
+from ..constants import PayType,PayStatus,Status
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from qcome.services import booking_service
@@ -54,6 +54,20 @@ def create_payment(request, booking_id, user_id):
         booking.is_active = False
         booking.save(update_fields=["is_active"])
 
+
+        channel_layer = get_channel_layer()
+        # Create the data to send to the WebSocket
+        async_to_sync(channel_layer.group_send)(
+            "garage_bills",  # Group name
+            {
+                "type": "payment_status_update",  # Event type for handling in consumer
+                "payment": json.dumps({
+                    "booking_id": booking_id,
+                    "pay_status": PayStatus(payment.pay_status).name,
+                }),
+            }
+        )
+
         # Send real-time update to the specific user's WebSocket group
         channel_layer = get_channel_layer()
         payment_data = {
@@ -76,24 +90,6 @@ def create_payment(request, booking_id, user_id):
             {
                 "type": "payment_update",
                 "payment": payment_data  # Sending the payment data as an object
-            }
-        )
-
-         # Send real-time update to "garage_bills" WebSocket group
-        async_to_sync(channel_layer.group_send)(
-            "garage_bills",
-            {
-                "type": "bill_update",
-                "bill": json.dumps({
-                    "message": "✅ Payment created successfully",
-                    "booking_id": booking.id,
-                    "amount": payment.amount,
-
-                    "status": PayStatus(payment.pay_status).name,
-                    "vehicle_type": Vehicle_Type(booking.vehicle_type).name if booking.vehicle_type else "unknown",
-                    "created_at": payment.created_at.isoformat(),
-                    "total": payment.amount
-                }),
             }
         )
 

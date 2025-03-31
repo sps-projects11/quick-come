@@ -9,7 +9,7 @@ from ..constants.error_message import ErrorMessage
 from ..decorators import auth_required, garage_required,worker_required
 from ..models import User
 from qcome.package.file_management import save_uploaded_file
-from qcome.constants.default_values import Vehicle_Type,Status
+from qcome.constants.default_values import Vehicle_Type,Status,PayStatus
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -218,8 +218,29 @@ class WorkerWorkRecieptView(View):
             booking=booking_service.get_booking_id(work_id)
             status_value=booking_service.get_booking_status(booking.id)
             status_name=booking_service.get_status_name(status_value)
+            if status_value == Status.COMPLETED.value:
+                channel_layer = get_channel_layer()
+                # Convert datetime to ISO format string
+                created_at_str = booking.created_at.isoformat()
+                # Get the total price from the service (assuming this returns a Decimal)
+                total_price = booking_service.get_service_price(booking.id)
+                # Convert Decimal to float before serializing
+                total_price_float = float(total_price)
 
-
+                async_to_sync(channel_layer.group_send)(
+                    "garage_bills",
+                    {
+                        "type": "bill_create",
+                        "bill": json.dumps({
+                            "message": "✅ Work completed successfully",
+                            "booking_id": booking.id,
+                            "vehicle_type": Vehicle_Type(booking.vehicle_type).name,
+                            "created_at": created_at_str,
+                            "total": total_price_float,  # Ensure it's a float for JSON serialization
+                            "pay_status":PayStatus.NOT_PAID.name,
+                        }),
+                    }
+                )
             # **Trigger WebSocket Event**
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(

@@ -29,6 +29,61 @@
 </div>
 
 <script>
+    const billSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/garage_bills/'
+    );
+
+    billSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        if (data.type === "bill_create") {
+            const bill = data.data;
+            
+            // Create the new bill card HTML dynamically
+            const billCardHTML = `
+                <div class="bill-card" id="bill-${bill.booking_id}" onclick="openBill(${bill.booking_id})">
+                    <div class="bill-info">
+                        <div class="bill-row">
+                            <span class="customer"><strong>Booking ID:</strong> ${bill.booking_id}</span>
+                            <span class="vehicle"><strong>Car Type:</strong> ${bill.vehicle_type}</span>
+                            <span><strong>Payment Status:</strong>${bill.pay_status}</span>
+                        </div>
+                        <div class="bill-date">
+                            <span><strong>Date:</strong> ${new Date(bill.created_at).toLocaleString()}</span>
+                            <span class="total"><strong>Total:</strong> ₹${bill.total}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add the new bill card to the list
+            const billsList = document.getElementById('bills-list');
+            billsList.insertAdjacentHTML('beforeend', billCardHTML);
+        }
+        
+        // Handle payment status update
+        if (data.type === "payment_status_update") {
+            const payment = data.data;
+
+            // Find the bill card corresponding to the booking_id
+            const billCard = document.getElementById(`bill-${payment.booking_id}`);
+            if (billCard) {
+                // Update the payment status text
+                const paymentStatus = billCard.querySelector('.bill-row span:nth-child(3)');
+                paymentStatus.innerHTML = `<strong>Payment Status:</strong> ${payment.pay_status}`;
+            }
+        }
+    };
+
+    billSocket.onclose = function(e) {
+        console.error('WebSocket closed unexpectedly');
+    };
+</script>
+
+
+
+
+<script>
 // Open bill details
 function openBill(bookingId) {
     window.location.href = `/garage/bills/${bookingId}/`;

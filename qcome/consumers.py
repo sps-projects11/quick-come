@@ -160,15 +160,31 @@ class WorkerUpdateConsumer(AsyncWebsocketConsumer):
 
 class GarageBillConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        # This adds the user to the 'garage_bills' group
         await self.channel_layer.group_add("garage_bills", self.channel_name)
         await self.accept()
 
     async def disconnect(self, close_code):
+        # This removes the user from the 'garage_bills' group
         await self.channel_layer.group_discard("garage_bills", self.channel_name)
 
-    async def bill_update(self, event):
+    async def bill_create(self, event):
+        # This will receive the bill data from the server and send it to the WebSocket
         bill_data = json.loads(event["bill"])
-        await self.send(text_data=json.dumps({"type": "bill_update", "data": bill_data}))
+        await self.send(text_data=json.dumps({
+            "type": "bill_create", 
+            "data": bill_data
+        }))
+
+    async def payment_status_update(self, event):
+        # Receive the payment status update from the server
+        payment_data = json.loads(event["payment"])
+
+        # Send the updated payment status to the WebSocket
+        await self.send(text_data=json.dumps({
+            "type": "payment_status_update",
+            "data": payment_data
+        }))
 
 
 
