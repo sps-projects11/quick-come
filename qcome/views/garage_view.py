@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.contrib import messages
 from qcome.constants.default_values import Role, Vehicle_Type,PayStatus
-from qcome.decorators import auth_required, role_required,garage_required
+from qcome.decorators import auth_required, enduser_required,garage_required
 from qcome.services import booking_service, garage_service,workers_service,payment_service
 from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
@@ -14,15 +14,15 @@ from asgiref.sync import async_to_sync
 import json
 
 
-
 @auth_required(login_url='/sign-in/')
-@role_required(Role.END_USER.value, page_type='enduser')
+@enduser_required
 class GarageCreateView(View):
     def get(self, request):
         """ Show the create garage form, or redirect to update if an active garage already exists """
-        existing_garage = Garage.objects.filter(garage_owner=request.user, is_active=True).first()
+        existing_garage = garage_service.check_existing_garage(request.user)
         if existing_garage:
-            return redirect('garage_profile')  # Only redirect if it's active
+            garage_service.toggle_garage_status(existing_garage.id)
+            return redirect('garage_profile')
 
         vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
         return render(request, 'enduser/Profile/garage/garage_profile_create.html', {'vehicle_types': vehicle_types})
@@ -30,25 +30,6 @@ class GarageCreateView(View):
     def post(self, request):
         """ Create a garage for the logged-in user (Only one allowed) """
         user = request.user
-
-        existing_garage = Garage.objects.filter(garage_owner=user).first()
-        if existing_garage:
-            existing_garage.garage_name = request.POST.get('garage_name')
-            existing_garage.address = request.POST.get('address')
-            existing_garage.phone = request.POST.get('phone')
-            existing_garage.vehicle_type = request.POST.get('vehicle_type')
-            existing_garage.garage_ac = request.POST.get('garage_ac')
-            existing_garage.is_active=True
-             # Handle image upload
-            garage_profile_photo = request.FILES.get('garage_image')
-
-            garage_profile_photo_path = ''
-
-            if garage_profile_photo:
-                garage_profile_photo_path = save_uploaded_file(garage_profile_photo, subfolder="garage-profile-photo")
-
-            existing_garage.save()
-            return redirect('garage_profile')
 
         garage_name = request.POST.get('garage_name')
         address = request.POST.get('address')
@@ -64,11 +45,13 @@ class GarageCreateView(View):
         if garage_profile_photo:
             garage_profile_photo_path = save_uploaded_file(garage_profile_photo, subfolder="garage-profile-photo")
 
-        garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, user)
-
-        messages.success(request, SuccessMessage.S00008.value)
-        return redirect('garage_profile')
-
+        garage = garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, user)
+        if garage:
+            messages.success(request, SuccessMessage.S00008.value)
+            return redirect('garage_profile')
+        else:
+            messages.error(request, ErrorMessage.E00013.value)
+            return redirect('user_profile')
 
 
 @auth_required(login_url='/sign-in/')

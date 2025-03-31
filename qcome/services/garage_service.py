@@ -129,3 +129,7 @@ def booking_status(booking_id):
 
 def get_all_garages_exclude_worker_garage(worker_garage):
     return Garage.objects.exclude(id=worker_garage)
+
+
+def check_existing_garage(user):
+    return Garage.objects.filter(garage_owner=user).first()
