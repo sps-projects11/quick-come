@@ -8,6 +8,43 @@
     margin: auto;
     height: 85vh;
 }
+.delete_modal{
+    top: 24%;
+    border-radius: 10px;
+    width: 30%;
+    background: #f1f1f1;
+    position: absolute;
+    height: 25%;
+    padding:30px;
+}
+#warn{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 30px;
+}
+.cancel{
+    border-radius: 5px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    background: #ffffff;
+    height: 50px;
+    font-size: 30px;
+}
+.delete-btn{
+    border-radius: 5px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    background: #fb0808;
+    color:white;
+    height: 50px;
+    font-size: 30px;
+}
+
 .cart-container {
     height: 100%;
     margin: auto;
