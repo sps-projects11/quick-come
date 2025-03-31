@@ -90,8 +90,26 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {
-                    document.getElementById("current_location").value =
-                        position.coords.latitude + ", " + position.coords.longitude;
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Set the latitude and longitude in the input field
+                    document.getElementById("current_location").value = `${latitude}, ${longitude}`;
+
+                    // Reverse geocode to get human-readable address
+                    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            const address = data.display_name || "Unknown location";
+                            
+                            // Display the address in the input field
+                            document.getElementById("current_location").value = address;
+                        })
+                        .catch(error => {
+                            console.error("Error fetching address:", error);
+                        });
                 },
                 function (error) {
                     console.error("Error getting location:", error);
@@ -101,7 +119,8 @@
             alert("Geolocation is not supported by this browser.");
         }
     });
-    </script>
+</script>
+
     
 <style>
     /* Emergency Form */
