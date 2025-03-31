@@ -117,7 +117,7 @@ def get_services_by_id(booking_id):
         service_ids = booking.service  # This is a list of service IDs
 
         services = ServiceCatalog.objects.filter(id__in=service_ids).values(
-            'service_name', 'service_image', 'price'
+           'id', 'service_name', 'service_image', 'price'
         )
 
         service_data = list(services)
@@ -127,10 +127,10 @@ def get_services_by_id(booking_id):
         return []
 
 
-def remove_service_from_booking(booking_id, service_name):
+def remove_service_from_booking(booking_id, service_id):
     """Removes a service from a booking's service list if the service exists."""
     try:
-        service = ServiceCatalog.objects.filter(service_name=service_name, is_active=True).first()
+        service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
         if not service:
             return {"success": False, "error": "Service not found"}
 

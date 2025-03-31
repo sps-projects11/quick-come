@@ -65,11 +65,14 @@ class BillingDelete(View):
     def delete(self, request, booking_id):
         try:
             data = json.loads(request.body)
-            service_name = data.get("service_name")
+            service_id = data.get("service_id")  # ✅ Corrected key
+
+            if not service_id:
+                return JsonResponse({"success": False, "error": "Service ID is required"}, status=400)
 
             # Call service layer for deletion
-            response = booking_service.remove_service_from_booking(booking_id, service_name)
-            
+            response = booking_service.remove_service_from_booking(booking_id, service_id)
+
             status_code = 200 if response["success"] else 404
             return JsonResponse(response, status=status_code)
 
