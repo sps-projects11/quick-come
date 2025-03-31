@@ -8,22 +8,29 @@ console.log("Toast script loaded!");
       const clonedResponse = response.clone();
       clonedResponse.json().then(data => {
         if (data && (data.success || data.error) && data.message) {
-          let icon = "info";
-          if (data.success) {
-            icon = "success";
-          } else if (data.error) {
-            icon = "error";
+          if (data.redirect) {
+            // Store message details for later display after redirect
+            sessionStorage.setItem('loginToastMessage', JSON.stringify({
+              message: data.message,
+              icon: data.success ? "success" : "error"
+            }));
+          } else {
+            let icon = "info";
+            if (data.success) {
+              icon = "success";
+            } else if (data.error) {
+              icon = "error";
+            }
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: icon,
+              title: data.message,
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            });
           }
-          // Show a toast using SweetAlert2
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icon,
-            title: data.message,
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
         }
       }).catch(error => {
         // If not JSON, do nothing.
@@ -43,21 +50,28 @@ console.log("Toast script loaded!");
       // Wrap the success callback.
       options.success = function(data, textStatus, jqXHR) {
         if (data && (data.success || data.error) && data.message) {
-          let icon = "info";
-          if (data.success) {
-            icon = "success";
-          } else if (data.error) {
-            icon = "error";
+          if (data.redirect) {
+            sessionStorage.setItem('loginToastMessage', JSON.stringify({
+              message: data.message,
+              icon: data.success ? "success" : "error"
+            }));
+          } else {
+            let icon = "info";
+            if (data.success) {
+              icon = "success";
+            } else if (data.error) {
+              icon = "error";
+            }
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: icon,
+              title: data.message,
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            });
           }
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icon,
-            title: data.message,
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
         }
         if (originalSuccess) {
           originalSuccess(data, textStatus, jqXHR);
@@ -73,21 +87,28 @@ console.log("Toast script loaded!");
           data = null;
         }
         if (data && (data.success || data.error) && data.message) {
-          let icon = "info";
-          if (data.success) {
-            icon = "success";
-          } else if (data.error) {
-            icon = "error";
+          if (data.redirect) {
+            sessionStorage.setItem('loginToastMessage', JSON.stringify({
+              message: data.message,
+              icon: data.success ? "success" : "error"
+            }));
+          } else {
+            let icon = "info";
+            if (data.success) {
+              icon = "success";
+            } else if (data.error) {
+              icon = "error";
+            }
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: icon,
+              title: data.message,
+              timer: 3000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            });
           }
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icon,
-            title: data.message,
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          });
         }
         if (originalError) {
           originalError(jqXHR, textStatus, errorThrown);
@@ -98,8 +119,24 @@ console.log("Toast script loaded!");
     };
   }
 
-  // ----- Display Django Messages on full page loads -----
+  // ----- Display stored toast message and Django Messages on full page loads -----
   document.addEventListener('DOMContentLoaded', function() {
+    // Check for stored toast message from sessionStorage
+    const storedToast = sessionStorage.getItem('loginToastMessage');
+    if (storedToast) {
+      const toastData = JSON.parse(storedToast);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: toastData.icon,
+        title: toastData.message,
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+      sessionStorage.removeItem('loginToastMessage');
+    }
+
     if (window.djangoMessages && Array.isArray(window.djangoMessages)) {
       window.djangoMessages.forEach(function(msg) {
         let icon = "info";
