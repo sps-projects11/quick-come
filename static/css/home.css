@@ -356,3 +356,23 @@
 }
 
 
+@media (max-width: 400px) {
+   
+#feature .fe-box h6 {
+    width: 100%;
+}
+.container{
+    padding: 20px !important;
+}
+.hero-content p {
+    font-size: 14px !important;  
+}
+.ride-section {
+    height: 32vh !important;
+}
+.ride-content h2 {
+    font-size: 12px !important;
+}
+
+}
+

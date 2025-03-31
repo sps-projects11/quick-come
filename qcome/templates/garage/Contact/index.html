@@ -5,8 +5,8 @@
 
 
 <section id="page-header" class="about-header">
-    <h2><span style="color: #0f00ff; font-size: 80px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);">#Get in Touch</span> </h2>
-    <p><span style="color: white;background: #0000002b;padding: 10px;border-radius: 10px;">Have questions or need assistance? We're here to help! Reach out to us anytime, and our team will be happy to assist you. Your satisfaction is our priority!" 😊</span></p>
+    <h2><span id="conhead" style="color: #0f00ff; font-size: 80px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);">#Get in Touch</span> </h2>
+    <p><span id="conpgf" style="color: white;background: #0000002b;padding: 10px;border-radius: 10px;">Have questions or need assistance? We're here to help! Reach out to us anytime, and our team will be happy to assist you. Your satisfaction is our priority!" 😊</span></p>
 </section>
 <section id="contact-details" class="section-p1">
     <div class="details">
@@ -280,6 +280,20 @@
     }
     #newsletter .form{
         width: 100%;
+    }
+}
+
+@media (max-width: 400px){
+    p{
+        padding: 20px !important;
+    }
+    #conhead{
+    font-size: 50px !important;
+    }
+    #conpgf{
+        padding: 20px !important;
+        /* font-size: 10px !important; */
+        background: none !important;
     }
 }
 
