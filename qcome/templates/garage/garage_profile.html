@@ -4,140 +4,353 @@
 {% block content %}
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <style>
-
-    .profile-container {
-        width: 50%;
-        height: 70vh;
-        max-width: 650px;
-        margin: 50px auto;
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        padding: 40px;
-        text-align: center;
-        transition: all 0.3s ease-in-out;
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --accent-color: #4cc9f0;
+        --dark-color: #2b2d42;
+        --light-color: #f8f9fa;
+        --danger-color: #ef233c;
     }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .profile-card {
+        width: 90%;
+        max-width: 800px;
+        margin: 30px auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 30px 0;
+        text-align: center;
+        color: white;
+        position: relative;
+    }
+
+    .profile-image-container {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
     .profile-img {
-        width: 130px;
-        height: 130px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
         border-radius: 50%;
-        margin-bottom: 15px;
-        border: 5px solid #007bff;
+        border: 5px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
     }
 
-    h2 {
+    .profile-img:hover {
+        transform: scale(1.05);
+    }
+
+    .profile-body {
+        padding: 30px;
+    }
+
+    .profile-title {
         font-weight: 700;
-        color: #343a40;
+        color: var(--dark-color);
+        margin-bottom: 25px;
+        font-size: 2rem;
+        position: relative;
     }
 
-    .profile-details p {
-        font-size: 17px;
-        color: #6c757d;
-        margin: 6px 0;
+    .profile-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: var(--accent-color);
     }
 
-    @media (min-width: 768px) {
-        .btn-group {
-            gap: 25px;
-        }
-
-        #edit-btn {
-            width: 190px;
-            padding-top: 10px;
-            height: 50px;
-            border-radius: 10px;
-        }
-
-        #delete-btn {
-            border-radius: 10px;
-            width: 190px;
-            height: 50px;
-        }
+    .detail-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px 15px;
+        background: rgba(248, 249, 250, 0.7);
+        border-radius: 8px;
+        transition: all 0.2s ease;
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
+    .detail-item:hover {
+        background: rgba(67, 97, 238, 0.1);
+        transform: translateX(5px);
     }
 
-    .btn-danger:hover {
-        background-color: #c82333;
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        margin-right: 15px;
+        flex-shrink: 0;
     }
 
+    .detail-label {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-right: 5px;
+    }
 
+    .detail-value {
+        color: #495057;
+    }
 
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+
+    .btn-edit {
+        background: var(--primary-color);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-delete {
+        background: var(--danger-color);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-delete:hover {
+        background: #d90429;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(239, 35, 60, 0.3);
+    }
+
+    /* Responsive adjustments */
     @media (max-width: 768px) {
-        
-    .profile-container {
-        width: 100%;
-        height: 50vh;
-    }
-        .btn-group {
-            display: flex;
+        .profile-card {
+            width: 95%;
+            margin: 20px auto;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .profile-body {
+            padding: 20px;
+        }
+
+        .action-buttons {
             flex-direction: column;
             gap: 10px;
         }
 
-        .btn-group a,
-        .btn-group button {
+        .btn-edit, .btn-delete {
             width: 100%;
         }
     }
 
-    @media (max-width: 480px){
-        .profile-container {
-            width: 100% !important;
-            height: 70vh !important;
+    @media (max-width: 480px) {
+        .profile-header {
+            padding: 20px 0;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-title {
+            font-size: 1.5rem;
+        }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px;
+        }
+
+        .detail-icon {
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+    }
+
+    /* Animation classes */
+    .animate-in {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>
 
-<div class="container" style="height: 100vh;">
-    <div class="profile-container">
-        <h2>{{ garage.garage_name }}</h2>
-        <!-- Garage Image -->
-        {% if garage.garage_image %}
-            <img src="{{ garage.garage_image }}" class="profile-img" alt="Garage Image">
-        {% else %}
-            <img src="\static\all-Pictures\user.jpg" class="profile-img" alt="No Image">
-        {% endif %}
-        <!-- Garage Details -->
-        <div class="profile-details">
-            <p><i class="fas fa-user-tie"></i> <strong>Owner:</strong> {{ garage_owner }}</p>
-            <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> {{ garage.address }}</p>
-            <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {{ garage.phone }}</p>
-            <p><i class="fas fa-car"></i> <strong>Vehicle Type:</strong> {{ vehicle_type_name }}</p>
-            <p><i class="fas fa-dollar"></i> <strong>Garage AC:</strong> {{ garage.garage_ac }}</p>
+<div class="container py-5">
+    <div class="profile-card animate__animated animate__fadeInUp">
+        <div class="profile-header">
+            <div class="profile-image-container">
+                {% if garage.garage_image %}
+                    <img src="{{ garage.garage_image }}" class="profile-img" alt="Garage Image">
+                {% else %}
+                    <img src="{% static 'all-Pictures/user.jpg' %}" class="profile-img" alt="No Image">
+                {% endif %}
+            </div>
+            <h1 class="profile-title">{{ garage.garage_name }}</h1>
         </div>
-        <!-- Action Buttons -->
-        <div class="btn d-flex justify-content-between">
-            <!-- Edit Button -->
-            <a href="{% url 'garage_update' garage.id %}" class="btn btn-primary" id="edit-btn"><i class="fas fa-edit"></i>Edit</a>
-            <!-- Delete Button -->
-            <form method="POST" action="{% url 'garage_delete' garage.id %}" onsubmit="return confirm('Are you sure you want to delete this garage?');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" id="delete-btn"><i class="fas fa-trash-alt"></i>Delete</button>
-            </form>
+        
+        <div class="profile-body">
+            <div class="profile-details">
+                <div class="detail-item animate-in" style="animation-delay: 0.1s">
+                    <div class="detail-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <span class="detail-label">Owner:</span>
+                        <span class="detail-value">{{ garage_owner }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item animate-in" style="animation-delay: 0.2s">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">{{ garage.address }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item animate-in" style="animation-delay: 0.3s">
+                    <div class="detail-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">{{ garage.phone }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item animate-in" style="animation-delay: 0.4s">
+                    <div class="detail-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div>
+                        <span class="detail-label">Vehicle Type:</span>
+                        <span class="detail-value">{{ vehicle_type_name }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item animate-in" style="animation-delay: 0.5s">
+                    <div class="detail-icon">
+                        <i class="fas fa-dollar"></i>
+                    </div>
+                    <div>
+                        <span class="detail-label">Garage AC:</span>
+                        <span class="detail-value">{{ garage.garage_ac }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'garage_update' garage.id %}" class="btn btn-edit">
+                    <i class="fas fa-edit me-2"></i>Edit Profile
+                </a>
+                
+                <form method="POST" action="{% url 'garage_delete' garage.id %}" onsubmit="return confirm('Are you sure you want to delete this garage? This action cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-delete">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Garage
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-
 <script>
-    const theSection = document.getElementById('bar')
-    const closeSection = document.getElementById('close')
-    const navberSection = document.getElementById('navber')
+    // Navbar toggle functionality
+    const theSection = document.getElementById('bar');
+    const closeSection = document.getElementById('close');
+    const navberSection = document.getElementById('navber');
 
-    if(theSection){
-    theSection.addEventListener( 'click',()=>{
-        navberSection.classList.add('active')
-    })
+    if(theSection) {
+        theSection.addEventListener('click', () => {
+            navberSection.classList.add('active');
+        });
     }
-    if(closeSection){
-    closeSection.addEventListener('click',()=>{
-        navberSection.classList.remove('active')
-    })
+    
+    if(closeSection) {
+        closeSection.addEventListener('click', () => {
+            navberSection.classList.remove('active');
+        });
     }
+
+    // Add animation to elements as they come into view
+    document.addEventListener('DOMContentLoaded', () => {
+        const animateElements = document.querySelectorAll('.animate-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animateElements.forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    });
 </script>
+
 {% endblock %}
