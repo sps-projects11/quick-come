@@ -30,6 +30,13 @@
 </head>
 <body>
     <div class="wrapper">
+        <!-- Modal with background blur effect (blurring the entire content behind it) -->
+        <div class="modal" id="modal" style="position: absolute; display: none; background: rgba(102, 102, 102, 0.5); height: 100vh; width: 100%; backdrop-filter: blur(10px);">
+            <div id="loading" style="top: 44%; right: 50%; position: absolute; transform: translate(50%, -50%);">
+                <p>Loading....</p><span class="spinner"></span>
+            </div>
+        </div>
+       
         <div class="carousel-container">
             <div class="carousel">
                 <img src="/static/all-Pictures/slide1 (2).avif" alt="Slide 1">
@@ -61,6 +68,8 @@
                         <button type="button" id="sendOtp">Send OTP</button>
                     </div>
                 </div>
+                
+
                 <div class="form-group">
                     <label for="otp">OTP Verification</label>
                     <div class="input-row">
@@ -88,7 +97,35 @@
         </div>
     </div>
     
-
+    <style>
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        #loading{
+            align-items: center;
+            color: white;
+            font-size: 21px;
+            background: black;
+            width: 200px;
+            height: 70px;
+            top: 44%;
+            right: 50%;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
     
     <script>
         let currentIndex = 0;
@@ -119,17 +156,19 @@
             // Send OTP
             sendOtpButton.addEventListener("click", function () {
                 let email = document.getElementById("email").value;
-        
+                let loader = document.getElementById("modal");
+
+                loader.style.display = "block";
                 if (!email) {
                     alert("Please enter your email address.");
                     return;
                 }
-        
+                
                 fetch(`/request-otp/?email=${encodeURIComponent(email)}`)
                     .then(response => response.json())
                     .then(data => {
                         console.log(data)
-
+                        loader.style.display = "none";
                     })
                     .catch(error => console.error("Error:", error));
             });
@@ -164,7 +203,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message);
                     if (data.status === "success") {
                         console.log("OTP verified successfully.");
                     }
@@ -177,6 +215,8 @@
                 event.preventDefault(); // Prevent default form submission
         
                 let formData = new FormData(signupForm);
+                let loader = document.getElementById("modal");
+                loader.style.display = "block";
         
                 fetch("/sign-up/", {
                     method: "POST",
@@ -187,10 +227,11 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    loader.style.display = "none";
                     if (data.status === "success") {
                         window.location.href = data.redirect; // Redirect to sign-in page
                     } else {
-                        alert(data.message); // Show error message
+                        loader.style.display = "none";
                     }
                 })
                 .catch(error => console.error("Error:", error));
@@ -358,6 +399,9 @@
         @media (max-width: 768px) {
             .wrapper {
                 flex-direction: column;
+            }
+            #loading{
+                top: 52% !important;
             }
         }
         
