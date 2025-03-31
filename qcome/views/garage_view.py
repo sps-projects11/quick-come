@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib import messages
 from qcome.constants.default_values import Role, Vehicle_Type,PayStatus
 from qcome.decorators import auth_required, enduser_required,garage_required
-from qcome.services import booking_service, garage_service,workers_service,payment_service
+from qcome.services import booking_service, garage_service,workers_service,payment_service, user_service
 from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
@@ -30,13 +30,14 @@ class GarageCreateView(View):
     def post(self, request):
         """ Create a garage for the logged-in user (Only one allowed) """
         user = request.user
-
+        
+        garage_owner_name = request.POST.get('garage_owner_name')
+        garage_owner_profile_photo = request.FILES.get('garage_owner_profile_photo')
         garage_name = request.POST.get('garage_name')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         vehicle_type = request.POST.get('vehicle_type')
         garage_ac = request.POST.get('garage_ac')
-
         # Handle image upload
         garage_profile_photo = request.FILES.get('garage_image')
 
@@ -47,6 +48,16 @@ class GarageCreateView(View):
 
         garage = garage_service.garage_create(user, garage_name, garage_profile_photo_path, address, phone, vehicle_type, garage_ac, user)
         if garage:
+            
+            garage_owner_profile_photo_path = ''
+            if garage_owner_profile_photo:
+                garage_owner_profile_photo_path = save_uploaded_file(garage_owner_profile_photo, subfolder="profile-images")
+
+            user_service.user_profile_photo_create(user, garage_owner_profile_photo_path)            
+
+            first_name,middle_name, last_name = user_service.split_full_name(garage_owner_name)
+            user_service.user_name_update(user, first_name, middle_name, last_name)
+
             messages.success(request, SuccessMessage.S00008.value)
             return redirect('garage_profile')
         else:

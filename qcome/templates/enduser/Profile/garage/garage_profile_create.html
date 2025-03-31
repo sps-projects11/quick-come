@@ -6,15 +6,30 @@
 <section style="height: 100vh;">
 <div class="container">
     <div class="garage-form">
-        <h2>{% if garage %}Update Garage Profile{% else %}Create Garage Profile{% endif %}</h2>
+        <h2>Create Garage Profile</h2>
 
-        <form method="POST" enctype="multipart/form-data" action="{% if garage %}{% url 'garage_update' garage.id %}{% else %}{% url 'garage_create' %}{% endif %}">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            <div class="mb-4 text-center">
+                <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
+                  <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" 
+                       alt="Profile Photo" id="profilePreview" class="rounded-circle" 
+                       style="width:150px; height:150px; object-fit:cover;">
+                  <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
+                    <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
+                  </div>
+                    <!-- Remove icon: shown only when the container has "has-image" class -->
+                    <div id="removePhotoIcon" class="remove-photo-icon">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
+                </div>
+                <!-- Hidden file input -->
+                <input type="file" class="d-none" id="id_garage_owner_profile_photo" name="garage_owner_profile_photo" accept="image/*">
+              </div>
 
-            <!-- Garage Owner -->
             <div class="input-group">
                 <label>Garage Owner</label>
-                <input type="text" placeholder="Enter Owner Name" value="{{ user.get_full_name|default:user.email }}" required>
+                <input type="text" placeholder="Enter Owner Name" name="garage_owner_name" value="{{ user.get_full_name|default:user.email }}" required>
             </div>
 
             <!-- Garage Name -->
@@ -238,4 +253,48 @@ body {
 
 
 </style>
+
+
+<script type="module">
+    import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
+    document.addEventListener("DOMContentLoaded", () => {
+      initProfileUploader({
+        profileContainerSelector: '.profile-picture-container',
+        fileInputId: 'id_garage_owner_profile_photo',
+        profilePreviewId: 'profilePreview',
+        removePhotoIconId: 'removePhotoIcon',
+        plusIconSelector: '.profile-plus-icon',
+        defaultImage: "{{ '/static/all-Pictures/user.jpg' }}"
+      });
+    });
+  </script>
+  
+  <style>
+    .remove-photo-icon {
+      position: absolute;
+      top: 17px;
+      right: 20px;
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 0, 0, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 11;
+    }
+    /* Show the remove icon on hover only if the container has "has-image" */
+    .profile-picture-container.has-image:hover .remove-photo-icon {
+      opacity: 1;
+    }
+    .remove-photo-icon i {
+      color: #fff;
+      font-size: 1rem;
+    }
+  </style>
+
+
 {% endblock %}
