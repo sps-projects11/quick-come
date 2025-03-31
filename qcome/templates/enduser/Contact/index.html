@@ -1,5 +1,5 @@
 {% extends "enduser/base.html" %}
-{% block title %}Quick Come Home{% endblock %}
+{% block title %}Quick Come Home | Contact Us{% endblock %}
 {%load static %}
 {% block content %}
 
@@ -25,15 +25,21 @@
     </div>
 </section>
 <section id="form-details">
-    <form method="post">
+    <form method="post" id="contact-form">
         <span>LEAVE A MESSAGE</span>
         <h2>We love to hear from you</h2>
         {% csrf_token %}
-        <input type="text" name = "contacter_email" placeholder="E-mail">
+        <input type="text" name="contacter_email" placeholder="E-mail">
         <input type="text" name="contacter_subject" placeholder="Subject">
-        <textarea name="contacter_msg" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
-        <button class="normal">Submit</button>
+        <textarea name="contacter_msg" cols="30" rows="10" placeholder="Your Message"></textarea>
+        <button class="normal" type="submit">Submit</button>
     </form>
+
+    <!-- Loader Overlay: hidden by default -->
+<div id="loader-overlay" style="display: none;">
+    <div class="loader"></div>
+  </div>
+    
     <div class="people">
         <div>
             <img src="\static\all-Pictures\banners\contact-avater.avif" alt="">
@@ -53,6 +59,40 @@
 
 
 <style>
+
+    
+    /* Loader Overlay styling */
+    #loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 90%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5); /* semi-transparent background */
+      backdrop-filter: blur(5px); /* apply background blur */
+      z-index: 9999; /* ensure it's on top */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* Custom CSS Loader */
+    .loader {
+      border: 8px solid #f3f3f3; /* Light grey */
+      border-top: 8px solid #3498db; /* Blue color */
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Keyframes for spinning animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+
 
     /* contact page */
 
@@ -315,7 +355,25 @@
       closeSection.addEventListener('click',()=>{
           navberSection.classList.remove('active')
       })
-    }
-</script>
+    }      
+  </script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contact-form');
+      const loaderOverlay = document.getElementById('loader-overlay');
+      
+      form.addEventListener('submit', function(e) {
+        // Show overlay with loader when form is submitted
+        loaderOverlay.style.display = 'flex';
+        // Optionally, disable the submit button to prevent multiple submissions:
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+      });
+    });
+  </script>
+  
+  
 
 {% endblock %}
