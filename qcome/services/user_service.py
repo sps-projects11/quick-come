@@ -247,5 +247,5 @@ def split_full_name(full_name):
 
 
 def user_full_name(user):
-    return
+    return f"{user.first_name} " f"{(user.middle_name + ' ') if user.middle_name else ''}" f"{user.last_name}"
 
