@@ -90,7 +90,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
-        max-width: 90%;
+        width: 100% !important;
         padding: 15px;
     }
 
