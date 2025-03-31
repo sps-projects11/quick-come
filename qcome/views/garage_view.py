@@ -146,7 +146,7 @@ class GarageUpdateView(View):
         """ Load the same create page but pre-fill it for update """
         garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
         vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
-        return render(request, 'enduser/Profile/garage/garage_profile_create.html', {'garage': garage, 'vehicle_types': vehicle_types})
+        return render(request, 'garage/garage_update.html', {'garage': garage, 'vehicle_types': vehicle_types})
 
     def post(self, request, garage_id):
         """ Update existing garage details """
