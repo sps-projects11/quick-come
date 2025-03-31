@@ -5,12 +5,14 @@
 <link rel="stylesheet" href="{% static 'css/cart.css' %}"> 
         <div class="wrapper">
             <div class="delete_modal" style="display:none;">
-                <p id="warn">Are you want to remove the service ?</p>
-                <div style="padding: 20px;height: 70%;">
-                <div class="cancel" onclick="close_modal()">cancel</div>
-                <div class="delete-btn">delete</div>
+                <p id="warn">Are you sure you want to remove the service?</p>
+                <div style="padding: 20px; height: 70%;">
+                    <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="cancel" onclick="close_modal()">Cancel</div>
+                    <div class="delete-btn" onclick="removeService()">Delete</div>
                 </div>
             </div>
+            
             <div class="cart-container">
                 <h3>Shopping Cart</h3>
                 <div class="cart-items">
@@ -26,9 +28,10 @@
                         <div class="item-details">
                             <h5>{{ service.service_name }}</h5>
                             <p>₹{{ service.price }}</p>
-                            <button class="remove-btn" onclick="open_modal()">Remove</button>
+                            <button class="remove-btn" id="delete_{{ service.id }}{{ booking_id }}" 
+                                    onclick="open_modal('{{ service.id }}', '{{ booking_id }}')">Remove</button>
                         </div>
-                    </div>
+                    </div>                    
                     {% endfor %}
                 </div>
                 <div class="footer">
@@ -61,15 +64,62 @@
         </div>
 
       <script>  
+        // Function to delete service and send request to backend
+        let selectedServiceId = null;
+        let selectedBookingId = null;
+        
+        function open_modal(serviceId, bookingId) {
+            selectedServiceId = serviceId;
+            selectedBookingId = bookingId;
+        
+            document.querySelector(".delete_modal").style.display = "block";
+        }
+        
+        function close_modal() {
+            document.querySelector(".delete_modal").style.display = "none";
+        }
+        
+        function removeService() {
+            if (!selectedServiceId || !selectedBookingId) {
+                console.error("Missing service ID or booking ID");
+                return;
+            }
+        
+            let csrfTokenElement = document.querySelector("[name=csrfmiddlewaretoken]");
+            if (!csrfTokenElement) {
+                console.error("CSRF token not found in the document.");
+                return;
+            }
+            let csrfToken = csrfTokenElement.value;
+        
+            console.log(`Removing service ${selectedServiceId} from booking ${selectedBookingId}...`);
+        
+            fetch(`/billing/${selectedBookingId}/delete`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ service_id: selectedServiceId })  // ✅ Corrected JSON key
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Remove service response:", data);
+        
+                if (data.success) {
+                    document.getElementById(`delete_${selectedServiceId}${selectedBookingId}`).closest(".cart-item").remove();
+                    console.log(`Service ID ${selectedServiceId} removed successfully.`);
+                    close_modal();
+                } else {
+                    console.log("Failed to remove item. Try again.");
+                }
+            })
+            .catch(error => console.error("Error removing service:", error));
+        }
+        
 
-        function open_modal(){
-            let modal = document.querySelector('.delete_modal');
-            modal.style.display="block";
-        }
-        function close_modal(){
-            let modal = document.querySelector('.delete_modal');
-            modal.style.display="none";
-        }
+        
+
 
 
         function openServiceModal() {
@@ -144,44 +194,6 @@
             closeModal();
         }
         
-            document.addEventListener("DOMContentLoaded", function () {
-                console.log("Page loaded. Initializing event listeners...");
-        
-                document.querySelectorAll(".delete-btn").forEach(button => {
-                    button.addEventListener("click", function () {
-                        let cartItem = this.closest(".cart-item");
-                        let serviceName = cartItem.querySelector("h5").textContent.trim();
-                
-                        let bookingId = "{{ booking_id }}";
-                        let csrfToken = "{{ csrf_token }}";
-        
-                        console.log(`Removing service ${serviceName} from booking ${bookingId}...`);
-        
-                        fetch(`/billing/${bookingId}/delete`, {
-                            method: "DELETE",
-                            headers: {
-                                "X-CSRFToken": csrfToken,
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ service_name: serviceName })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("Remove service response:", data);
-        
-                            if (data.success) {
-                                cartItem.remove();
-                                console.log(`${serviceName} removed successfully.`);
-                                window.location.href = "/billing/";
-                            } else {
-                                console.log("Failed to remove item. Try again.");
-                            }
-                        })
-                        .catch(error => console.error("Error removing service:", error));
-                    });
-                });
-            });
-
             const theSection = document.getElementById('bar')
             const closeSection = document.getElementById('close')
             const navberSection = document.getElementById('navber')
