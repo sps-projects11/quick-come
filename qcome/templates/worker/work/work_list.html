@@ -9,7 +9,7 @@
     .wrapper {
         display: flex;
         justify-content: center;
-        min-height: 100vh;
+        min-height: 90vh;
         padding: 15px;
     }
 
@@ -89,7 +89,7 @@
 
     @media (max-width: 992px) {
         .container {
-            max-width: 90%;
+            width: 100%;
         }
         
         .work-card {
@@ -106,7 +106,7 @@
 
     @media (max-width: 768px) {
         .container {
-            max-width: 100%;
+            width: 100%;
             padding: 15px;
         }
         
@@ -124,6 +124,10 @@
         .work-details p {
             font-size: 12px;
         }
+
+        .wrapper{
+            padding: 10px;
+        }
     }
 
     @media (max-width:530px) {
@@ -134,7 +138,7 @@
 
     @media (max-width: 480px) {
         .container {
-            max-width: 100%;
+            width: 100%;
             padding: 10px;
         }
         
@@ -176,7 +180,7 @@
 </style>
 
 <div class="wrapper">
-    <div class="container"style="background-color:white;margin-top:1.2%;margin-bottom:1.5%;">
+    <div class="container"style="background-color:white;">
         <h2>Work List</h2>
         <div class="work-list">
             {% if bookings %}

@@ -110,5 +110,11 @@
         font-size: 13px;
         gap: 5px;
     }
+
+    .wrapper {
+        padding: 10px;
+        height: 90vh;
+    }
 }
+
 

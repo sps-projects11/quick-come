@@ -15,7 +15,7 @@
             <!-- Profile Image -->
             <div class="mb-4 text-center">
                 <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-                    <img src="{{ garage.garage_owner_profile_photo.url|default:'/static/all-Pictures/user.jpg' }}" 
+                    <img src="{{ garage_owner_image|default:'/static/all-Pictures/user.jpg' }}" 
                          alt="Profile Photo" id="profilePreview" class="rounded-circle" 
                          style="width:150px; height:150px; object-fit:cover;">
                     
@@ -35,7 +35,7 @@
             <div class="input-group">
                 <label>Garage Owner</label>
                 <input type="text" name="garage_owner_name" placeholder="Enter Owner Name" 
-                       value="{{ garage.garage_owner_name|default:user.get_full_name }}" required>
+                       value="{{ garage_owner_name|default:'' }}" required>
             </div>
 
             <!-- Garage Name -->
@@ -59,7 +59,7 @@
                      style="width: 100px; height: auto;">
 
                 {% if garage.garage_image %}
-                    <img src="{{ garage.garage_image.url }}" id="uploaded_image" alt="Garage Image" 
+                    <img src="{{ garage.garage_image }}" id="uploaded_image" alt="Garage Image" 
                          style="width: 100px; height: auto;">
                 {% else %}
                     <p>No image uploaded</p>
@@ -85,9 +85,9 @@
                 <label>Vehicle Type</label>
                 <select name="vehicle_type" required>
                     <option value="" selected disabled>Select Vehicle Type</option>
-                    <option value="1" {% if garage.vehicle_type == "1" %}selected{% endif %}>Car</option>
-                    <option value="2" {% if garage.vehicle_type == "2" %}selected{% endif %}>Bike</option>
-                    <option value="3" {% if garage.vehicle_type == "3" %}selected{% endif %}>Bike & Car</option>
+                    <option value="1" {% if garage.vehicle_type == 1 %}selected{% endif %}>Car</option>
+                    <option value="2" {% if garage.vehicle_type == 2 %}selected{% endif %}>Bike</option>
+                    <option value="3" {% if garage.vehicle_type == 3 %}selected{% endif %}>Bike & Car</option>
                 </select>
             </div>
 

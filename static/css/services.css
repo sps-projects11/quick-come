@@ -14,9 +14,10 @@
 
 
 .services-wrapper {
-    min-height: 100vh;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    min-height: 90vh;
     padding: 2rem 1rem;
-    background-color: #f8fafc;
 }
 
 .services-header {
