@@ -256,6 +256,9 @@ footer .copyright {
         padding: 80px 0 0 10px;
         /* transition: 0.3s; */
     }
+    .hello{
+        display: none;
+    }
 
     #navber.active{
         right: 0;
@@ -281,9 +284,6 @@ footer .copyright {
         left: 30px;
         color: #222;
         font-size: 24px;
-    }
-    #profile-link2{
-        display:none;
     }
     #lg-search{
         display: none;

@@ -3,27 +3,34 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             if (data.logged_in) {
-                let profileLink = document.getElementById('profile-link');
-                profileLink.innerHTML = `
-                    <img id="profile-img" src="${data.profile_photo_url}" alt="Profile style="dislay:block;" 
-                        style="width:40px; height:40px; border-radius:50%; cursor:pointer;margin-left: 18px;">
-                `;
+                let profileLinks = document.querySelectorAll('#profile-link'); // Select all profile-link elements
+                
+                profileLinks.forEach(profileLink => {
+                    profileLink.innerHTML = `
+                        <img class="profile-img" src="${data.profile_photo_url}" 
+                            alt="Profile" style="width:40px; height:40px; border-radius:50%; cursor:pointer;margin-left: 18px;">
+                    `;
+                });
 
                 // Show dropdown on click
-                document.getElementById("profile-img").addEventListener("click", function (event) {
-                    event.preventDefault(); // Prevent navigation
-                    let dropdown = document.getElementById("profile-dropdown");
-                    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                document.querySelectorAll(".profile-img").forEach(img => {
+                    img.addEventListener("click", function (event) {
+                        event.preventDefault(); // Prevent navigation
+                        let dropdown = this.closest("div").querySelector("#profile-dropdown");
+                        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+                    });
                 });
 
                 // Hide dropdown when clicking outside
                 document.addEventListener("click", function (event) {
-                    let dropdown = document.getElementById("profile-dropdown");
-                    let profileImg = document.getElementById("profile-img");
+                    let dropdowns = document.querySelectorAll("#profile-dropdown");
+                    let profileImgs = document.querySelectorAll(".profile-img");
 
-                    if (event.target !== dropdown && event.target !== profileImg) {
-                        dropdown.style.display = "none";
-                    }
+                    dropdowns.forEach(dropdown => {
+                        if (![...profileImgs].includes(event.target) && event.target !== dropdown) {
+                            dropdown.style.display = "none";
+                        }
+                    });
                 });
             }
         })
@@ -54,11 +61,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-function open_slidebar(){
-    let profileLink = document.getElementById('profile-link');
-    profileLink.style.display="none";
+function open_slidebar() {
+    document.querySelectorAll('#profile-link').forEach(link => {
+        link.style.display = "none";
+    });
 }
-function undo(){
-    let profileLink = document.getElementById('profile-link');
-    profileLink.style.display="block";
+
+function undo() {
+    document.querySelectorAll('#profile-link').forEach(link => {
+        link.style.display = "block";
+    });
 }
+
