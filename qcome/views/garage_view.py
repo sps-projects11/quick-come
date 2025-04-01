@@ -4,7 +4,6 @@ from django.contrib import messages
 from qcome.constants.default_values import Vehicle_Type
 from qcome.decorators import auth_required, enduser_required,garage_required
 from qcome.services import booking_service, garage_service, workers_service, user_service
-from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from qcome.package.file_management import save_uploaded_file
@@ -102,7 +101,7 @@ class GarageWorkerListView(View):
             worker_data = [
                 {
                     'id': worker.id,
-                    'worker_name': f"{worker.worker.first_name} {worker.worker.last_name}",
+                    'worker_name': user_service.user_full_name(worker.worker),
                     'worker_phone': worker.worker.phone,
                     'garage_name': worker.garage.garage_name,
                     'experience': worker.experience,
