@@ -41,8 +41,8 @@ def is_user_a_garage_owner(user):
     return Garage.objects.filter(garage_owner=user, is_active=True).exists()
 
 
-def get_garage(worker_garage):
-    return Garage.objects.get(id=worker_garage, is_active = True)
+def get_garage(garage):
+    return Garage.objects.get(id=garage, is_active = True)
 
 
 def get_garage_id(user_id):

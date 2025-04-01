@@ -53,7 +53,7 @@ class GarageCreateView(View):
             if garage_owner_profile_photo:
                 garage_owner_profile_photo_path = save_uploaded_file(garage_owner_profile_photo, subfolder="profile-images")
 
-            user_service.user_profile_photo_create(user, garage_owner_profile_photo_path)            
+            user_service.user_profile_photo_create(user, garage_owner_profile_photo_path)
 
             first_name,middle_name, last_name = user_service.split_full_name(garage_owner_name)
             user_service.user_name_update(user, first_name, middle_name, last_name)
@@ -137,19 +137,23 @@ class GarageWorkerListView(View):
 @garage_required
 class GarageUpdateView(View):
     def get(self, request, garage_id):
-        garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
-        vehicle_types = [(v_type.value, v_type.name) for v_type in Vehicle_Type]
-        return render(request, 'garage/profile/garage_profile_update.html', {'garage': garage, 'vehicle_types': vehicle_types})
+        garage = garage_service.get_garage(garage_id)
+        garage_owner = user_service.get_user(garage.garage_owner.id)
+        garage_owner_name = user_service.user_full_name(garage_owner)
+        garage_owner_image = user_service.get_user_profile_photo(garage_owner.id)
+        context =  {
+            'garage': garage,
+            'garage_owner_name' : garage_owner_name,
+            'garage_owner_image' : garage_owner_image,
+        }
+        return render(request, 'garage/profile/garage_profile_update.html', context)
 
     def post(self, request, garage_id):
-        print(request.POST)
-        garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
-
-        garage.garage_name = request.POST.get('garage_name')
-        garage.address = request.POST.get('address')
-        garage.phone = request.POST.get('phone')
-        garage.vehicle_type = request.POST.get('vehicle_type')
-        garage.garage_ac = request.POST.get('garage_ac')
+        garage_name = request.POST.get('garage_name')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        vehicle_type = request.POST.get('vehicle_type')
+        garage_ac = request.POST.get('garage_ac')
 
         # Handle image update
         garage_profile_photo = request.FILES.get('garage_image')
@@ -158,15 +162,25 @@ class GarageUpdateView(View):
 
         if garage_profile_photo:
             garage_profile_photo_path = save_uploaded_file(garage_profile_photo, subfolder="garage-profile-photo")
+        
+        garage = garage_service.garage_update(garage_id, request.user, garage_name, address, phone, garage_ac, vehicle_type, garage_profile_photo_path)
 
-        garage.garage_image = garage_profile_photo_path
+        if garage:
+            garage_owner_name = request.POST.get('garage_owner_name')
+            garage_owner_profile_photo = request.FILES.get('garage_owner_profile_photo')
+            garage_owner_profile_photo_path = ''
+            if garage_owner_profile_photo:
+                garage_owner_profile_photo_path = save_uploaded_file(garage_owner_profile_photo, subfolder="profile-images")
 
-        garage.updated_by = request.user
-        garage.save()
-
-        messages.success(request, "Garage updated successfully!")
-        return redirect('garage_profile')
-
+            user_service.user_profile_photo_create(request.user, garage_owner_profile_photo_path)
+            first_name, middle_name, last_name = user_service.split_full_name(garage_owner_name)
+            user_service.user_name_update(request.user, first_name, middle_name, last_name)
+            messages.success(request, SuccessMessage.S00007.value)
+            return redirect('garage_profile')
+        else:
+            messages.error(request, ErrorMessage.E00014.value)
+            return redirect('garage_profile')
+            
 
 @auth_required(login_url='/sign-in/')
 @garage_required
