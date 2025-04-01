@@ -12,7 +12,7 @@ class HomeView(View):
         if garage:
             garage = garage_service.get_garage_id(request.user.id)
             workers = workers_service.get_worker_of_garage(garage.id)
-            workers_list = [{"id": worker.id, "name": f"{worker.worker.first_name} {worker.worker.last_name}"} for worker in workers] 
+            workers_list = [{"id": worker.id, "name": f"{worker.worker.first_name} {worker.worker.last_name}"} for worker in workers]
             bookings = garage_service.get_garage_bookings()
             return render(request, 'garage/bookings.html', {'garage':garage,'bookings':bookings,'workers': workers_list})
         elif worker:
@@ -31,11 +31,3 @@ class HomeView(View):
             }
             return render(request, 'enduser/home/index.html', context)
 
-    
-class ChangeMyThemeView(View):
-    def post(self, request):
-        return
-    
-
-
-        
