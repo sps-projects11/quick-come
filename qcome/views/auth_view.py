@@ -17,6 +17,8 @@ from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
+from django.core.cache import cache
+import json
 
 
 
@@ -105,7 +107,6 @@ class VerifyOTPView(View):
         return JsonResponse(error_response(ErrorMessage.E00006.value))
 
 
-
 class UserSigninView(View):
     def get(self, request):
         return render(request, "enduser/home/signin.html")
@@ -136,69 +137,99 @@ class UserLogoutView(View):
         return redirect("/sign-in/")
     
 
-
-
-
-
-class PasswordResetView(View):
-    def get(self, request):
-        return render(request, 'enduser/home/password_reset.html')
-
-    def post(self, request):
-        email = request.POST.get("email")
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "User with this email does not exist."})
-
-        # Generate password reset token
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-        reset_link = f"{settings.SITE_URL}/password-reset-confirm/{uid}/{token}/"
-
-        # Send reset email
-        send_mail(
-            subject="Password Reset Request",
-            message=f"Click the link to reset your password: {reset_link}",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        return JsonResponse({"status": "success", "message": "Password reset link sent to your email."})
-
-
-class PasswordResetConfirmView(View):
-    def get(self, request, uidb64, token):
-        return render(request, 'enduser/home/password_reset_confirm.html', {"uidb64": uidb64, "token": token})
-
-    def post(self, request, uidb64, token):
-        new_password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
-
-        if new_password != confirm_password:
-            return JsonResponse({"status": "error", "message": "Passwords do not match."})
-
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = User.objects.get(pk=uid)
-
-            if not default_token_generator.check_token(user, token):
-                return JsonResponse({"status": "error", "message": "Invalid or expired token."})
-
-            user.password = make_password(new_password)
-            user.save()
-
-            return JsonResponse({"status": "success", "redirect": "/sign-in/"})
-
-        except (User.DoesNotExist, ValueError, TypeError):
-            return JsonResponse({"status": "error", "message": "Invalid reset link."})
-
 class CheckLoginStatus(View):
     """Handles checking login status for authenticated users."""
     def get(self, request):
         if request.user.is_authenticated:
             return JsonResponse(user_service.get_user_profile(request.user.id))
         return JsonResponse({"logged_in": False, "profile_photo_url": None})
+
+
+
+OTP_STORAGE = {}
+class PasswordResetView(View):
+    def get(self, request):
+        return render(request, 'enduser/home/password_reset.html')
+
+    def post(self, request):
+        try:
+            # Parse JSON body
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
+            confirm_password = data.get("confirm_password")
+
+            # Validation checks
+            if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
+                return JsonResponse({"success": False, "message": "OTP not verified or expired."}, status=400)
+
+            if password != confirm_password:
+                return JsonResponse({"success": False, "message": "Passwords do not match."}, status=400)
+
+            # Save the new password
+            user = User.objects.get(email=email)
+            user.password = make_password(password)
+            user.save()
+
+            # Clear OTP after password reset
+            del OTP_STORAGE[email]
+
+            return JsonResponse({"success": True, "message": "Password reset successfully."})
+
+        except User.DoesNotExist:
+            return JsonResponse({"success": False, "message": "User not found."}, status=400)
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)}, status=400)
+
+
+class ResetPasswordRequestOTPView(View):
+    def get(self, request):
+        email = request.GET.get("email")
+
+        if not email:
+            return JsonResponse({"success": False, "message": "Email is required."}, status=400)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"success": False, "message": "User not found."}, status=400)
+
+        otp = random.randint(100000, 999999)
+        OTP_STORAGE[email] = {"otp": otp, "verified": False, "timestamp": time.time()}
+
+        print(f"Your OTP for {email} is: {otp}")  # For debugging, remove in production
+
+        send_mail(
+            subject="Your OTP Code",
+            message=f"Your OTP is: {otp}",
+            from_email="your-email@example.com",  # Use appropriate email
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({"success": True, "message": f"An OTP has been sent to {email}. Please check your email."}, status=200)
+
+
+class ResetOtpVerificationView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        email = data.get("email")
+        otp = data.get("otp")
+
+        # Validate email and OTP
+        if not email or not otp:
+            return JsonResponse({"success": False, "message": "Email and OTP are required."}, status=400)
+
+        # Check OTP in cache
+        stored_otp = OTP_STORAGE.get(email, {}).get("otp")
+
+        if not stored_otp:
+            return JsonResponse({"success": False, "message": "OTP expired. Request a new one."}, status=400)
+
+        if str(stored_otp) != str(otp):
+            return JsonResponse({"success": False, "message": "Invalid OTP. Try again."}, status=400)
+
+        # Mark OTP as verified
+        OTP_STORAGE[email]["verified"] = True
+
+        return JsonResponse({"success": True, "message": "OTP verified. Proceed with password reset."})
