@@ -50,10 +50,6 @@ urlpatterns = [
 
     # Admin-Payment Management
     path('admin/payments', views.ManagePaymentListView.as_view(), name='manage_payment_list'),
-
-    # Theme
-    path('change-my-theme/', views.ChangeMyThemeView.as_view(), name='change_my_theme'),
-
    
  #GARAGE ----------------------------------------------------------------------->
     # Garage
