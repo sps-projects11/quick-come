@@ -19,11 +19,7 @@ class ManageWorkerListView(View):
         workers = workers_service.get_all_workers()
         for worker in workers:
             worker_user_id = user_service.get_user(worker.worker.id)
-            worker.worker_name = (
-                f"{worker_user_id.first_name} "
-                f"{(worker_user_id.middle_name + ' ') if worker_user_id.middle_name else ''}"
-                f"{worker_user_id.last_name}"
-            )
+            user_service.user_full_name(worker_user_id)
             worker.worker_image = worker_user_id.profile_photo_url
             worker.phone = worker_user_id.phone
             worker_garage = garage_service.get_garage(worker.garage.id)
