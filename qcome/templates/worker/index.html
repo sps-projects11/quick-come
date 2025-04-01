@@ -67,11 +67,11 @@
                 <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
                  </div>
             </div>
-            <a href="#" id="close"><i class="fas fa-times"></i></a>     
+            <a href="#" onclick="undo()" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>
     <div id="mobile">
-        <a id="profile-link" href="/sign-in/" style="text-decoration: none;color: black;">
+        <a id="profile-link" href="/sign-in/" style="text-decoration: none;color: black;display:block;">
             <li id="lg-bag">
             <i class="fas fa-user-circle" style="font-size: 30px;"></i>
                 
@@ -82,10 +82,17 @@
             <a href="/profile" style="display: block; padding: 8px;">Profile</a>
             <a href="/logout" style="display: block; padding: 8px; color: red;">Logout</a>
         </div>
-        <i id="bar" class="fas fa-outdent"></i>
+        <i id="bar" class="fas fa-outdent" onclick="open_slidebar()"></i>
     </div>
 </section>
 <!-- Navbar End -->
+
+<script>
+function open_slidebar(){
+    let profileLink = document.getElementById('profile-link');
+    profileLink.style.display="none";
+}
+</script>
 
 {% block content %}
 

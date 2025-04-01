@@ -70,7 +70,7 @@
             <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
              </div>
         </div>
-            <a href="#" id="close"><i class="fas fa-times"></i></a>     
+            <a href="#" onclick="undo()" id="close"><i class="fas fa-times"></i></a>     
         </ul>
     </div>
     <div id="mobile">
@@ -87,12 +87,10 @@
             <a href="/logout"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Logout</a>
              </div>
         </div>
-        <i id="bar" class="fas fa-outdent"></i>
+        <i id="bar" class="fas fa-outdent" onclick="open_slidebar()"></i>
     </div>
 </section>
 <!-- Navbar End -->
-
-
 
 
 {% block content %}

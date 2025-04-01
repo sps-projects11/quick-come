@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.logged_in) {
                 let profileLink = document.getElementById('profile-link');
                 profileLink.innerHTML = `
-                    <img id="profile-img" src="${data.profile_photo_url}" alt="Profile" 
+                    <img id="profile-img" src="${data.profile_photo_url}" alt="Profile style="dislay:block;" 
                         style="width:40px; height:40px; border-radius:50%; cursor:pointer;margin-left: 18px;">
                 `;
 
@@ -52,3 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+
+function open_slidebar(){
+    let profileLink = document.getElementById('profile-link');
+    profileLink.style.display="none";
+}
+function undo(){
+    let profileLink = document.getElementById('profile-link');
+    profileLink.style.display="block";
+}
