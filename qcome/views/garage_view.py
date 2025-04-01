@@ -186,11 +186,8 @@ class GarageUpdateView(View):
 @garage_required
 class GarageDeleteView(View):
     def post(self, request, garage_id):
-        """ Delete garage and redirect to home page """
-        garage = get_object_or_404(Garage, id=garage_id, garage_owner=request.user)
-        garage.is_active = False  # ✅ Mark as inactive
-        garage.save()
-        messages.success(request, "Garage deleted successfully!")
+        garage_service.toggle_garage_status(garage_id)
+        messages.success(request, SuccessMessage.S00016.value)
         return redirect('home')
    
      

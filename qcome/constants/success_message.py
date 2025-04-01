@@ -17,7 +17,7 @@ class SuccessMessage(Enum):
     S00013 = "Service deleted successfully."
     S00014 = "Successfully logged out"
     S00015 = "Email sent successfully!"
-    S00016 = ""
+    S00016 = "Garage Profile Delete Sucessfully!"
     S00017 = ""
     S00018 = ""
     S00019 = ""    
