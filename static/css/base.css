@@ -184,6 +184,9 @@ footer h4{
     padding-bottom: 20px;
     color: #000;
 }
+li{
+    list-style: none;
+}
 
 footer p{
     font-size: 13px;
@@ -279,14 +282,10 @@ footer .copyright {
         color: #222;
         font-size: 24px;
     }
-
+    #profile-link2{
+        display:none;
+    }
     #lg-search{
-        display: none;
-    }
-    #lg-bag{
-        display: none;
-    }
-    #lg-user{
         display: none;
     }
     
