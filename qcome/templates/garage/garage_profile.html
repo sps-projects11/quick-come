@@ -159,6 +159,10 @@
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(239, 35, 60, 0.3);
     }
+    .py-5 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -211,6 +215,18 @@
             margin-bottom: 8px;
         }
     }
+
+    
+    @media (max-width: 477px) {
+    #header {
+        padding: 0!important;
+    }
+}
+@media (max-width: 430px) {
+    #header a img {
+        width: 60px;
+    }
+}
 
     /* Animation classes */
     .animate-in {

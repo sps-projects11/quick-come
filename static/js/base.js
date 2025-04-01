@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 profileLinks.forEach(profileLink => {
                     profileLink.innerHTML = `
                         <img class="profile-img" src="${data.profile_photo_url}" 
-                            alt="Profile" style="width:40px; height:40px; border-radius:50%; cursor:pointer;margin-left: 18px;">
+                            alt="Profile" style="width:36px; height:36px; border-radius:50%; cursor:pointer;margin-left: 18px;">
                     `;
                 });
 
