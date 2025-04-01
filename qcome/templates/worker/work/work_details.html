@@ -94,108 +94,396 @@
        }
    </script>
 
-<style>
+   <style>
+    /* Base Styles */
     .wrapper {
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
         display: flex;
+        justify-content: center;
+        align-items: center;
         padding: 20px;
-        margin: auto;
-        height: 60vh;
+        min-height: 80vh;
+        background-color:aqua;
+        box-sizing: border-box;
     }
+
     .container {
         width: 100%;
         max-width: 600px;
         background: white;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        margin: auto;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
+
     .receipt-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 18px;
-        font-weight: bold;
+        margin-bottom: 20px;
+        position: relative;
+        flex-wrap: wrap;
     }
+
+    .back-btn {
+        cursor: pointer;
+        font-size: 20px;
+        color: #333;
+        margin-right: 15px;
+    }
+
+    .back-btn:hover {
+        color: #007bff;
+    }
+
     .title {
         font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+        flex-grow: 1;
+        text-align: center;
     }
+
     .status {
-        color: green;
+        color: #28a745;
         font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: rgba(40, 167, 69, 0.1);
+        font-size: 14px;
     }
+
+    .receipt-content {
+        padding: 15px 0;
+    }
+
     .item {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        align-items: flex-start;
+        gap: 12px;
         font-size: 16px;
-        margin: 8px 0;
+        margin: 15px 0;
+        line-height: 1.5;
+        flex-wrap: wrap;
     }
+
+    .item i {
+        color: #007bff;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .item strong {
+        min-width: 90px;
+    }
+
+    .item span {
+        word-break: break-word;
+    }
+
+    .item select {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .item img {
+        height: 30px;
+        width: auto;
+        margin-right: 10px;
+        object-fit: contain;
+        vertical-align: middle;
+    }
+
     .btn {
         display: block;
         text-align: center;
-        margin-top: 15px;
+        margin-top: 25px;
         background: #007bff;
         color: white;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 12px 20px;
+        border-radius: 8px;
         text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
     }
+
     .btn:hover {
         background: #0056b3;
     }
 
-    @media (max-width: 768px) {
+    /* Large Desktop Screens */
+    @media (min-width: 1200px) {
         .container {
-            width: 80%;
+            max-width: 700px;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+        }
+        
+        .item {
+            font-size: 18px;
+        }
+    }
+
+    /* Desktop Screens */
+    @media (max-width: 992px) {
+        .container {
+            max-width: 550px;
+        }
+    }
+
+    /* Tablet Screens */
+    @media (max-width: 768px) {
+        .wrapper {
             padding: 15px;
         }
+        
+        .container {
+            max-width: 500px;
+            padding: 20px;
+        }
+        
         .title {
-            font-size: 20px;
+            font-size: 22px;
         }
+        
+        .receipt-header {
+            margin-bottom: 15px;
+        }
+        
         .item {
-            font-size: 14px;
+            font-size: 15px;
+            margin: 12px 0;
         }
+        
         .btn {
+            padding: 10px 15px;
+            margin-top: 20px;
+        }
+    }
+
+    /* Small Tablets */
+    @media (max-width: 576px) {
+        .wrapper {
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 18px;
+            border-radius: 10px;
+        }
+        
+        .receipt-header {
+            /* Maintain row layout */
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+        }
+        
+        .title {
+            font-size: 18px;
+            margin: 0;
+            padding: 0 5px;
+        }
+        
+        .status {
+            font-size: 12px;
+            padding: 3px 8px;
+        }
+        
+        .back-btn {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .item {
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .btn {
+            margin-top: 15px;
+            width: 100%;
+        }
+    }
+    
+    /* Mobile Landscape */
+    @media (max-width: 480px) {
+        .wrapper {
             padding: 8px;
         }
-    }
-      @media (max-width:368px) {
-        .container{
-        width:100%;
-        padding:7%;
+        
+        .container {
+            padding: 20px;
         }
-      }
-      @media (max-width:350px) {
-        .container{
-            width:100%;
-            height:100%;
-            padding:7%;
-            }
-      }
-    @media (max-width:344px) {
-        .container{
-            width:100%;
-            height:95%;
-            padding:6%;
-       
-       .receipt-content{
-        padding:4px;
-       }
-     }
+        
+        .receipt-content {
+            padding: 10px 0;
+        }
+        
+        .receipt-header {
+            /* Reduce spacing */
+            margin-bottom: 12px;
+        }
+        
+        .title {
+            font-size: 16px;
+            /* Allow title to shrink */
+            flex-shrink: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .item {
+            font-size: 14px;
+            gap: 8px;
+        }
+        
+        .item i {
+            min-width: 16px;
+        }
+        
+        .item strong {
+            min-width: 80px;
+        }
     }
-@media (max-width:336px) {
-    .container{
-        width: 100%;
-       height:89%;
-       padding:2%;
+    
+    /* Mobile Portrait */
+    @media (max-width: 400px) {
+        .container {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .receipt-header {
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 15px;
+        }
+        
+        .status {
+            font-size: 11px;
+            padding: 2px 6px;
+        }
+        
+        .item {
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .btn {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
     }
-    .receipt-content{
-        padding:3px;
-       }
-}
+    
+    /* Small Mobile Devices */
+    @media (max-width: 350px) {
+        .wrapper {
+            padding: 21px;
+        }
+        
+        .container {
+            padding: 8px;
+        }
+        
+        .receipt-header {
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+        
+        .title {
+            font-size: 14px;
+            padding: 0 3px;
+        }
+        
+        .back-btn {
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .status {
+            font-size: 10px;
+            padding: 2px 5px;
+        }
+        
+        .item {
+            gap: 5px;
+            margin: 7px 0;
+        }
+        
+        .item strong {
+            min-width: 70px;
+        }
+        
+        .receipt-content {
+            padding: 5px 0;
+        }
+    }
+    @media (max-width: 349px) {
+        .wrapper {
+            padding: 11px;
+        }
+        
+        .container {
+            padding: 17px;
+        }
+        
+    }
+
+    
+    /* Extra Small Devices */
+    @media (max-width: 320px) {
+        .container {
+            padding: 22px;
+        }
+        
+        .receipt-header {
+            gap: 2px;
+        }
+        
+        .title {
+            font-size: 13px;
+        }
+        
+        .item {
+            font-size: 12px;
+        }
+        
+        .btn {
+            padding: 7px 10px;
+            font-size: 13px;
+        }
+    }
 </style>
+<script>
+    const theSection = document.getElementById('bar')
+    const closeSection = document.getElementById('close')
+    const navberSection = document.getElementById('navber')
+  
+    if(theSection){
+      theSection.addEventListener( 'click',()=>{
+          navberSection.classList.add('active')
+      })
+    }
+    if(closeSection){
+      closeSection.addEventListener('click',()=>{
+          navberSection.classList.remove('active')
+      })
+    }
+    document.getElementById('confirmDelete').addEventListener('click', function () {
+        document.getElementById('deleteForm').submit();
+      });
+</script>
 {% endblock %}
