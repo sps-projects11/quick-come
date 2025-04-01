@@ -262,5 +262,7 @@ def split_full_name(full_name):
 
 
 def user_full_name(user):
-    return f"{user.first_name} " f"{(user.middle_name + ' ') if user.middle_name else ''}" f"{user.last_name}"
+    if isinstance(user, int):
+        user = User.objects.get(id=user)
+    return f"{user.first_name} {(user.middle_name + ' ') if getattr(user, 'middle_name', None) else ''}{user.last_name}"
 

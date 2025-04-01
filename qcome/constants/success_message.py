@@ -26,7 +26,7 @@ class SuccessMessage(Enum):
     S00022 = "Worker Profile Create Successfully!"
     S00023 = "Worker Profile Update Successfully!"
     S00024 = "Worker Profile Delete Sucessfully!"
-    S00025 = ""
+    S00025 = "Service added successfully"
     S00026 = ""
     S00027 = ""
     S00028 = ""
