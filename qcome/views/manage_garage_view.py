@@ -22,13 +22,8 @@ class ManageGarageListView(View):
         for garage in garages:
             # Compute the vehicle type string if needed.
             garage.vehicle = Vehicle_Type(garage.vehicle_type).name if garage.vehicle_type else "N/A"
-            # Construct the owner's full name.
-            garage.garage_owner_name = (
-                f"{garage.garage_owner.first_name} "
-                f"{(garage.garage_owner.middle_name + ' ') if garage.garage_owner.middle_name else ''}"
-                f"{garage.garage_owner.last_name}"
-            )
-
+            garage.garage_owner_name = user_service.user_full_name(garage.garage_owner)
+            print(garage.garage_owner_name)
         # Pass the list of garage objects to the template.
         return render(request, 'adminuser/garage/garage_list.html', {'garages': garages, 'admin': admin_data})
 

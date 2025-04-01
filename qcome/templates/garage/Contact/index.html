@@ -1,12 +1,12 @@
-{% extends "garage/index.html" %}
-{% block title %}Quick Come Home{% endblock %}
+{% extends "enduser/base.html" %}
+{% block title %}Quick Come | Contact Us{% endblock %}
 {%load static %}
 {% block content %}
 
 
 <section id="page-header" class="about-header">
-    <h2><span style="color: #0f00ff; font-size: 80px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);">#Get in Touch</span> </h2>
-    <p><span style="color: white;background: #0000002b;padding: 10px;border-radius: 10px;">Have questions or need assistance? We're here to help! Reach out to us anytime, and our team will be happy to assist you. Your satisfaction is our priority!" 😊</span></p>
+    <h2><span id="conhead" style="color: #0f00ff; font-size: 80px;text-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);">#Get in Touch</span> </h2>
+    <p><span id="conpgf" style="color: white;background: #0000002b;padding: 10px;border-radius: 10px;">Have questions or need assistance? We're here to help! Reach out to us anytime, and our team will be happy to assist you. Your satisfaction is our priority!" 😊</span></p>
 </section>
 <section id="contact-details" class="section-p1">
     <div class="details">
@@ -25,15 +25,21 @@
     </div>
 </section>
 <section id="form-details">
-    <form action="">
+    <form method="post" id="contact-form">
         <span>LEAVE A MESSAGE</span>
         <h2>We love to hear from you</h2>
-        <input type="text" placeholder="Your Name">
-        <input type="text" placeholder="E-mail">
-        <input type="text" placeholder="Subject">
-        <textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
-        <button class="normal">Submit</button>
+        {% csrf_token %}
+        <input type="text" name="contacter_email" placeholder="E-mail">
+        <input type="text" name="contacter_subject" placeholder="Subject">
+        <textarea name="contacter_msg" cols="30" rows="10" placeholder="Your Message"></textarea>
+        <button class="normal" type="submit">Submit</button>
     </form>
+
+    <!-- Loader Overlay: hidden by default -->
+    <div id="loader-overlay" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    
     <div class="people">
         <div>
             <img src="\static\all-Pictures\banners\contact-avater.avif" alt="">
@@ -51,7 +57,42 @@
 </section>
   
 
+
 <style>
+
+    
+    /* Loader Overlay styling */
+    #loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5); /* semi-transparent background */
+      backdrop-filter: blur(5px); /* apply background blur */
+      z-index: 9999; /* ensure it's on top */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* Custom CSS Loader */
+    .loader {
+      border: 8px solid #f3f3f3; /* Light grey */
+      border-top: 8px solid #3498db; /* Blue color */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Keyframes for spinning animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+
 
     /* contact page */
 
@@ -242,6 +283,20 @@
     }
 }
 
+@media (max-width: 400px){
+    p{
+        padding: 20px !important;
+    }
+    #conhead{
+    font-size: 50px !important;
+    }
+    #conpgf{
+        padding: 20px !important;
+        /* font-size: 10px !important; */
+        background: none !important;
+    }
+}
+
 
 
 
@@ -299,7 +354,7 @@
 
 
 </style>
-{% comment %} Add The Js {% endcomment %}
+
 <script>
     const theSection = document.getElementById('bar')
     const closeSection = document.getElementById('close')
@@ -314,7 +369,25 @@
       closeSection.addEventListener('click',()=>{
           navberSection.classList.remove('active')
       })
-    }
-  
+    }      
   </script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contact-form');
+      const loaderOverlay = document.getElementById('loader-overlay');
+      
+      form.addEventListener('submit', function(e) {
+        // Show overlay with loader when form is submitted
+        loaderOverlay.style.display = 'flex';
+        // Optionally, disable the submit button to prevent multiple submissions:
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+      });
+    });
+  </script>
+  
+  
+
 {% endblock %}

@@ -94,7 +94,7 @@
        }
    </script>
 
-   <style>
+<style>
     .wrapper {
         justify-content: flex-start;
         align-items: center;
@@ -102,49 +102,100 @@
         display: flex;
         padding: 20px;
         margin: auto;
-        height: 90vh;
+        height: 60vh;
     }
-       .container {
-           width:40%;
-           background: white;
-           border-radius: 10px;
-           padding: 20px;
-           box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-           margin: auto;
+    .container {
+        width: 100%;
+        max-width: 600px;
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin: auto;
+    }
+    .receipt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .title {
+        font-size: 24px;
+    }
+    .status {
+        color: green;
+        font-weight: bold;
+    }
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        margin: 8px 0;
+    }
+    .btn {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .btn:hover {
+        background: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 80%;
+            padding: 15px;
+        }
+        .title {
+            font-size: 20px;
+        }
+        .item {
+            font-size: 14px;
+        }
+        .btn {
+            padding: 8px;
+        }
+    }
+      @media (max-width:368px) {
+        .container{
+        width:100%;
+        padding:7%;
+        }
+      }
+      @media (max-width:350px) {
+        .container{
+            width:100%;
+            height:100%;
+            padding:7%;
+            }
+      }
+    @media (max-width:344px) {
+        .container{
+            width:100%;
+            height:95%;
+            padding:6%;
+       
+       .receipt-content{
+        padding:4px;
        }
-       .receipt-header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           font-size: 18px;
-           font-weight: bold;
+     }
+    }
+@media (max-width:336px) {
+    .container{
+        width: 100%;
+       height:89%;
+       padding:2%;
+    }
+    .receipt-content{
+        padding:3px;
        }
-       .title {
-           font-size: 24px;
-       }
-       .status {
-           color: green;
-           font-weight: bold;
-       }
-       .item {
-           display: flex;
-           align-items: center;
-           gap: 8px;
-           font-size: 16px;
-           margin: 8px 0;
-       }
-       .btn {
-           display: block;
-           text-align: center;
-           margin-top: 15px;
-           background: #007bff;
-           color: white;
-           padding: 10px;
-           border-radius: 5px;
-           text-decoration: none;
-       }
-       .btn:hover {
-           background: #0056b3;
-       }
-   </style>
+}
+</style>
 {% endblock %}

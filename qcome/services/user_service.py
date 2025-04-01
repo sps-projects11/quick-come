@@ -118,13 +118,13 @@ def toggle_user_status(user_id):
     return user
    
 
-def user_phone_create(user, worker_phone):
-    user.phone = worker_phone
+def user_phone_create(user, phone):
+    user.phone = phone
     user.save()
 
 
-def user_profile_photo_create(user, worker_profile_photo_path):
-    user.profile_photo_url = worker_profile_photo_path
+def user_profile_photo_create(user, profile_photo_path):
+    user.profile_photo_url = profile_photo_path
     user.save()
 
 
@@ -232,3 +232,20 @@ def check_user_exist(email):
         return User.objects.get(email=email, is_active=True)
     except User.DoesNotExist:
         return None   # Return None if no user found
+    
+
+def split_full_name(full_name):
+    """Split full name into first, middle, and last names."""
+    name_parts = full_name.strip().split()
+
+    # Assigning names based on the number of parts
+    first_name = name_parts[0] if len(name_parts) > 0 else ''
+    middle_name = ' '.join(name_parts[1:-1]) if len(name_parts) > 2 else ''
+    last_name = name_parts[-1] if len(name_parts) > 1 else ''
+
+    return first_name, middle_name, last_name
+
+
+def user_full_name(user):
+    return f"{user.first_name} " f"{(user.middle_name + ' ') if user.middle_name else ''}" f"{user.last_name}"
+

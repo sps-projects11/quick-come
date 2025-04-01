@@ -6,7 +6,7 @@
         <div class="wrapper">
             <div class="delete_modal" style="display:none;">
                 <p id="warn">Are you sure you want to remove the service?</p>
-                <div style="padding: 20px; height: 70%;">
+                <div style="padding: 20px; height: 70%;" id="button">
                     <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     <div class="cancel" onclick="close_modal()">Cancel</div>
                     <div class="delete-btn" onclick="removeService()">Delete</div>
