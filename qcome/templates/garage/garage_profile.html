@@ -232,12 +232,9 @@
 <div class="container py-5">
     <div class="profile-card animate__animated animate__fadeInUp">
         <div class="profile-header">
+            <img src="{{ garage_owner_image|default:'/static/all-Pictures/user.jpg' }}" class="profile-img" alt="Garage Image">
             <div class="profile-image-container">
-                {% if garage.garage_image %}
-                    <img src="{{ garage.garage_image }}" class="profile-img" alt="Garage Image">
-                {% else %}
-                    <img src="{% static 'all-Pictures/user.jpg' %}" class="profile-img" alt="No Image">
-                {% endif %}
+                    <img src="{{ garage.garage_image|default:'/static/all-Pictures/user.jpg' }}" class="profile-img" alt="No Image">
             </div>
             <h1 class="profile-title">{{ garage.garage_name }}</h1>
         </div>

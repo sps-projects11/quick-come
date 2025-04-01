@@ -1,17 +1,13 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from qcome.constants.default_values import Role, Vehicle_Type,PayStatus
+from qcome.constants.default_values import Vehicle_Type
 from qcome.decorators import auth_required, enduser_required,garage_required
-from qcome.services import booking_service, garage_service,workers_service,payment_service, user_service
+from qcome.services import booking_service, garage_service, workers_service, user_service
 from qcome.models import Garage
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from qcome.package.file_management import save_uploaded_file
-from django.http import JsonResponse
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-import json
 
 
 @auth_required(login_url='/sign-in/')
@@ -69,36 +65,22 @@ class GarageCreateView(View):
 @garage_required
 class GarageProfileView(View):
     def get(self, request):
-        """ Display the garage profile for the logged-in user """
-        if not request.user.is_authenticated:
-            return redirect('login')  # Redirect if not logged in
+        garage = garage_service.get_garage_by_garage_owner(request.user)
+        owner_name = user_service.user_full_name(request.user)
 
-        # Fetch only active garages for the user
-        garages = Garage.objects.filter(garage_owner=request.user, is_active=True)
-
-        if not garages.exists():
-            messages.error(request, "No active garage found.")
-            return redirect('garage_create')  # Redirect to create a new garage
-
-        # If multiple active garages exist, pick the first one
-        garage = garages.first()
-        owner_name = garage.garage_owner.get_full_name() or garage.garage_owner.email
-
-        # Mapping vehicle type integer values to readable names
         vehicle_type_mapping = {
             Vehicle_Type.CAR.value: "Car",
             Vehicle_Type.BIKE.value: "Bike",
             Vehicle_Type.BOTH.value: "Car & Bike",
         }
 
-        # Ensure the correct name is fetched
-        vehicle_type_name = vehicle_type_mapping.get(int(garage.vehicle_type), "Unknown")
-
+        vehicle_type_name = vehicle_type_name = vehicle_type_mapping.get(int(garage.vehicle_type), "Unknown")
 
         context = {
             'garage': garage,
             'garage_owner': owner_name,
-            'vehicle_type_name': vehicle_type_name,  # Send the mapped name
+            'garage_owner_image': request.user.profile_photo_url,
+            'vehicle_type_name': vehicle_type_name,
         }
         return render(request, 'garage/garage_profile.html', context)
 
@@ -149,6 +131,7 @@ class GarageUpdateView(View):
         return render(request, 'garage/profile/garage_profile_update.html', context)
 
     def post(self, request, garage_id):
+        garage = garage_service.get_garage(garage_id)
         garage_name = request.POST.get('garage_name')
         address = request.POST.get('address')
         phone = request.POST.get('phone')
@@ -158,7 +141,7 @@ class GarageUpdateView(View):
         # Handle image update
         garage_profile_photo = request.FILES.get('garage_image')
 
-        garage_profile_photo_path = ''
+        garage_profile_photo_path = garage.garage_image
 
         if garage_profile_photo:
             garage_profile_photo_path = save_uploaded_file(garage_profile_photo, subfolder="garage-profile-photo")
@@ -168,7 +151,7 @@ class GarageUpdateView(View):
         if garage:
             garage_owner_name = request.POST.get('garage_owner_name')
             garage_owner_profile_photo = request.FILES.get('garage_owner_profile_photo')
-            garage_owner_profile_photo_path = ''
+            garage_owner_profile_photo_path = request.user.profile_photo_url
             if garage_owner_profile_photo:
                 garage_owner_profile_photo_path = save_uploaded_file(garage_owner_profile_photo, subfolder="profile-images")
 

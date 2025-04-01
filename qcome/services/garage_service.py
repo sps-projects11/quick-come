@@ -133,3 +133,7 @@ def get_all_garages_exclude_worker_garage(worker_garage):
 
 def check_existing_garage(user):
     return Garage.objects.filter(garage_owner=user).first()
+
+
+def get_garage_by_garage_owner(user):
+    return Garage.objects.get(garage_owner = user, is_active = True)
