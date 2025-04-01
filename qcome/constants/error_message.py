@@ -25,7 +25,7 @@ class ErrorMessage(Enum):
     E00021 = "Invalid service selection."
     E00022 = "Something went wrong!"
     E00023 = "Booking not found!"
-    E00024 = ""
+    E00024 = "Error updating User! Please try again."
     E00025 = ""
     E00026 = ""
     E00027 = ""

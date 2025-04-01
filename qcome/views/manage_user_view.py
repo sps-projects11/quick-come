@@ -95,13 +95,16 @@ class ManageUserUpdateView(View):
         if profile_photo:
             profile_photo_path = save_uploaded_file(profile_photo, 'profile-images')
 
-        admin_service.admin_profile_update(
+        user = user_service.user_profile_update(
             user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo_path
         )
 
-        messages.success(request, SuccessMessage.S00002.value)
-        return redirect('manage_users')
-    
+        if user:
+            messages.success(request, SuccessMessage.S00002.value)
+            return redirect('manage_users')
+        else:
+            messages.error(request, ErrorMessage.E00024.value)
+            return redirect('manage_users')
 
 
 @auth_required(login_url='/login/admin/')

@@ -94,6 +94,20 @@ def user_create(first_name, middle_name, last_name, dob, email, phone, gender, p
        password = user_password
     )
 
+def user_profile_update(user, first_name, middle_name, last_name, email, phone, gender, dob, profile_photo):
+    
+    user.first_name = first_name
+    user.middle_name = middle_name
+    user.last_name = last_name
+    user.email = email
+    user.phone = phone
+    user.gender = gender
+    user.dob = dob
+    user.profile_photo_url = profile_photo
+    user.updated_by = user
+    user.save()
+    return user
+
 
 def create_user_initially(first_name, last_name, dob, email, password):
     return User.objects.create(
