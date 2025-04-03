@@ -1,5 +1,5 @@
 from ..models import Garage, Booking, ServiceCatalog,Work
-from ..services import workers_service,work_service
+from ..services import workers_service, work_service, user_service
 from qcome.constants.default_values import Vehicle_Type,Status
 
 def get_garage_bookings():
@@ -12,7 +12,7 @@ def get_garage_bookings():
         booking.status=work_service.get_status_of_work(booking.id)
         # Add customer details
         if booking.customer:
-            booking.customer_name = f"{booking.customer.first_name} {booking.customer.last_name}"
+            booking.customer_name = user_service.user_full_name(booking.customer)
             booking.customer_phone = getattr(booking.customer, "phone", "No phone")
         else:
             booking.customer_name = "No Customer"
@@ -102,11 +102,11 @@ def get_all_garage_works(garage):
         bookings = [
             {
                 'id':booking.id,
-                'customer_name': f"{booking.customer.first_name} {booking.customer.last_name}",
+                'customer_name': user_service.user_full_name(booking.customer),
                 'description':booking.description,
                 'customer_phone': booking.customer.phone,
                 'services': list(ServiceCatalog.objects.filter(id__in=booking.service).values_list("service_name", flat=True)),
-                'assigned_worker': f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}",
+                'assigned_worker': user_service.user_full_name(booking.assigned_worker.worker),
                 'vehicle_type':Vehicle_Type(booking.vehicle_type).name,
                 'current_location':booking.current_location,
             }
