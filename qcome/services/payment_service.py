@@ -1,19 +1,19 @@
 import json
 from django.shortcuts import get_object_or_404
-from qcome.models import Payment, Booking,User,Worker
+from qcome.models import Payment, Booking, User, Worker
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from ..constants import PayType,PayStatus,Status
+from ..constants import PayType, PayStatus, Status
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from qcome.services import booking_service
+from qcome.services import booking_service, user_service
 
 
     
 def get_all_payments_created_by(user_id):
     """Retrieve all payments"""
     payments = Payment.objects.filter(created_by=user_id, is_active=True).values(
-        'id', 'amount', 'type', 'paid_at', 'created_by__first_name', 'created_by__last_name','booking_id',
+        'id', 'amount', 'type', 'paid_at', 'created_by', 'booking_id',
     ).order_by('-created_at')
     return list(payments)
 
@@ -78,8 +78,8 @@ def create_payment(request, booking_id, user_id):
             "amount": payment.amount,
             "work_status":Status(booking_service.get_booking_status(booking.id)).name,
             "type": PayType(payment.type).name,
-            "paid_by": f"{booking.customer.first_name} {booking.customer.last_name}".strip(),
-            "paid_to": f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}" if PayType.CASH.value == payment.type else "Quick-come Company",
+            "paid_by": user_service.user_full_name(booking.customer),
+            "paid_to": user_service.user_full_name(booking.assigned_worker.worker) if PayType.CASH.value == payment.type else "Quick-come Company",
         }
 
         # Log the payment data to verify it
@@ -150,8 +150,8 @@ def get_worker_payments(worker_user_id):
                 "amount": payment.amount,
                 "paid_at": payment.paid_at.strftime('%Y-%m-%d'),
                 "booking_id": booking.id,
-                "customer": f"{booking.customer.first_name} {booking.customer.last_name}",
-                "pay_type":PayType(payment.type).name,
+                "customer": user_service.user_full_name(booking.customer),
+                "pay_type": PayType(payment.type).name,
             })
 
     return payments
@@ -168,11 +168,9 @@ def get_all_payments():
             'amount', 
             'type', 
             'paid_at', 
-            'created_by__first_name', 
-            'created_by__last_name',
+            'created_by',
             'booking_id',
-            'booking_id__assigned_worker__worker__first_name',
-            'booking_id__assigned_worker__worker__last_name',
+            'booking_id__assigned_worker__worker',
         )
     
     payments_data = []
@@ -182,14 +180,12 @@ def get_all_payments():
         # Format the paid_at field as a string
         paid_at = payment['paid_at'].strftime('%Y-%m-%d %H:%M:%S') if payment['paid_at'] else "N/A"
         # Combine the created_by first and last name
-        payment_by = f"{payment.get('created_by__first_name', '')} {payment.get('created_by__last_name', '')}".strip()
+        payment_by = user_service.user_full_name(payment.get('created_by'))
         
-        # Determine 'paid_to' from the booking's assigned worker
-        assigned_worker_first_name = payment.get('booking_id__assigned_worker__worker__first_name')
-        assigned_worker_last_name = payment.get('booking_id__assigned_worker__worker__last_name')
+        assigned_worker = payment.get('booking_id__assigned_worker__worker')
         
-        if assigned_worker_first_name:
-            paid_to = f"{assigned_worker_first_name} {assigned_worker_last_name}".strip()
+        if assigned_worker:
+            paid_to = user_service.user_full_name(assigned_worker)
         else:
             paid_to = "Unknown"
         

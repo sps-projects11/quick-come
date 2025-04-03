@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views import View
-from qcome.services import payment_service,booking_service,workers_service,garage_service
+from qcome.services import payment_service, booking_service, workers_service, garage_service, user_service
 from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required, worker_required
 from ..constants import Role,PayType,PayStatus
@@ -21,14 +21,15 @@ class PaymentListView(View):
                 'amount': payment['amount'],
                 'type': PayType(payment['type']).name if payment['type'] else "N/A",
                 'time': payment['paid_at'].strftime('%Y-%m-%d %H:%M:%S') if payment['paid_at'] else "N/A",
-                'payment_by': f"{payment.get('created_by__first_name', 'Unknown')} {payment.get('created_by__last_name', '')}".strip(),
+                'payment_by': user_service.user_full_name(payment.get('created_by')),
                 'booking_id': payment['booking_id']
             }
             # Determine 'paid_to' field
             if payment['type'] == PayType.CASH.value:
                 booking = booking_service.get_booking(payment['booking_id'])
                 if booking and booking.assigned_worker:
-                    entry['paid_to'] = f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}".strip()
+                    entry['paid_to'] = user_service.user_full_name(booking.assigned_worker.worker)
+
                 else:
                     entry['paid_to'] = "Unknown"
             else:
@@ -62,17 +63,17 @@ class PaymentReceipt(View):
         if payment['type'] == PayType.CASH.value:
             booking = booking_service.get_booking(payment['booking_id'])
             if booking and booking.assigned_worker:
-                paid_to = f"{booking.assigned_worker.worker.first_name} {booking.assigned_worker.worker.last_name}".strip()
-                paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
+                paid_to = user_service.user_full_name(booking.assigned_worker.worker)
+                paid_by = user_service.user_full_name(booking.customer)
             else:
                 paid_to = "Unknown"
-                paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
+                paid_by = user_service.user_full_name(booking.customer)
             type="CASH"
         else:
             booking = booking_service.get_booking(payment['booking_id'])
             paid_to = "Quick-come Company"
             type="UPI"
-            paid_by = f"{booking.customer.first_name} {booking.customer.last_name}".strip()
+            paid_by = user_service.user_full_name(booking.customer)
         payment["paid_to"]=paid_to
         payment["type"]=type
         payment["paid_by"]=paid_by
