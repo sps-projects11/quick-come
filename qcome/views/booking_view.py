@@ -4,7 +4,7 @@ from ..decorators import auth_required, role_required
 from ..constants import Role
 from django.contrib import messages
 from ..models import Booking,ServiceCatalog
-from ..services import booking_service 
+from ..services import booking_service, user_service
 from ..decorators import auth_required, role_required
 from qcome.constants.default_values import Vehicle_Type,Status
 from django.contrib import messages 
@@ -48,7 +48,7 @@ class BookingCreateView(View):
             selected_service = ServiceCatalog.objects.filter(id=service_id, is_active=True).first()
 
         return render(request, 'enduser/Booking/booking_create.html', {
-            'user_name': f"{user.first_name} {user.last_name}",
+            'user_name': user_service.user_full_name(user),
             'user_phone': user.phone if user.phone else "",  # Default text
             'services': services,  # Pass services to template
             'selected_service': selected_service  # Pass selected service to prefill
@@ -73,7 +73,7 @@ class BookingCreateView(View):
                     "type": "send_booking_update",  # Matches method in BookingConsumer
                     "booking": {  # ✅ Correct key
                         "id": booking.id,
-                        "customer_name": f"{user.first_name} {user.last_name}",
+                        "customer_name": user_service.user_full_name(user),
                         "customer_phone": booking.customer.phone,
                         "vehicle_type": Vehicle_Type(int(booking.vehicle_type)).name,
                         "current_location": booking.current_location,
@@ -102,7 +102,7 @@ class BookingUpdateView(View):
             services = ServiceCatalog.objects.filter(is_active=True)  # Get active services
 
             return render(request, 'enduser/Booking/booking_create.html', {  # Reuse booking_create.html
-                'user_name': f"{user.first_name} {user.last_name}",
+                'user_name': user_service.user_full_name(user),
                 'user_phone': user.phone if user.phone else "",
                 'services': services,
                 'booking': booking  # Pass booking object to the form
