@@ -55,7 +55,7 @@ class UserSignupView(View):
         del OTP_STORAGE[email]  # Remove OTP after successful registration
 
         if user:
-            return JsonResponse(success_response(SuccessMessage.S00001.value, redirect="/sign-in/"), status=200)
+            return JsonResponse(success_response(SuccessMessage.S00028.value, redirect="/sign-in/"), status=200)
         else:
             return JsonResponse(error_response(ErrorMessage.E00019.value, redirect="/sign-up/"), status=200)
     

@@ -32,7 +32,7 @@ class ErrorMessage(Enum):
     E00028 = "OTP not verified or expired."
     E00029 = "Email and OTP are required."
     E00030 = "You can only change your own password."
-    E00031 = ""
+    E00031 = "Service ID is required"
     E00032 = ""
     E00033 = ""
     E00034 = ""

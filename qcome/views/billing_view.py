@@ -4,6 +4,10 @@ from ..decorators import auth_required, worker_required
 from ..services import booking_service,work_service
 from django.http import JsonResponse
 import json
+from ..constants.success_message import SuccessMessage
+from ..constants.error_message import ErrorMessage
+from ..package.response import success_response,error_response
+
 
 
 @auth_required(login_url='/sign-in/')
@@ -47,37 +51,42 @@ class BillingUpdate(View):
             service_id = data.get("service_id")
 
             if not service_id:
-                return JsonResponse({"success": False, "error": "Missing service_id"}, status=400)
+                return JsonResponse(error_response(ErrorMessage.E00031.value),status=400)
 
             response = booking_service.add_service_to_booking(booking_id, service_id)
-            status_code = 200 if response["success"] else 400
 
-            return JsonResponse(response, status=status_code)
+            if response["success"]:
+                return JsonResponse(success_response(response.get("message")), status=200)
+            else:
+                return JsonResponse(error_response(response.get("error")),status=404)
 
         except json.JSONDecodeError:
-            return JsonResponse({"success": False, "error": "Invalid JSON data"}, status=400)
+            return JsonResponse(error_response("Invalid JSON data"),status=400)
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-        
+            return JsonResponse(error_response(str(e)),status=500)
+
+
 @auth_required(login_url='/sign-in/')
 @worker_required
 class BillingDelete(View):
     def delete(self, request, booking_id):
         try:
             data = json.loads(request.body)
-            service_id = data.get("service_id")  # ✅ Corrected key
+            service_id = data.get("service_id")
 
             if not service_id:
-                return JsonResponse({"success": False, "error": "Service ID is required"}, status=400)
+                return JsonResponse(error_response(ErrorMessage.E00031.value),status=400)
 
             # Call service layer for deletion
             response = booking_service.remove_service_from_booking(booking_id, service_id)
 
-            status_code = 200 if response["success"] else 404
-            return JsonResponse(response, status=status_code)
+            if response["success"]:
+                return JsonResponse(success_response(SuccessMessage.S00029.value),status=200)
+            else:
+                return JsonResponse(error_response(response.get("error")),status=404)
 
         except json.JSONDecodeError:
-            return JsonResponse({"success": False, "error": "Invalid JSON data"}, status=400)
+            return JsonResponse(error_response("Invalid JSON data"),status=400)
 
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
+            return JsonResponse(error_response(str(e)),status=500)
