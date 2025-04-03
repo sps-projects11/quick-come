@@ -338,6 +338,14 @@ footer .copyright {
         flex-wrap: wrap !important;
         gap: 0 !important;
     }
+    #profile-dropdown{
+        top: 60px !important;
+        right: 10px  !important;
+        width: 190px !important;
+    }
+    .p-menu{
+        width: 88% !important;
+    }
    
 }
 
@@ -433,13 +441,39 @@ footer .copyright {
     .join-us {
         display: block !important;
     }
+
+    #profile-dropdown{
+        width: 160px !important;
+        top: 44px !important;
+        right: 8px  !important;
+    }
+    .p-menu{
+        font-size: 14px !important;
+        padding: 0px 0px !important;
+    }
 } 
+
+@media (max-width: 400px){
+    #profile-dropdown{
+        width: 160px !important;
+        top: 44px !important;
+        right: 8px  !important;
+    }
+    .p-menu{
+        font-size: 14px !important;
+        padding: 0px 0px !important;
+        width: 85% !important;
+    }
+
+}
+
+
 
 #profile-dropdown{
     display: none;
     position: fixed;
-    top: 64px;
-    right: 38px;
+    top: 60px;
+    right: 6px;
     background: white;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;

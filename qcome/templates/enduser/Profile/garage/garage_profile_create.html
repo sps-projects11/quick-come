@@ -2,301 +2,448 @@
 {% block title %}Garage Profile Create{% endblock %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
-<section style="height: 100vh;">
-<div class="container">
-    <div class="garage-form">
-        <h2>Create Garage Profile</h2>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --primary-hover: #3a56d4;
+        --secondary-color: #3f37c9;
+        --light-gray: #f8f9fa;
+        --border-color: #e9ecef;
+        --text-dark: #212529;
+        --text-light: #6c757d;
+    }
+
+    .create-garage-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px);
+        background-color: #f5f7ff;
+        padding: 2rem;
+    }
+
+    .garage-form-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 600px;
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .garage-form-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .form-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .form-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: var(--primary-color);
+        margin: 0.5rem auto 0;
+        border-radius: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        outline: none;
+    }
+
+    .profile-upload-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-picture-wrapper {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        text-align: center;
+        padding: 8px 0;
+        font-size: 0.9rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-picture-wrapper:hover .upload-overlay {
+        opacity: 1;
+    }
+
+    .image-upload-box {
+        border: 2px dashed var(--border-color);
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .image-upload-box:hover {
+        border-color: var(--primary-color);
+        background-color: rgba(67, 97, 238, 0.05);
+    }
+
+    .upload-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-text {
+        color: var(--text-light);
+        margin-bottom: 0;
+    }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-top: 1rem;
+        display: none;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(135deg, var(--primary-hover), #3527d1);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    /* Remove photo button */
+    .remove-photo-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background: rgba(220, 53, 69, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+        border: none;
+    }
+
+    .profile-picture-wrapper:hover .remove-photo-btn {
+        opacity: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .create-garage-container {
+            padding: 1rem;
+        }
+        
+        .garage-form-card {
+            padding: 1.5rem;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-picture-wrapper {
+            width: 120px;
+            height: 120px;
+        }
+    }
+</style>
+
+<div class="create-garage-container">
+    <div class="garage-form-card">
+        <h1 class="form-title">{% if garage %}Update Garage{% else %}Create Garage{% endif %}</h1>
+        
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-4 text-center">
-                <div class="profile-picture-container position-relative d-inline-block" style="cursor: pointer;">
-                  <img src="{{ user.profile_photo_url | default:'/static/all-Pictures/user.jpg' }}" 
-                       alt="Profile Photo" id="profilePreview" class="rounded-circle" 
-                       style="width:150px; height:150px; object-fit:cover;">
-                  <div class="profile-plus-icon position-absolute" style="bottom: 10px; right: 10px; z-index: 10;">
-                    <i class="bi bi-plus-circle-fill text-white" style="font-size:1.5rem; border-radius: 50%; padding: 5px;"></i>
-                  </div>
-                    <!-- Remove icon: shown only when the container has "has-image" class -->
-                    <div id="removePhotoIcon" class="remove-photo-icon">
-                        <i class="bi bi-x-lg"></i>
+            
+            <!-- Profile Photo Upload -->
+            <div class="profile-upload-container">
+                <div class="profile-picture-wrapper" id="profileUploadContainer">
+                    <img src="{{ user.profile_photo_url|default:'/static/all-Pictures/user.jpg' }}" 
+                         alt="Profile Photo" 
+                         class="profile-image" 
+                         id="profilePreview">
+                    <div class="upload-overlay">
+                        <i class="fas fa-camera"></i> Change Photo
                     </div>
+                    <button type="button" class="remove-photo-btn" id="removePhotoBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <input type="file" 
+                           class="d-none" 
+                           id="id_garage_owner_profile_photo" 
+                           name="garage_owner_profile_photo" 
+                           accept="image/*">
                 </div>
-                <!-- Hidden file input -->
-                <input type="file" class="d-none" id="id_garage_owner_profile_photo" name="garage_owner_profile_photo" accept="image/*">
-              </div>
+            </div>
 
-            <div class="input-group">
-                <label>Garage Owner</label>
-                <input type="text" placeholder="Enter Owner Name" name="garage_owner_name" value="{{ user.get_full_name|default:user.email }}" required>
+            <!-- Garage Owner Name -->
+            <div class="form-group">
+                <label for="garage_owner_name" class="form-label">Garage Owner</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="garage_owner_name" 
+                       name="garage_owner_name" 
+                       value="{{ user.get_full_name|default:user.email }}" 
+                       placeholder="Enter Owner Name" 
+                       required>
             </div>
 
             <!-- Garage Name -->
-            <div class="input-group">
-                <label>Garage Name</label>
-                <input type="text" name="garage_name" value="{{ garage.garage_name|default_if_none:'' }}" placeholder="Enter Garage Name" required>
+            <div class="form-group">
+                <label for="garage_name" class="form-label">Garage Name</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="garage_name" 
+                       name="garage_name" 
+                       value="{{ garage.garage_name|default_if_none:'' }}" 
+                       placeholder="Enter Garage Name" 
+                       required>
             </div>
 
             <!-- Garage Image Upload -->
-            <div class="input-group">
-                <label>Garage Image</label>
-                <div class="upload-box" id="image_upload_area">
-                    <p>Click to upload image</p>
-                    <input type="file" name="garage_image" id="garage_image" accept="image/*" hidden>
+            <div class="form-group">
+                <label class="form-label">Garage Image</label>
+                <div class="image-upload-box" id="imageUploadBox">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p class="upload-text">Click to upload garage image</p>
+                    <input type="file" 
+                           name="garage_image" 
+                           id="garage_image" 
+                           accept="image/*" 
+                           hidden>
                 </div>
-
+                
                 <!-- Image Preview -->
-                <img id="preview_image" class="hidden preview-img" style="width: 100px; height: auto;">
-
-                <!-- Show previously uploaded image -->
+                <img id="previewImage" class="image-preview" alt="Garage Image Preview">
+                
+                <!-- Show previously uploaded image if exists -->
                 {% if garage.garage_image %}
-                    <img src="{{ garage.garage_image.url }}" id="uploaded_image" alt="Garage Image" style="width: 100px; height: auto;">
-                {% else %}
-                    <p>No image uploaded</p>
+                    <img src="{{ garage.garage_image.url }}" 
+                         id="uploadedImage" 
+                         class="image-preview" 
+                         alt="Current Garage Image"
+                         style="display: block;">
                 {% endif %}
             </div>
 
             <!-- Address -->
-            <div class="input-group">
-                <label>Address</label>
-                <input type="text" name="address" value="{{ garage.address|default_if_none:'' }}" placeholder="Enter Address" required>
+            <div class="form-group">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="address" 
+                       name="address" 
+                       value="{{ garage.address|default_if_none:'' }}" 
+                       placeholder="Enter Address" 
+                       required>
             </div>
 
             <!-- Phone Number -->
-            <div class="input-group">
-                <label>Phone</label>
-                <input type="text" name="phone" value="{{ garage.phone|default_if_none:'' }}" placeholder="Enter Phone Number" maxlength="10" required>
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" 
+                       class="form-control" 
+                       id="phone" 
+                       name="phone" 
+                       value="{{ garage.phone|default_if_none:'' }}" 
+                       placeholder="Enter Phone Number" 
+                       maxlength="10" 
+                       required>
             </div>
 
-            <!-- Vehicle Type Dropdown -->
-            <div class="input-group">
-                <label>Vehicle Type</label>
-                <select name="vehicle_type" required>
+            <!-- Vehicle Type -->
+            <div class="form-group">
+                <label for="vehicle_type" class="form-label">Vehicle Type</label>
+                <select class="form-control" id="vehicle_type" name="vehicle_type" required>
                     <option value="" selected disabled>Select Vehicle Type</option>
                     <option value="1" {% if booking.vehicle_type == "1" %}selected{% endif %}>Car</option>
                     <option value="2" {% if booking.vehicle_type == "2" %}selected{% endif %}>Bike</option>
                     <option value="3" {% if booking.vehicle_type == "3" %}selected{% endif %}>Bike & Car</option>
-                    <!-- {% for value, name in vehicle_types %}
-                        <option value="{{ value }}" {% if garage.vehicle_type == value %}selected{% endif %}>{{ name }}</option>
-                    {% endfor %} -->
                 </select>
             </div>
 
             <!-- Garage AC -->
-            <div class="input-group">
-                <label>Garage AC</label>
-                <input type="text" name="garage_ac" value="{{ garage.garage_ac|default_if_none:'' }}" placeholder="Enter Garage AC Info" required>
+            <div class="form-group">
+                <label for="garage_ac" class="form-label">Garage AC</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="garage_ac" 
+                       name="garage_ac" 
+                       value="{{ garage.garage_ac|default_if_none:'' }}" 
+                       placeholder="Enter Garage AC Info" 
+                       required>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="submit-btn">{% if garage %}Update Garage{% else %}Create Garage{% endif %}</button>
+            <button type="submit" class="submit-btn">
+                {% if garage %}
+                    <i class="fas fa-save"></i> Update Garage
+                {% else %}
+                    <i class="fas fa-plus-circle"></i> Create Garage
+                {% endif %}
+            </button>
         </form>
     </div>
 </div>
-</section>
 
-<!-- JavaScript for Image Preview -->
 <script>
-    document.getElementById("image_upload_area").addEventListener("click", function () {
-        document.getElementById("garage_image").click();
+    // Profile picture upload functionality
+    const profileUploadContainer = document.getElementById('profileUploadContainer');
+    const profileFileInput = document.getElementById('id_garage_owner_profile_photo');
+    const profilePreview = document.getElementById('profilePreview');
+    const removePhotoBtn = document.getElementById('removePhotoBtn');
+    const defaultProfileImage = "{% static 'all-Pictures/user.jpg' %}";
+
+    profileUploadContainer.addEventListener('click', () => {
+        profileFileInput.click();
     });
 
-    document.getElementById("garage_image").addEventListener("change", function (event) {
-        const file = event.target.files[0];
+    profileFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function (e) {
-                let preview = document.getElementById("preview_image");
-                preview.src = e.target.result;
-                preview.classList.remove("hidden");
+            reader.onload = (event) => {
+                profilePreview.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-                let uploadedImg = document.getElementById("uploaded_image");
-                if (uploadedImg) {
-                    uploadedImg.style.display = "none";
+    removePhotoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profilePreview.src = defaultProfileImage;
+        profileFileInput.value = '';
+    });
+
+    // Garage image upload functionality
+    const imageUploadBox = document.getElementById('imageUploadBox');
+    const garageImageInput = document.getElementById('garage_image');
+    const previewImage = document.getElementById('previewImage');
+    const uploadedImage = document.getElementById('uploadedImage');
+
+    imageUploadBox.addEventListener('click', () => {
+        garageImageInput.click();
+    });
+
+    garageImageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                previewImage.src = event.target.result;
+                previewImage.style.display = 'block';
+                if (uploadedImage) {
+                    uploadedImage.style.display = 'none';
                 }
             };
             reader.readAsDataURL(file);
         }
     });
 
-// Navbar Toggle Script
-const theSection = document.getElementById('bar')
-const closeSection = document.getElementById('close')
-const navberSection = document.getElementById('navber')
+    // Navbar toggle functionality
+    const theSection = document.getElementById('bar');
+    const closeSection = document.getElementById('close');
+    const navberSection = document.getElementById('navber');
 
-if(theSection){
-  theSection.addEventListener( 'click',()=>{
-      navberSection.classList.add('active')
-  })
-}
-if(closeSection){
-  closeSection.addEventListener('click',()=>{
-      navberSection.classList.remove('active')
-  })
-}
+    if (theSection) {
+        theSection.addEventListener('click', () => {
+            navberSection.classList.add('active');
+        });
+    }
+    if (closeSection) {
+        closeSection.addEventListener('click', () => {
+            navberSection.classList.remove('active');
+        });
+    }
 </script>
-
-<style>
-    /* Container */
-/* Centered Form Container */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 100px); /* Adjust to fit footer */
-    padding: 20px;
-
-}
-
-/* Form Card - Prevents Overflow */
-.garage-form {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    max-height: 80vh; /* Prevents footer overlap */
-    overflow-y: auto; /* Scroll only if needed */
-    scrollbar-width: none;
-}
-
-/* Title */
-.garage-form h2 {
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Input Group */
-.input-group {
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.input-group input, 
-.input-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-}
-
-/* Upload Box */
-.upload-box {
-    width: 100%;
-    height: 150px;
-    border: 2px dashed #aaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    cursor: pointer;
-    color: #666;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-
-.upload-box:hover {
-    border-color: #007bff;
-    color: #007bff;
-}
-
-/* Preview Image */
-.preview-img {
-    width: 100px;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 10px;
-}
-
-/* Submit Button */
-.submit-btn {
-    width: 100%;
-    background: #007bff;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.submit-btn:hover {
-    background: #0056b3;
-}
-
-/* Footer Stays at Bottom */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-
-
-/* Prevent Extra Scroll on Small Screens */
-@media (max-width: 768px) {
-    .garage-form {
-        max-width: 100%;
-        max-height: 90vh; 
-    }
-}
-
-
-</style>
-
-
-<script type="module">
-    import { initProfileUploader } from "{% static 'js/profileUploader.js' %}";
-    document.addEventListener("DOMContentLoaded", () => {
-      initProfileUploader({
-        profileContainerSelector: '.profile-picture-container',
-        fileInputId: 'id_garage_owner_profile_photo',
-        profilePreviewId: 'profilePreview',
-        removePhotoIconId: 'removePhotoIcon',
-        plusIconSelector: '.profile-plus-icon',
-        defaultImage: "{{ '/static/all-Pictures/user.jpg' }}"
-      });
-    });
-  </script>
-  
-  <style>
-    .remove-photo-icon {
-      position: absolute;
-      top: 17px;
-      right: 20px;
-      width: 24px;
-      height: 24px;
-      background: rgba(255, 0, 0, 0.8);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 11;
-    }
-    /* Show the remove icon on hover only if the container has "has-image" */
-    .profile-picture-container.has-image:hover .remove-photo-icon {
-      opacity: 1;
-    }
-    .remove-photo-icon i {
-      color: #fff;
-      font-size: 1rem;
-    }
-  </style>
-
 
 {% endblock %}
