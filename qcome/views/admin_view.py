@@ -87,16 +87,6 @@ class AdminProfileView(View):
         return render(request, 'adminuser/profile/profile.html',{'user':user, 'gender': gender_name, 'admin':admin_data,})
     
     
-
-@auth_required(login_url='/login/admin/')
-@role_required(Role.ADMIN.value, page_type='admin')
-class AdminPasswordUpdateView(View):
-    def get(self, request):
-        return render(request, 'adminuser/login/forgot_password.html')
-    def post(self, request):
-        return
-
-
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
 class AdminProfileUpdateView(View):

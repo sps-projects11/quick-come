@@ -19,6 +19,9 @@ from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
 from django.core.cache import cache
 import json
+from ..decorators import auth_required, role_required
+from qcome.constants.default_values import Role
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -161,10 +164,10 @@ class PasswordResetView(View):
 
             # Validation checks
             if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
-                return JsonResponse({"success": False, "message": "OTP not verified or expired."}, status=400)
+                return JsonResponse(error_response(ErrorMessage.E00028.value))
 
             if password != confirm_password:
-                return JsonResponse({"success": False, "message": "Passwords do not match."}, status=400)
+                return JsonResponse(error_response(ErrorMessage.E00007.value))
 
             # Save the new password
             user = User.objects.get(email=email)
@@ -174,10 +177,10 @@ class PasswordResetView(View):
             # Clear OTP after password reset
             del OTP_STORAGE[email]
 
-            return JsonResponse({"success": True, "message": "Password reset successfully."})
+            return JsonResponse(success_response(SuccessMessage.S00027.value, redirect="/sign-in/"), status=200)
 
         except User.DoesNotExist:
-            return JsonResponse({"success": False, "message": "User not found."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00010.value))
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)}, status=400)
 
@@ -187,12 +190,12 @@ class ResetPasswordRequestOTPView(View):
         email = request.GET.get("email")
 
         if not email:
-            return JsonResponse({"success": False, "message": "Email is required."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00003.value))
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return JsonResponse({"success": False, "message": "User not found."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00010.value))
 
         otp = random.randint(100000, 999999)
         OTP_STORAGE[email] = {"otp": otp, "verified": False, "timestamp": time.time()}
@@ -202,12 +205,14 @@ class ResetPasswordRequestOTPView(View):
         send_mail(
             subject="Your OTP Code",
             message=f"Your OTP is: {otp}",
-            from_email="your-email@example.com",  # Use appropriate email
+            from_email=settings.DEFAULT_FROM_EMAIL,  # Use Django settings            
             recipient_list=[email],
             fail_silently=False,
         )
 
-        return JsonResponse({"success": True, "message": f"An OTP has been sent to {email}. Please check your email."}, status=200)
+        msg = f"An OTP has been sent to {email}. Please check your email." # custom OTP Success Message
+        
+        return JsonResponse(success_response(msg), status=200)
 
 
 class ResetOtpVerificationView(View):
@@ -218,18 +223,58 @@ class ResetOtpVerificationView(View):
 
         # Validate email and OTP
         if not email or not otp:
-            return JsonResponse({"success": False, "message": "Email and OTP are required."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00029.value))
 
         # Check OTP in cache
         stored_otp = OTP_STORAGE.get(email, {}).get("otp")
 
         if not stored_otp:
-            return JsonResponse({"success": False, "message": "OTP expired. Request a new one."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00005.value))
 
         if str(stored_otp) != str(otp):
-            return JsonResponse({"success": False, "message": "Invalid OTP. Try again."}, status=400)
+            return JsonResponse(error_response(ErrorMessage.E00006.value))
 
         # Mark OTP as verified
         OTP_STORAGE[email]["verified"] = True
 
-        return JsonResponse({"success": True, "message": "OTP verified. Proceed with password reset."})
+        return JsonResponse(success_response(SuccessMessage.S00026.value))
+
+
+OTP_STORAGE = {}
+@auth_required(login_url='/login/admin/')
+@role_required(Role.ADMIN.value, page_type='admin')
+class AdminPasswordUpdateView(View):
+    def get(self, request):
+        return render(request, 'adminuser/login/forgot_password.html')
+
+    def post(self, request):
+        email = request.POST.get("email")
+        if request.user.email != email:
+            return messages.error(request, ErrorMessage.E00030.value)
+
+        try:
+            password = request.POST.get("new_password")
+            confirm_password = request.POST.get("confirm_password")
+
+            # Validation checks
+            if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
+                return messages.error(request, ErrorMessage.E00028.value)
+
+            if password != confirm_password:
+                return messages.error(request, ErrorMessage.E00007.value)
+
+            # Save the new password
+            request.user.set_password(password)
+            request.user.save()
+
+            # Clear OTP after password reset
+            del OTP_STORAGE[email]
+
+            # Update session authentication hash to keep the user logged in
+            update_session_auth_hash(request, request.user)
+            messages.success(request, SuccessMessage.S00027.value)
+            return redirect("/admin/profile/")
+
+        except Exception as e:
+            return messages.error(request, str(e))
+
