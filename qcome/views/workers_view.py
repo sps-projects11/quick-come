@@ -162,7 +162,7 @@ class AssignedWorkerCreateView(View):
                     "data": {
                         "message": "Worker assigned to booking",
                         "booking_id": booking.id,
-                        "customer_name": f"{booking.customer.first_name} {booking.customer.last_name}",
+                        "customer_name": user_service.user_full_name(booking.customer),
                         "vehicle_type":Vehicle_Type(booking.vehicle_type).name,
                         "location":booking.current_location,
                         "services":booking_service.get_booking_service(booking.service),

@@ -1,8 +1,8 @@
 from django.views import View
 from django.shortcuts import render
-from ..services import booking_service,garage_service
+from ..services import booking_service, garage_service, user_service
 from ..constants.default_values import Vehicle_Type
-from qcome.decorators import auth_required,garage_required,worker_required
+from qcome.decorators import auth_required, garage_required, worker_required
 
 
 @auth_required(login_url='/sign-in/')
@@ -14,7 +14,7 @@ class WorkListView(View):
         if bookings:
             booking_data = [{
                 'booking_id': booking.id,
-                'customer_id': f"{booking.customer.first_name} {booking.customer.last_name}",
+                'customer_id': user_service.user_full_name(booking.customer),
                 'customer_photo': booking.customer.profile_photo_url,
                 'address':booking.current_location,
                 'service':booking.service.service_name,

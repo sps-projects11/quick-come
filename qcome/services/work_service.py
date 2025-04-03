@@ -1,5 +1,6 @@
 from qcome.models import Work,ServiceCatalog,Booking
 from qcome.constants.default_values import Status
+from qcome.services import user_service
 
 def work_create(booking,work_by,user):
     return Work.objects.create(
@@ -15,7 +16,7 @@ def get_work_by_id(work_id):
     if work:
         work_data={
             'id':work.id,
-            'customer_name':f"{work.customer.first_name} {work.customer.last_name}",
+            'customer_name': user_service.user_full_name(work.customer),
             'status': Status(work.status).name,
             'location':work.booking.current_location,
             'services':list(ServiceCatalog.objects.filter(id__in=work.booking.service).values(
