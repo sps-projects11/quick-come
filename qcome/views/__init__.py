@@ -10,7 +10,6 @@ from .auth_view import *
 from .manage_service_view import *
 from .manage_user_view import *
 from .workers_view import *
-from .firebase_view import *
 from .service_view import *
 from .manage_payment_view import *
 from .contact_view import *
