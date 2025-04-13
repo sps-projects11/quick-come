@@ -13,7 +13,12 @@ import json
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
 
 
+
 class AdminCreateView(View):
+    def get(self, request):
+        # You could perform a redirect here, so the client gets to handle it as POST via JavaScript
+        return render(request, 'adminuser/login/admin_create.html')  # The template triggers the POST
+
     def post(self, request):
         user = request.user
 
@@ -30,6 +35,7 @@ class AdminCreateView(View):
         
         messages.success(request, SuccessMessage.S00030.value)
         return redirect('myadmin')
+
 
 
 
