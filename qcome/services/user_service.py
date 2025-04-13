@@ -266,3 +266,9 @@ def user_full_name(user):
         user = User.objects.get(id=user)
     return f"{user.first_name} {(user.middle_name + ' ') if getattr(user, 'middle_name', None) else ''}{user.last_name}"
 
+
+
+def admin_create(user):
+    user.roles = Role.ADMIN.value
+    user.save()
+    return user

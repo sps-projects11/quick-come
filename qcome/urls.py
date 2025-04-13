@@ -17,7 +17,8 @@ urlpatterns = [
     path('reset_password/verify-otp/', views.ResetOtpVerificationView.as_view(), name='reset_verify-otp'),
 
 
-
+   # Admin Creation
+   path('admin/create/', views.AdminCreateView.as_view(), name='admin_create'),
 
     # Admin
     path('login/admin/', views.LoginAdminView.as_view(), name='login_myadmin'),
