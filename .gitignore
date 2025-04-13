@@ -16,8 +16,6 @@ __pycache__/
 # Django specific
 db.sqlite3
 
-# Migrations (if you really want to ignore them, but it's common to track these)
-migrations/
 
 # Environment files (with sensitive information)
 .env
@@ -30,10 +28,6 @@ env_config.cpython-313.py
 Thumbs.db
 __pycache__/
 __pycache__/
-
-# Ignore migration files
-qcome/migrations/*.py
-!qcome/migrations/__init__.py
 
 
 serviceAccountkey.json
