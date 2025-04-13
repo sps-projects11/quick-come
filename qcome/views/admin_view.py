@@ -10,6 +10,27 @@ from ..constants.success_message import SuccessMessage
 from ..services import user_service, admin_service, workers_service, payment_service, booking_service
 from qcome.package.file_management import save_uploaded_file
 import json
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
+
+
+class AdminCreateView(View):
+    def post(self, request):
+        user = request.user
+
+        if user.roles == Role.ADMIN.value:
+            return HttpResponseForbidden("You are already an admin.")
+
+        if not user_service.check_user_exist(user.email):
+            return HttpResponseBadRequest("User does not exist.")
+
+        try:
+            user_service.admin_create(user)
+        except Exception as e:
+            return HttpResponseBadRequest(f"Failed to create admin: {str(e)}")
+        
+        messages.success(request, SuccessMessage.S00030.value)
+        return redirect('myadmin')
+
 
 
 class LoginAdminView(View):

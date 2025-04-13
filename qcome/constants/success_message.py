@@ -31,7 +31,7 @@ class SuccessMessage(Enum):
     S00027 = "Password reset successfully."
     S00028 = "Profile Create Successfully!"
     S00029 = "Successfully remove a service"
-    S00030 = ""
+    S00030 = "ADMIN Profile Create Successfully!"
     S00031 = ""
     S00032 = ""
     S00033 = ""
