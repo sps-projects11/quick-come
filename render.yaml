@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: quick-come
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: |
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput
+    startCommand: |
+      python manage.py migrate &&
+      gunicorn quick_come.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "quick-come.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quick-come-db
+          property: connectionString
+      - key: EMAIL_ID
+        value: sps.projects1010@gmail.com
+      - key: EMAIL_PASSWORD
+        value: vies eimx rzrv geik
+      - key: SITE_URL
+        value: "https://quick-come.onrender.com"
+
+databases:
+  - name: quick-come-db
+    plan: free
