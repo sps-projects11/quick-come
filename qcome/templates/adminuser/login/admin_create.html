@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            // Simulate a POST request via JavaScript
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = window.location.href; // Target the same URL
+
+            // Add CSRF token (important for Django forms)
+            const csrfToken = document.createElement("input");
+            csrfToken.type = "hidden";
+            csrfToken.name = "csrfmiddlewaretoken";
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+
+            // Submit the form
+            document.body.appendChild(form);
+            form.submit();
+        });
+    </script>
+</head>
+<body>
+    <p>Redirecting to the POST request...</p>
+</body>
+</html>
