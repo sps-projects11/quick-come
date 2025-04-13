@@ -33,7 +33,7 @@ class AdminCreateView(View):
         except Exception as e:
             return HttpResponseBadRequest(f"Failed to create admin: {str(e)}")
         
-        messages.success(request, SuccessMessage.S00030.value)
+        messages.success(request, SuccessMessage.S00001.value)
         return redirect('myadmin')
 
 
