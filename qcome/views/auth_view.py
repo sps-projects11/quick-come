@@ -9,15 +9,11 @@ import random
 import time
 from ..models import User
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
 from django.contrib.auth.hashers import check_password
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from django.contrib import messages  # For user feedback
-from django.core.cache import cache
 import json
 from ..decorators import auth_required, role_required
 from qcome.constants.default_values import Role
@@ -79,7 +75,7 @@ class RequestOTPView(View):
         send_mail(
             subject="Your OTP Code",
             message=f"Your OTP is: {otp}",
-            from_email=settings.DEFAULT_FROM_EMAIL,  # Use Django settings
+            from_email=settings.DEFAULT_FROM_EMAIL,  # It's required—pass it!
             recipient_list=[email],
             fail_silently=False,
         )

@@ -5,6 +5,7 @@ from django.contrib import messages
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from qcome.services import workers_service, garage_service
+from quickcome import settings
 
 class ContactView(View):
     def get(self, request):
@@ -26,7 +27,7 @@ class ContactView(View):
                 subject,
                 msg,
                 email,
-                ['sps.projects1010@gmail.com'],
+                [settings.DEFAULT_FROM_EMAIL],
             )
             
             email_msg.reply_to = [email]

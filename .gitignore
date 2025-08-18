@@ -5,17 +5,13 @@ env/
 .env/
 
 # Python cache and bytecode
-qcome/__pycache__/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-__pycache__/
-*.pyc
-
 
 # Django specific
 db.sqlite3
-
 
 # Environment files (with sensitive information)
 .env
@@ -26,11 +22,11 @@ env_config.cpython-313.py
 # OS-specific files
 .DS_Store
 Thumbs.db
-__pycache__/
-__pycache__/
 
-
+# Firebase and other keys
 serviceAccountkey.json
 firebase-messaging-sw.js
 
-
+# Django: Don't track migrations or static files
+qcome/migrations/
+static/
