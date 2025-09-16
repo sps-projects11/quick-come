@@ -12,7 +12,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ["http://localhost:8000","https://quick-come-1.onrender.com"]
+ALLOWED_HOSTS = ['quick-come-1.onrender.com', 'localhost', '127.0.0.1']
+
 CORS_ALLOWED_ORIGINS = ["http://localhost:8000","https://quick-come-1.onrender.com"]
 
 # Application definition
