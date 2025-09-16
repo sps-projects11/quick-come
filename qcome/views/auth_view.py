@@ -28,6 +28,7 @@ User = get_user_model()
 # Store OTPs temporarily with expiry time
 OTP_STORAGE = {}
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserSignupView(View):
     def get(self,request):
         return render(request,  "enduser/home/signup.html")

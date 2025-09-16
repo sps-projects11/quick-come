@@ -231,7 +231,7 @@
                 fetch("/sign-up/", {
                     method: "POST",
                     headers: {
-                        "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+                        "X-CSRFToken": 'csrfToken' 
                     },
                     body: formData
                 })
