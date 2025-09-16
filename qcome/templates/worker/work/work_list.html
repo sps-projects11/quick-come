@@ -208,7 +208,7 @@
 
 <script>
 // WebSocket setup
-const workerSocket = new WebSocket("wss://https://quick-come.onrender.com/ws/worker-assignments/");
+const workerSocket = new WebSocket("wss://quick-come.onrender.com/ws/worker-assignments/");
 
 workerSocket.onopen = function () {
     console.log("✅ Worker WebSocket Connected!");
@@ -266,7 +266,7 @@ workerSocket.onerror = function (error) {
 workerSocket.onclose = function () {
     console.warn("⚠️ Worker WebSocket Disconnected. Attempting to reconnect...");
     setTimeout(function() {
-        workerSocket = new WebSocket("wss://https://quick-come.onrender.com/ws/worker-assignments/");
+        workerSocket = new WebSocket("wss://quick-come.onrender.com/ws/worker-assignments/");
     }, 3000);  // Reconnect after 3 seconds
 };
 

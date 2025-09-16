@@ -101,7 +101,7 @@
         console.log("🚀 Document Loaded. Initializing WebSocket...");
     
         function connectWebSocket() {
-            const bookingSocket = new WebSocket("wss://" + window.location.host + "/ws/bookings/");
+            const bookingSocket = new WebSocket("wss://quick-come.onrender.com/ws/bookings/");
     
             bookingSocket.onopen = function () {
                 console.log("✅ WebSocket Connected Successfully!");
