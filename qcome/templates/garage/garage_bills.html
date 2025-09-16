@@ -30,7 +30,7 @@
 
 <script>
     const billSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/garage_bills/'
+        'wss://' + window.location.host + '/ws/garage_bills/'
     );
 
     billSocket.onmessage = function(e) {

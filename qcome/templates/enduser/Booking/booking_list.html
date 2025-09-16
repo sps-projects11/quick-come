@@ -101,7 +101,7 @@
         console.log("🚀 Document Loaded. Initializing WebSocket...");
     
         function connectWebSocket() {
-            const bookingSocket = new WebSocket("ws://" + window.location.host + "/ws/bookings/");
+            const bookingSocket = new WebSocket("wss://" + window.location.host + "/ws/bookings/");
     
             bookingSocket.onopen = function () {
                 console.log("✅ WebSocket Connected Successfully!");

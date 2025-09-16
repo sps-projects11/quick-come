@@ -40,7 +40,7 @@
     const userId = {{ user.id }};  // Get logged-in user's ID from the Django template context
 
     // Open WebSocket connection for the specific user group
-    const socket = new WebSocket(`ws://https://quick-come.onrender.com/ws/payments/user_${userId}/`);
+    const socket = new WebSocket(`wss://https://quick-come.onrender.com/ws/payments/user_${userId}/`);
 
     socket.onmessage = function (event) {
         const data = JSON.parse(event.data);

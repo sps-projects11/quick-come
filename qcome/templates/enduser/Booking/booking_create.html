@@ -51,7 +51,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const socket = new WebSocket("ws://" + window.location.host + "/ws/booking_updates/");
+        const socket = new WebSocket("wss://" + window.location.host + "/ws/booking_updates/");
 
         socket.onopen = function () {
             console.log("✅ Booking WebSocket Connected!");

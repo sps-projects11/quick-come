@@ -69,7 +69,7 @@
 <!-- Your original JavaScript remains completely unchanged -->
 <script>
     // WebSocket for booking updates
-    const bookingSocket = new WebSocket("ws://https://quick-come.onrender.com/ws/booking_updates/");
+    const bookingSocket = new WebSocket("wss://https://quick-come.onrender.com/ws/booking_updates/");
 
     bookingSocket.onopen = function () {
         console.log("✅ Booking WebSocket Connected!");
@@ -173,7 +173,7 @@
 
     // Function to start worker WebSocket after assignment
     function startWorkerSocket() {
-        const workerSocket = new WebSocket("ws://https://quick-come.onrender.com/ws/worker-assignments/");
+        const workerSocket = new WebSocket("wss://https://quick-come.onrender.com/ws/worker-assignments/");
 
         workerSocket.onopen = function () {
             console.log("✅ Worker WebSocket Connected!");
