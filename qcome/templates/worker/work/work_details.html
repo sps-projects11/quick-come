@@ -43,7 +43,7 @@
 
    <script>
         // Establish WebSocket connection
-        const workSocket = new WebSocket("ws://localhost:8000/ws/bookings/");
+        const workSocket = new WebSocket("ws://https://quick-come.onrender.com/ws/bookings/");
 
         workSocket.onopen = function () {
             console.log("✅ WebSocket Connected for Work Status Updates");
