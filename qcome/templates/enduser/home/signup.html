@@ -202,15 +202,23 @@
                     },
                     body: formData
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        // Log the text response for diagnosis
+                        return response.text().then(text => {
+                            console.error("Error response text:", text);
+                            throw new Error("Server returned an error");
+                        });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.status === "success") {
                         console.log("OTP verified successfully.");
                     }
                 })
                 .catch(error => console.error("Error:", error));
-            });
-        
+
             // Submit Signup Form
             signupForm.addEventListener("submit", function (event) {
                 event.preventDefault(); // Prevent default form submission
