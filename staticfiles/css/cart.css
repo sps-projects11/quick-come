@@ -1,0 +1,309 @@
+.wrapper{
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    padding: 20px;
+    width: 100%;
+    height: 90vh;
+}
+
+
+/* This is the delete modal */
+.delete_modal {
+    position: fixed;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+}
+
+#warn {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    margin: 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+#button {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    height: auto; 
+}
+
+.cancel, .delete-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.delete-btn {
+    background-color: #ff3b30;
+    color: white;
+}
+/* This is the end of the delete meodal */
+
+/* This is the cart-container */
+.cart-container {
+    height: 100%;
+    margin: 0px 20px;
+    background:white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.cart-items {
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; 
+    height: 60%;
+    overflow-y: scroll;
+    margin: 20px 0;
+}
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f1f1f1;
+    transition: background 0.3s;
+}
+.cart-item:hover {
+    background: #e0e0e0;
+}
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+.item-details {
+    flex-grow: 1;
+    text-align: left;
+}
+.remove-btn {
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.remove-btn:hover {
+    background: #cc0000;
+}
+.cart-total {
+    margin-top: 20px;
+    font-size: 18px;
+}
+@media (max-width:440px) {
+    .cart-container{
+        width:95vw;
+    }
+}
+
+@media (min-width:441px){
+    .cart-container{
+        width: 90vw;
+    }
+}
+@media (min-width:630px){
+    .cart-container{
+        width: 80vw;
+    }
+}
+@media (min-width:810px){
+    .cart-container{
+        width: 70vw;
+    }
+}
+@media (min-width:930px){
+    .cart-container{
+        width: 55vw;
+    }
+}
+/* This is the end of cart-container */
+
+/* This is the service-modal */
+#serviceModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 450px;
+    max-height: 70vh; /* Decreased height */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+h4 {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    text-align: center; 
+    width: 100%;
+    font-size: 18px;
+}
+
+#serviceList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: calc(70vh - 80px); /* Adjusted to fit in the modal */
+    overflow-y: auto;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#serviceList::-webkit-scrollbar {
+    display: none;
+}
+#serviceList li {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#serviceList li:hover {
+    background-color: #f5f5f5;
+}
+
+#serviceList li:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        max-height: 80vh;
+    }
+    
+    #serviceList {
+        max-height: calc(80vh - 80px);
+    }
+}
+/* This  the end of the service-modal */
+
+.btn {
+    display: inline-block;
+    padding: 8px 14px;  /* Reduced padding */
+    border: none;
+    border-radius: 4px;
+    background-color: #2ecc71;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;  /* Smaller font size */
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+    max-width: 200px;  /* Limit maximum width */
+    width: auto;  /* Allow natural width based on content */
+}
+
+.btn:hover {
+    background-color: #27ae60;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    background-color: #1e8449;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.4);
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+
+.btn-secondary:hover {
+    background-color: #f8f8f8;
+    color: #27ae60;
+    border-color: #27ae60;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn {
+        padding: 6px 10px;
+        font-size: 13px;
+        max-width: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        max-width: 150px;
+        margin: 4px;
+    }
+    
+    .wrapper {
+        padding: 15px;
+    }
+}

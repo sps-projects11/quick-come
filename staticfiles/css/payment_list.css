@@ -1,0 +1,131 @@
+.wrapper {
+    background-image: url(/static/all-Pictures/banners/con10.gif);
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    padding: 20px;
+    width: 100%;
+    margin: auto;
+    height: 92vh;
+}
+
+.container {
+    margin: auto;
+    height: 100%;
+    width: 50%;
+    background:#00fff6db;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.payment-list {
+    cursor: pointer;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-item {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.payment-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.payment-details {
+    flex-grow: 1;
+    margin-left: 15px;
+    text-align: left;
+}
+
+.payment-name {
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.payment-time {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.payment-amount {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.positive {
+    color: #4caf50;
+}
+
+.negative {
+    color: #f44336;
+}
+
+.no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+    padding: 20px;
+}
+.payment-paid-to{
+    font-weight: 600;
+    color: #51a780;
+    display: flex;
+}
+.payment-type{
+    font-style: italic;
+    color: grey;
+    font-size: 12px;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .wrapper{
+        height: 95vh !important;
+        width: 100%;
+    }
+    .container {
+        width: 100% !important;
+        padding: 15px;
+    }
+
+    .payment-item {
+        padding: 12px;
+    }
+
+    .payment-amount {
+        font-size: 18px;
+    }  
+}
+
+@media (max-width: 480px) {
+    .wrapper{
+        height: 96vh !important;
+        width: 100%;
+    }
+}
+

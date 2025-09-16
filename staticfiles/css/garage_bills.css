@@ -1,0 +1,120 @@
+/* Wrapper */
+.wrapper {
+    background-image: url(/static/all-Pictures/banners/con10.gif);
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    padding: 20px;
+    width: 100%;
+    margin: auto;
+    height: 92vh;
+}
+
+/* Container */
+.container {
+    margin: auto;
+    height: 100%;
+    width: 50%;
+    background: #00fff6db;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#bills-list{
+    cursor: pointer;
+    scrollbar-width: none;
+    overflow-y: scroll;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Billing Title */
+.billing-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Bill Card */
+.bill-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Bill Info */
+.bill-info {
+    text-align: left;
+    padding: 10px;
+}
+
+.bill-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.bill-date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+}
+
+/* Total Amount */
+.total {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 100% !important;
+        padding: 15px;
+    }
+
+    .bill-card {
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .bill-row {
+        flex-direction: column;
+        font-size: 14px;
+        gap: 5px;
+    }
+
+    .bill-date {
+        flex-direction: column;
+        font-size: 13px;
+        gap: 5px;
+    }
+
+    .wrapper {
+        padding: 10px;
+        height: 90vh;
+    }
+}
+
+
