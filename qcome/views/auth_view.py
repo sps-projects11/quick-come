@@ -18,7 +18,8 @@ import json
 from ..decorators import auth_required, role_required
 from qcome.constants.default_values import Role
 from django.contrib.auth import update_session_auth_hash
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 from django.contrib.auth import get_user_model
@@ -85,7 +86,7 @@ class RequestOTPView(View):
         return JsonResponse(success_response(msg), status=200)
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class VerifyOTPView(View):
     def post(self, request):
         email = request.POST.get("email")
