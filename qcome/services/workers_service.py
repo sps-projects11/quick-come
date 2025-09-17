@@ -72,7 +72,7 @@ def is_user_a_garage_worker(user):
 def get_worker_of_garage(garage_id):
     print("hello")
     # Get a list of workers for the given garage and who are active
-    workers_in_garage = Worker.objects.filter(garage=garage_id, is_active=True)
+    workers_in_garage = Worker.objects.filter(garage=garage_id, is_active=True, is_verified = True)
     print(workers_in_garage)
     # Get the list of worker IDs who have active work assigned
     workers_with_active_work = Booking.objects.exclude(assigned_worker__in = workers_in_garage,is_active=False)

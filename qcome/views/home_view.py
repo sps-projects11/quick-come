@@ -13,6 +13,7 @@ class HomeView(View):
             garage = garage_service.get_garage_id(request.user.id)
             workers = workers_service.get_worker_of_garage(garage.id)
             workers_list = [{"id": worker.id, "name": user_service.user_full_name(worker.worker)} for worker in workers]
+            print("workerlist=> ",workers_list)
             bookings = garage_service.get_garage_bookings()
             return render(request, 'garage/bookings.html', {'garage':garage,'bookings':bookings,'workers': workers_list})
         elif worker:
