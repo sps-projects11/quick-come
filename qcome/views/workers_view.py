@@ -10,7 +10,8 @@ from ..decorators import auth_required, garage_required,worker_required
 from ..models import User
 from qcome.package.file_management import save_uploaded_file
 from qcome.constants.default_values import Vehicle_Type,Status,PayStatus
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -32,6 +33,7 @@ class WorkerView(View):
 
 
 @auth_required(login_url='/sign-in/')
+@method_decorator(csrf_exempt, name='dispatch')
 class WorkerCreateView(View):
     def get(self, request):  
         garage_details = user_service.get_all_garages()
@@ -62,6 +64,7 @@ class WorkerCreateView(View):
 
 @auth_required(login_url='/sign-in/')
 @worker_required
+@method_decorator(csrf_exempt, name='dispatch')
 class WorkerUpdateView(View):
     def get(self, request, worker_id):
         worker_details = workers_service.get_worker_details(worker_id)
@@ -97,6 +100,7 @@ class WorkerUpdateView(View):
 
 @auth_required(login_url='/sign-in/')
 @worker_required
+@method_decorator(csrf_exempt, name='dispatch')
 class WorkerDeleteView(View):
     def post(self, request, worker_id):
         worker = workers_service.get_worker_details(worker_id)
@@ -132,6 +136,7 @@ class CheckWorkerStatus(View):
     
 @auth_required(login_url='/sign-in/')
 @garage_required 
+@method_decorator(csrf_exempt, name='dispatch')
 class AssignedWorkerCreateView(View):
     def post(self, request):
         try:
@@ -190,6 +195,7 @@ class AssignedWorkerCreateView(View):
         
     
 @auth_required(login_url='/sign-in/')
+@method_decorator(csrf_exempt, name='dispatch')
 class WorkerWorkRecieptView(View):
     def get(self, request, work_id):
         work = work_service.get_work_by_id(work_id)

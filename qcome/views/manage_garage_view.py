@@ -9,6 +9,8 @@ from qcome.constants.default_values import Vehicle_Type, Role
 from qcome.decorators.auth_decorator import auth_required, role_required
 from django.contrib import messages  # For user feedback
 from qcome.package.file_management import save_uploaded_file
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -31,6 +33,7 @@ class ManageGarageListView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageGarageCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -65,6 +68,7 @@ class ManageGarageCreateView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageGarageUpdateView(View):
     def get(self, request, garage_id):
         admin_data = user_service.get_user(request.user.id)
@@ -102,6 +106,7 @@ class ManageGarageUpdateView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageGarageToggleView(View):
     def post(self, request, garage_id):
         garage = garage_service.toggle_garage_status(garage_id)

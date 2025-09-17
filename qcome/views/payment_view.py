@@ -4,6 +4,8 @@ from qcome.services import payment_service, booking_service, workers_service, ga
 from django.shortcuts import render,redirect
 from ..decorators import auth_required, role_required, worker_required
 from ..constants import Role,PayType,PayStatus
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -41,6 +43,7 @@ class PaymentListView(View):
 
 @auth_required(login_url='/sign-in/')
 @worker_required
+@method_decorator(csrf_exempt, name='dispatch')
 class PaymentCreateView(View):
     """Create a payment"""
 

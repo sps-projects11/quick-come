@@ -67,14 +67,14 @@
                    status: selectedStatus,  
                };
 
-               const csrfToken = document.querySelector('[name="csrf-token"]').content;
+               
                const url = "{% url 'worker_work_details' work_id=work_data.id %}";
 
                fetch(url, {
                    method: 'POST',
                    headers: {
                        'Content-Type': 'application/json',
-                       'X-CSRFToken': csrfToken,  
+                       'X-CSRFToken': 'csrfToken',  
                    },
                    body: JSON.stringify(data)
                })

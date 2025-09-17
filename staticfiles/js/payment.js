@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("✅ Submit button clicked!");
 
         const selectedMethod = paymentMethod.value;
-        const csrfToken = document.getElementById("csrfToken").value;
         const amount = document.getElementById("amount").value;
         if (!selectedMethod) {
             alert("❌ Please select a valid payment method.");
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken,
+                "X-CSRFToken": 'csrfToken',
             },
             body: JSON.stringify(data),
         })

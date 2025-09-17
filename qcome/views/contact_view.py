@@ -6,7 +6,10 @@ from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from qcome.services import workers_service, garage_service
 from quickcome import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ContactView(View):
     def get(self, request):
         is_worker = workers_service.is_user_a_garage_worker(request.user.id)

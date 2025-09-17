@@ -85,19 +85,13 @@
                 return;
             }
         
-            let csrfTokenElement = document.querySelector("[name=csrfmiddlewaretoken]");
-            if (!csrfTokenElement) {
-                console.error("CSRF token not found in the document.");
-                return;
-            }
-            let csrfToken = csrfTokenElement.value;
         
             console.log(`Removing service ${selectedServiceId} from booking ${selectedBookingId}...`);
         
             fetch(`/billing/${selectedBookingId}/delete`, {
                 method: "DELETE",
                 headers: {
-                    "X-CSRFToken": csrfToken,
+                    "X-CSRFToken": 'csrfToken',
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ service_id: selectedServiceId })  // ✅ Corrected JSON key
@@ -160,7 +154,6 @@
     
         function addServiceToBooking(serviceId) {
             let bookingId = document.getElementById("bookingId").value.trim();
-            let csrfToken = "{{ csrf_token }}";
         
             if (!bookingId) {
                 console.error("Booking ID is missing.");
@@ -173,7 +166,7 @@
             fetch(`/billing/${bookingId}/update`, {
                 method: "POST",
                 headers: {
-                    "X-CSRFToken": csrfToken,
+                    "X-CSRFToken": 'csrfToken',
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ service_id: serviceId })

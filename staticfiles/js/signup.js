@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/verify-otp/", {
                 method: "POST",
-                headers: { "X-CSRFToken": csrfToken },
+                headers: { "X-CSRFToken": 'csrfToken' },
                 body: formData,
             });
 
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/sign-up/", {
                 method: "POST",
-                headers: { "X-CSRFToken": formData.get("csrfmiddlewaretoken") },
+                headers: { "X-CSRFToken": 'csrfToken' },
                 body: formData,
             });
 

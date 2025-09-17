@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const firstName = document.getElementById("first_name").value.trim();
         const lastName = document.getElementById("last_name").value.trim();
         const dob = document.getElementById("dob").value.trim();
-        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
         if (!email || !otp || !dob) {
             showToast("Please fill in all required fields.", "error");
@@ -67,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/verify-otp/", {
                 method: "POST",
-                headers: { "X-CSRFToken": csrfToken },
+                headers: { "X-CSRFToken": 'csrfToken' },
                 body: formData,
             });
 
@@ -86,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/sign-up/", {
                 method: "POST",
-                headers: { "X-CSRFToken": formData.get("csrfmiddlewaretoken") },
+                headers: { "X-CSRFToken": 'csrfToken'},
                 body: formData,
             });
 

@@ -7,10 +7,13 @@ from qcome.services import booking_service, garage_service, workers_service, use
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
 from qcome.package.file_management import save_uploaded_file
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 @auth_required(login_url='/sign-in/')
 @enduser_required
+@method_decorator(csrf_exempt, name='dispatch')
 class GarageCreateView(View):
     def get(self, request):
         """ Show the create garage form, or redirect to update if an active garage already exists """
@@ -116,6 +119,7 @@ class GarageWorkerListView(View):
 
 @auth_required(login_url='/sign-in/')
 @garage_required
+@method_decorator(csrf_exempt, name='dispatch')
 class GarageUpdateView(View):
     def get(self, request, garage_id):
         garage = garage_service.get_garage(garage_id)
@@ -166,6 +170,7 @@ class GarageUpdateView(View):
 
 @auth_required(login_url='/sign-in/')
 @garage_required
+@method_decorator(csrf_exempt, name='dispatch')
 class GarageDeleteView(View):
     def post(self, request, garage_id):
         garage_service.toggle_garage_status(garage_id)

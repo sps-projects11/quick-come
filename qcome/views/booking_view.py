@@ -13,6 +13,8 @@ from ..constants.success_message import SuccessMessage
 from ..package.response import success_response,error_response
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 # ✅ View to Show Booking History (List of Bookings)
@@ -35,6 +37,7 @@ class BookingDetailView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
+@method_decorator(csrf_exempt, name='dispatch')
 class BookingCreateView(View):
     def get(self, request):
         user = request.user
@@ -93,6 +96,7 @@ class BookingCreateView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
+@method_decorator(csrf_exempt, name='dispatch')
 class BookingUpdateView(View):
     def get(self, request, booking_id):
         """Show the booking form with existing booking data for update."""
@@ -135,6 +139,7 @@ class BookingUpdateView(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
+@method_decorator(csrf_exempt, name='dispatch')
 class BookingDeleteView(View):
     def post(self, request, booking_id):
         """Handle booking delete request."""

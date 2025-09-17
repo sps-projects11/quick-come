@@ -12,7 +12,7 @@ function login(event) {
         method: "POST",
         body: formData,
         headers: {
-            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            "X-CSRFToken": 'csrftoken'
         }
     })
     .then(response => response.json())

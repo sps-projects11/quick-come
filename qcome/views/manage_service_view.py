@@ -8,6 +8,8 @@ from django.contrib import messages  # For user feedback
 from ..package.response import success_response,error_response
 from ..constants.error_message import ErrorMessage
 from ..constants.success_message import SuccessMessage
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 @auth_required(login_url='/login/admin/')
@@ -21,6 +23,7 @@ class ManageServiceList(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageServiceCreate(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -43,6 +46,7 @@ class ManageServiceCreate(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageServiceUpdate(View):
     def get(self, request, service_id):
         admin_data = user_service.get_user(request.user.id)
@@ -67,6 +71,7 @@ class ManageServiceUpdate(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageServiceDelete(View):
     def post(self, request, service_id):
         service_service.remove_service(service_id, request.user)

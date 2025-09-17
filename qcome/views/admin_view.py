@@ -11,7 +11,8 @@ from ..services import user_service, admin_service, workers_service, payment_ser
 from qcome.package.file_management import save_uploaded_file
 import json
 from django.http import HttpResponseForbidden, HttpResponseBadRequest
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class AdminCreateView(View):
@@ -38,7 +39,7 @@ class AdminCreateView(View):
 
 
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginAdminView(View):
     def get(self, request):
         return render(request, 'adminuser/login/login.html')
@@ -116,6 +117,7 @@ class AdminProfileView(View):
     
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class AdminProfileUpdateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)

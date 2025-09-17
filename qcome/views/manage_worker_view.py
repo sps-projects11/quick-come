@@ -9,6 +9,8 @@ from ..package.response import success_response,error_response
 from qcome.package.file_management import save_uploaded_file
 from qcome.constants.default_values import Role
 from qcome.decorators import auth_required, role_required
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 @auth_required(login_url='/login/admin/')
@@ -30,6 +32,7 @@ class ManageWorkerListView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageWorkerCreateView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
@@ -66,6 +69,7 @@ class ManageWorkerCreateView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageWorkerUpdateView(View):
     def get(self, request, worker_id):
         admin_data = user_service.get_user(request.user.id)
@@ -114,6 +118,7 @@ class ManageWorkerUpdateView(View):
 
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value,  page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class ManageWorkerToggleView(View):
     def post(self, request, worker_id):
         worker = workers_service.worker_toggle(worker_id)

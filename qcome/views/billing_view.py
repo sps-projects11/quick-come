@@ -7,6 +7,8 @@ import json
 from ..constants.success_message import SuccessMessage
 from ..constants.error_message import ErrorMessage
 from ..package.response import success_response,error_response
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -43,6 +45,7 @@ class BillingHomeView(View):
 
 @auth_required(login_url='/sign-in/')
 @worker_required
+@method_decorator(csrf_exempt, name='dispatch')
 class BillingUpdate(View):
     def post(self, request, booking_id):
         """Handles adding a service to an existing booking."""

@@ -7,6 +7,8 @@ from django.contrib import messages
 from ..constants.success_message import SuccessMessage
 from ..constants.error_message import ErrorMessage
 from qcome.package.file_management import save_uploaded_file
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
@@ -31,6 +33,7 @@ class EnduserProfileCreate(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
+@method_decorator(csrf_exempt, name='dispatch')
 class EnduserProfileUpdate(View):
     def get(self, request, user_id):
         user_details = user_service.get_user_details(user_id)
@@ -61,6 +64,7 @@ class EnduserProfileUpdate(View):
 
 @auth_required(login_url='/sign-in/')
 @role_required(Role.END_USER.value, page_type='enduser')
+@method_decorator(csrf_exempt, name='dispatch')
 class EnduserProfileDelete(View):
     def post(self, request, user_id):
         user = user_service.get_user_details(user_id)

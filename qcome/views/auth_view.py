@@ -107,7 +107,7 @@ class VerifyOTPView(View):
 
         return JsonResponse(error_response(ErrorMessage.E00006.value))
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UserSigninView(View):
     def get(self, request):
         return render(request, "enduser/home/signin.html")
@@ -148,6 +148,7 @@ class CheckLoginStatus(View):
 
 
 OTP_STORAGE = {}
+@method_decorator(csrf_exempt, name='dispatch')
 class PasswordResetView(View):
     def get(self, request):
         return render(request, 'enduser/home/password_reset.html')
@@ -212,7 +213,7 @@ class ResetPasswordRequestOTPView(View):
         
         return JsonResponse(success_response(msg), status=200)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class ResetOtpVerificationView(View):
     def post(self, request):
         data = json.loads(request.body)
@@ -241,6 +242,7 @@ class ResetOtpVerificationView(View):
 OTP_STORAGE = {}
 @auth_required(login_url='/login/admin/')
 @role_required(Role.ADMIN.value, page_type='admin')
+@method_decorator(csrf_exempt, name='dispatch')
 class AdminPasswordUpdateView(View):
     def get(self, request):
         return render(request, 'adminuser/login/forgot_password.html')
