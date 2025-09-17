@@ -19,9 +19,10 @@ class ManageWorkerListView(View):
     def get(self, request):
         admin_data = user_service.get_user(request.user.id)
         workers = workers_service.get_all_workers()
+        print(workers)
         for worker in workers:
             worker_user_id = user_service.get_user(worker.worker.id)
-            user_service.user_full_name(worker_user_id)
+            worker.worker_name = user_service.user_full_name(worker_user_id)
             worker.worker_image = worker_user_id.profile_photo_url
             worker.phone = worker_user_id.phone
             worker_garage = garage_service.get_garage(worker.garage.id)

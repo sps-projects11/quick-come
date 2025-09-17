@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
+        'HOST': 'dpg-d34eshvfte5s73ch8jag-a.oregon-postgres.render.com',
         'PORT': env('DB_PORT'),
     }
 }

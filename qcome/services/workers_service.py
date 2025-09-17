@@ -70,20 +70,20 @@ def is_user_a_garage_worker(user):
     return Worker.objects.filter(worker=user, is_active=True).exists()
 
 def get_worker_of_garage(garage_id):
-    print("hello")
-    # Get a list of workers for the given garage and who are active
-    workers_in_garage = Worker.objects.filter(garage=garage_id, is_active=True, is_verified = True)
-    print(workers_in_garage)
-    # Get the list of worker IDs who have active work assigned
-    workers_with_active_work = Booking.objects.exclude(assigned_worker__in = workers_in_garage,is_active=False)
-    print(workers_with_active_work)
-
-
-    # Filter out the workers who are already assigned active work
-    available_workers = workers_in_garage.exclude(id__in=workers_with_active_work)
-
-    # Return the list of available workers
+    # Get all active, verified workers for the garage
+    workers_in_garage = Worker.objects.filter(
+        garage=garage_id, is_active=True, is_verified=True
+    )
+    # Get worker IDs that are assigned to any active booking
+    busy_worker_ids = Booking.objects.filter(
+        is_active=True,
+        assigned_worker__isnull=False
+    ).values_list('assigned_worker_id', flat=True)
+    # Get workers not assigned to any active booking
+    available_workers = workers_in_garage.exclude(id__in=busy_worker_ids)
+    print(available_workers)
     return list(available_workers)
+
 
 
 def get_worker_object(worker_id):
