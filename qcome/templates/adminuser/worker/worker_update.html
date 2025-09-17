@@ -96,6 +96,19 @@
             <input type="text" name="expertise" id="id_worker_expertise" class="form-control" value="{{ worker.expertise }}" placeholder="Enter expertise" required>
           </div>
         </div>
+
+        <!-- is Verified Field -->
+        <div class="mb-3 row align-items-center">
+          <label for="id_worker_is_verified" class="col-12 col-md-4 col-form-label fw-bold">Is_verified</label>
+          <div class="col-12 col-md-8">
+            <select class="form-control" id="id_worker_garage" name="is_verified" required>
+              <option value="{{ worker.is_verified }}" selected>{{ worker.is_verified }}</option>
+                <option value="{{'true'}}">True</option>
+                <option value="{{'false'}}">False</option>
+            </select>
+            <div class="invalid-feedback">Choose</div>
+          </div>
+        </div>
         
         <!-- Submit Button -->
         <div class="text-center mt-4">

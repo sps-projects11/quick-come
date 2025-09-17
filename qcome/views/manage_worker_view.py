@@ -95,6 +95,7 @@ class ManageWorkerUpdateView(View):
         worker_phone = request.POST.get('worker_phone')
         experience = request.POST.get('experience')
         expertise = request.POST.get('expertise')
+        is_verified = request.POST.get('is_verified')
         worker_profile_photo = request.FILES.get('worker_profile_photo')
 
         worker_profile_photo_path = save_uploaded_file(worker_profile_photo, 'worker-profile-photo')
@@ -103,7 +104,7 @@ class ManageWorkerUpdateView(View):
         worker_user = user_service.get_user(worker.worker.id)
         worker_garage = garage_service.get_garage(garage)
         try:
-            workers_service.worker_update(worker, expertise, experience, worker_garage, request.user)
+            workers_service.worker_update(worker, expertise, experience, worker_garage, request.user,is_verified)
             user_service.user_name_update(worker_user, worker_first_name, worker_middle_name, worker_last_name)
             user_service.user_phone_create(worker_user, worker_phone)
             user_service.user_profile_photo_create(worker_user, worker_profile_photo_path)

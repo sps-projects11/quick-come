@@ -17,12 +17,17 @@ def worker_create(user, expertise, experience, worker_garage):
     )
 
 
-def worker_update(worker, expertise, experience, worker_garage, user):
+def worker_update(worker, expertise, experience, worker_garage, user,is_verified):
+    if is_verified == 'true':
+        is_verified = True
+    else:
+        is_verified = False
     if worker:
         worker.experience = experience
         worker.expertise = expertise
         worker.garage = worker_garage
         worker.updated_by = user
+        worker.is_verified = is_verified
         worker.save()
         return worker
     return None
