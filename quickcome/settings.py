@@ -1,7 +1,6 @@
 from pathlib import Path
 from env_config import env
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,11 +73,7 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        env('DATABASE_URL', default=None),
-        conn_max_age=600 if not DEBUG else 0,
-        conn_health_checks=True,
-    ) if env('DATABASE_URL') else {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
@@ -86,6 +81,7 @@ DATABASES = {
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
         'OPTIONS': {'sslmode': 'disable' if DEBUG else 'require'},
+        'CONN_MAX_AGE': 600,
     }
 }
 
