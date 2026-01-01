@@ -79,13 +79,13 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': '35.227.164.209',  # or Render external hostname
+        'HOST': 'https://quick-come.onrender.com/', 
         'PORT': env('DB_PORT', default='5432'),
         'OPTIONS': {
             'sslmode': 'require',
             'connect_timeout': 10,
         },
-        'CONN_MAX_AGE': 60,  # Shorten further
+        'CONN_MAX_AGE': 60,
         'POOL': {
             'max_overflow': 0,
         },
