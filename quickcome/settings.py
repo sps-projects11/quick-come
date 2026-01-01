@@ -80,9 +80,14 @@ DATABASES = {
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': 'dpg-d34eshvfte5s73ch8jag-a.oregon-postgres.render.com',
-        'PORT': env('DB_PORT'),
+        'PORT': env('DB_PORT', default='5432'),
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
+        'CONN_MAX_AGE': 0,
     }
 }
+
 
 
 
