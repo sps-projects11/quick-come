@@ -75,12 +75,19 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': dj_database_url.parse(
-        env('DATABASE_URL'),
-        conn_max_age=300,
+        env('DATABASE_URL', default=None),
+        conn_max_age=600 if not DEBUG else 0,
         conn_health_checks=True,
-    )
+    ) if env('DATABASE_URL') else {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'OPTIONS': {'sslmode': 'disable' if DEBUG else 'require'},
+    }
 }
-
 
 
 
