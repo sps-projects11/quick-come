@@ -79,14 +79,19 @@ DATABASES = {
         'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD'),
-        'HOST': 'dpg-d34eshvfte5s73ch8jag-a.oregon-postgres.render.com',
+        'HOST': '35.227.164.209',  # or Render external hostname
         'PORT': env('DB_PORT', default='5432'),
         'OPTIONS': {
             'sslmode': 'require',
+            'connect_timeout': 10,
         },
-        'CONN_MAX_AGE': 0,
+        'CONN_MAX_AGE': 60,  # Shorten further
+        'POOL': {
+            'max_overflow': 0,
+        },
     }
 }
+
 
 
 
