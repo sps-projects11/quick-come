@@ -151,7 +151,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env("EMAIL_ID")
 EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD")
 SITE_URL = env("SITE_URL", default="http://localhost:8000")
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

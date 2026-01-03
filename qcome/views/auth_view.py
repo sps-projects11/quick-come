@@ -77,7 +77,7 @@ class RequestOTPView(View):
         send_mail(
             subject="Your OTP Code",
             message=f"Your OTP is: {otp}",
-            from_email=settings.DEFAULT_FROM_EMAIL,  # It's required—pass it!
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
             fail_silently=False,
         )
@@ -204,7 +204,7 @@ class ResetPasswordRequestOTPView(View):
         send_mail(
             subject="Your OTP Code",
             message=f"Your OTP is: {otp}",
-            from_email=settings.DEFAULT_FROM_EMAIL,  # Use Django settings            
+            from_email=settings.EMAIL_HOST_USER,  # Use Django settings            
             recipient_list=[email],
             fail_silently=False,
         )

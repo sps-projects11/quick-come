@@ -30,7 +30,7 @@ class ContactView(View):
                 subject,
                 msg,
                 email,
-                [settings.DEFAULT_FROM_EMAIL],
+                [settings.EMAIL_HOST_USER],
             )
             
             email_msg.reply_to = [email]
