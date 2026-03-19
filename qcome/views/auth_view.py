@@ -46,11 +46,11 @@ class UserSignupView(View):
             return JsonResponse(error_response(ErrorMessage.E00007.value))
 
         # Check if email is verified
-        if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
-            return JsonResponse(error_response(ErrorMessage.E00008.value))
+        # if email not in OTP_STORAGE or not OTP_STORAGE[email]["verified"]:
+        #     return JsonResponse(error_response(ErrorMessage.E00008.value))
         
         user = user_service.create_user_initially(first_name, last_name, dob, email, hash_password)
-        del OTP_STORAGE[email]  # Remove OTP after successful registration
+        # del OTP_STORAGE[email]  # Remove OTP after successful registration
 
         if user:
             return JsonResponse(success_response(SuccessMessage.S00028.value, redirect="/sign-in/"), status=200)
@@ -74,13 +74,13 @@ class RequestOTPView(View):
 
         print(f"Your {email} OTP is: {otp}")
 
-        send_mail(
-            subject="Your OTP Code",
-            message=f"Your OTP is: {otp}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+        # send_mail(
+        #     subject="Your OTP Code",
+        #     message=f"Your OTP is: {otp}",
+        #     from_email=settings.EMAIL_HOST_USER,
+        #     recipient_list=[email],
+        #     fail_silently=False,
+        # )
 
         msg = f"An OTP has been sent to {email}. Please check your email." # custom OTP Success Message
         
@@ -91,21 +91,21 @@ class RequestOTPView(View):
 class VerifyOTPView(View):
     def post(self, request):
         email = request.POST.get("email")
-        otp = request.POST.get("otp")
+        # otp = request.POST.get("otp")
 
         if email in OTP_STORAGE:
-            stored_otp = OTP_STORAGE[email]["otp"]
-            otp_timestamp = OTP_STORAGE[email]["timestamp"]
+            # stored_otp = OTP_STORAGE[email]["otp"]
+            # otp_timestamp = OTP_STORAGE[email]["timestamp"]
 
-            if time.time() - otp_timestamp > 300:
-                del OTP_STORAGE[email]
-                return JsonResponse(error_response(ErrorMessage.E00005.value))
+            # if time.time() - otp_timestamp > 300:
+            #     del OTP_STORAGE[email]
+            #     return JsonResponse(error_response(ErrorMessage.E00005.value))
 
-            if stored_otp == int(otp):
-                OTP_STORAGE[email]["verified"] = True
-                return JsonResponse(success_response(SuccessMessage.S00004.value))
+            # if stored_otp == int(otp):
+            #     OTP_STORAGE[email]["verified"] = True
+            return JsonResponse(success_response(SuccessMessage.S00004.value))
 
-        return JsonResponse(error_response(ErrorMessage.E00006.value))
+        # return JsonResponse(error_response(ErrorMessage.E00006.value))
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UserSigninView(View):
@@ -201,13 +201,13 @@ class ResetPasswordRequestOTPView(View):
 
         print(f"Your OTP for {email} is: {otp}")  # For debugging, remove in production
 
-        send_mail(
-            subject="Your OTP Code",
-            message=f"Your OTP is: {otp}",
-            from_email=settings.EMAIL_HOST_USER,  # Use Django settings            
-            recipient_list=[email],
-            fail_silently=False,
-        )
+        # send_mail(
+        #     subject="Your OTP Code",
+        #     message=f"Your OTP is: {otp}",
+        #     from_email=settings.EMAIL_HOST_USER,  # Use Django settings            
+        #     recipient_list=[email],
+        #     fail_silently=False,
+        # )
 
         msg = f"An OTP has been sent to {email}. Please check your email." # custom OTP Success Message
         
@@ -227,14 +227,14 @@ class ResetOtpVerificationView(View):
         # Check OTP in cache
         stored_otp = OTP_STORAGE.get(email, {}).get("otp")
 
-        if not stored_otp:
-            return JsonResponse(error_response(ErrorMessage.E00005.value))
+        # if not stored_otp:
+        #     return JsonResponse(error_response(ErrorMessage.E00005.value))
 
-        if str(stored_otp) != str(otp):
-            return JsonResponse(error_response(ErrorMessage.E00006.value))
+        # if str(stored_otp) != str(otp):
+        #     return JsonResponse(error_response(ErrorMessage.E00006.value))
 
-        # Mark OTP as verified
-        OTP_STORAGE[email]["verified"] = True
+        # # Mark OTP as verified
+        # OTP_STORAGE[email]["verified"] = True
 
         return JsonResponse(success_response(SuccessMessage.S00026.value))
 
